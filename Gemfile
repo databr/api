@@ -14,6 +14,5 @@ group :test do
   gem 'rspec'
   gem 'autotest'
   gem 'pry'
-  gem 'simple_cov'
   gem 'webmock'
 end

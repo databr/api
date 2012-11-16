@@ -1,11 +1,10 @@
 require 'bundler'
 Bundler.require
 
-require 'simple_cov'
 require 'pry'
 require 'shoulda-matchers'
+require 'webmock/rspec'
 
-SimpleCov.start
 
 Dir[File.join("data/*.rb")].each {|f| require File.absolute_path(f) }
 Dir[File.join("spec/support/*.rb")].each {|f| require File.absolute_path(f) }
