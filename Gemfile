@@ -1,5 +1,11 @@
 source 'http://rubygems.org'
 
 gem 'mechanize'
-gem 'rspec'
-gem 'rest-client'
+
+group :test do
+  gem 'rspec'
+  gem 'autotest'
+  gem 'pry'
+  gem 'simple_cov'
+  gem 'webmock'
+end
