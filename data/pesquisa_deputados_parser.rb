@@ -1,4 +1,4 @@
-class SimpleDeputadosParser
+class PesquisaDeputadosParser
   def initialize
     @agent = Mechanize.new
     @pesquisa = @agent.get "http://www2.camara.leg.br/deputados/pesquisa"

@@ -2,8 +2,8 @@
 
 require 'spec_helper'
 
-describe SimpleDeputadosParser do
-  let(:parser) { SimpleDeputadosParser.new }
+describe PesquisaDeputadosParser do
+  let(:parser) { PesquisaDeputadosParser.new }
 
   before do
     stub_request(:get, "http://www2.camara.leg.br/deputados/pesquisa").
