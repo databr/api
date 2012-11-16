@@ -1,11 +1,24 @@
 class PesquisaDeputadosParser
+  URLS = {
+    complete_info: 'http://www.camara.gov.br/internet/Deputado/dep_Detalhe.asp',
+    bio:           'http://www2.camara.leg.br/deputados/pesquisa/layouts_deputados_biografia'
+  }
+
   def initialize
     @agent = Mechanize.new
     @pesquisa = @agent.get "http://www2.camara.leg.br/deputados/pesquisa"
   end
 
   def deputados
-    search_deputados
+    @deputados ||= search_deputados
+  end
+
+  def complete_info_url(deputado_id = nil)
+    url('complete_info', 'id', deputado_id)
+  end
+
+  def bio_url(deputado_id = nil)
+    url('bio', 'pk', deputado_id)
   end
 
   private
@@ -16,5 +29,11 @@ class PesquisaDeputadosParser
       id =  deputado.attr("value").split("?").last
       {name: deputado.text, id: id} unless id.nil?
     end.delete_if{|i| i.nil?}
+  end
+
+  def url(name, param, id)
+    url = URLS[name.to_sym]
+    url += "?#{param}=#{id}" unless id.nil?
+    url
   end
 end
