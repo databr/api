@@ -27,7 +27,7 @@ class PesquisaDeputadosParser < CamaraParser
     deputados = @parser.search("#deputado option")
     deputados.map do |deputado|
       id =  deputado.attr("value").split("?").last
-      {name: deputado.text, id: id} unless id.nil?
+      {nome_parlamentar: deputado.text, id: id} unless id.nil?
     end.delete_if{|i| i.nil?}
   end
 

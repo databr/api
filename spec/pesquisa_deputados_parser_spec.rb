@@ -5,6 +5,11 @@ require 'spec_helper'
 describe PesquisaDeputadosParser do
   let(:parser) { PesquisaDeputadosParser.new }
 
+  before do
+    stub_request(:get, 'http://www2.camara.leg.br/deputados/pesquisa').
+      to_return(:status => 200, :body => File.read('spec/fixtures/pesquisa.html'), :headers => {:'Content-Type' => 'text/html'})
+  end
+
   describe '#deputados' do
     it 'returns 5 register' do
       expect(parser.deputados.count).to eq(5)
@@ -12,11 +17,11 @@ describe PesquisaDeputadosParser do
 
     it 'returns names and id of deputados' do
       expect(parser.deputados).to eq([
-        {id: '141463', name: 'ABELARDO CAMARINHA'},
-        {id: '74354', name: 'ZENALDO COUTINHO'},
-        {id: '73933', name: 'ZEQUINHA MARINHO'},
-        {id: '74145', name: 'ZEZÉU RIBEIRO'},
-        {id: '160625', name: 'ZOINHO'}
+        {id: '141463', nome_parlamentar: 'ABELARDO CAMARINHA'},
+        {id: '74354', nome_parlamentar: 'ZENALDO COUTINHO'},
+        {id: '73933', nome_parlamentar: 'ZEQUINHA MARINHO'},
+        {id: '74145', nome_parlamentar: 'ZEZÉU RIBEIRO'},
+        {id: '160625', nome_parlamentar: 'ZOINHO'}
       ])
     end
   end

@@ -22,10 +22,6 @@ RSpec.configure do |config|
   end
 
   config.around do |example|
-    stub_request(:get, 'http://www2.camara.leg.br/deputados/pesquisa').
-      to_return(:status => 200, :body => File.read('spec/fixtures/pesquisa.html'), :headers => {:'Content-Type' => 'text/html'})
-
-
     ActiveRecord::Base.transaction do
       example.run
       raise ActiveRecord::Rollback
