@@ -7,8 +7,9 @@ StandaloneMigrations::Tasks.load_tasks
 namespace :data do
   desc "get deputados"
   task :deputados do
-
-    Dir[File.join("data/*.rb")].each {|f| require File.absolute_path(f) }
+    require './data/camara_parser'
+    require './data/pesquisa_deputados_parser'
+    require './data/deputados_xml_parser'
     require './lib/activerecord'
 
     Deputado.save_from_pesquisa_parser
