@@ -61,6 +61,7 @@ GEM
     net-http-persistent (2.8)
     nokogiri (1.5.5)
     ntlm-http (0.1.1)
+    pg (0.14.1)
     pry (0.9.10)
       coderay (~> 1.0.5)
       method_source (~> 0.8)
@@ -123,6 +124,7 @@ DEPENDENCIES
   autotest
   grape
   mechanize
+  pg
   pry
   rake
   rspec

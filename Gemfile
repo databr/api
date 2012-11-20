@@ -6,6 +6,10 @@ gem 'rake'
 gem 'standalone_migrations'
 gem 'grape'
 
+group :production do
+  gem 'pg'
+end
+
 group :development do
   gem 'sqlite3'
 end
