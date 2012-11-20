@@ -2,11 +2,12 @@ source 'http://rubygems.org'
 
 gem 'mechanize'
 gem 'activerecord'
-gem 'sqlite3'
 gem 'rake'
+gem 'standalone_migrations'
+gem 'grape'
 
 group :development do
-  gem 'standalone_migrations'
+  gem 'sqlite3'
 end
 
 group :test do
