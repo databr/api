@@ -1,7 +1,8 @@
 class PesquisaDeputadosParser < CamaraParser
   URLS = {
     complete_info: 'http://www.camara.gov.br/internet/Deputado/dep_Detalhe.asp',
-    bio:           'http://www2.camara.leg.br/deputados/pesquisa/layouts_deputados_biografia'
+    bio:           'http://www2.camara.leg.br/deputados/pesquisa/layouts_deputados_biografia',
+    video:         'http://www2.camara.leg.br/atividade-legislativa/webcamara/resultadoDep'
   }
 
   def initialize
@@ -21,6 +22,9 @@ class PesquisaDeputadosParser < CamaraParser
     url('bio', 'pk', deputado_id)
   end
 
+  def video_url(nome_parlamentar = nil)
+    url('video', 'dep', nome_parlamentar)
+  end
   private
 
   def search_deputados

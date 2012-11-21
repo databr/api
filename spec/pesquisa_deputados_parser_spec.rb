@@ -47,4 +47,15 @@ describe PesquisaDeputadosParser do
       expect(parser.bio_url(deputado_id)).to eq("http://www2.camara.leg.br/deputados/pesquisa/layouts_deputados_biografia?pk=#{deputado_id}")
     end
   end
+
+  describe 'video_url' do
+    it 'returns the video url' do
+      expect(parser.video_url).to eq('http://www2.camara.leg.br/atividade-legislativa/webcamara/resultadoDep')
+    end
+
+    it 'returns the video url of deputado' do
+      nome_parlamentar = 'TIRIRICA'
+      expect(parser.video_url(nome_parlamentar)).to eq("http://www2.camara.leg.br/atividade-legislativa/webcamara/resultadoDep?dep=#{nome_parlamentar}")
+    end
+  end
 end
