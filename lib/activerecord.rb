@@ -9,6 +9,7 @@ env = ENV['RACK_ENV'] ? ENV['RACK_ENV'] : 'development'
 database_config_file = File.read('config/database.yml')
 
 if env == 'production'
+  require 'erubis'
   e = Erubis::Eruby.new(database_config_file)
   database_config_file = e.result(binding())
 end
