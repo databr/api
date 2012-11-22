@@ -5,9 +5,6 @@ Bundler.require(:default, env)
 
 require 'active_record'
 
-require 'pry'
-binding.pry
-
 if ENV['USE_PARSER'] == 'true'
   require './data/camara_parser'
   Dir[File.join("data/*.rb")].each {|f| require File.absolute_path(f) }
