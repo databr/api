@@ -1,12 +1,10 @@
-require 'bundler'
-Bundler.require
+ENV['RACK_ENV'] = 'test'
+ENV['USE_PARSER'] = 'true'
 
-require 'pry'
-require 'shoulda-matchers'
+require './config/boot'
+
 require 'webmock/rspec'
 
-
-Dir[File.join("data/*.rb")].each {|f| require File.absolute_path(f) }
 Dir[File.join("spec/support/*.rb")].each {|f| require File.absolute_path(f) }
 
 

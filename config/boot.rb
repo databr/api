@@ -1,10 +1,20 @@
 require "rubygems"
-require "bundler/setup"
+env = ENV['RACK_ENV'] ? ENV['RACK_ENV'] : 'development'
+require 'bundler'
+Bundler.require(:default, env)
+
 require 'active_record'
+
+require 'pry'
+binding.pry
+
+if ENV['USE_PARSER'] == 'true'
+  require './data/camara_parser'
+  Dir[File.join("data/*.rb")].each {|f| require File.absolute_path(f) }
+end
 
 Dir[File.join("lib/models/*.rb")].each {|f| require File.absolute_path(f) }
 
-env = ENV['RACK_ENV'] ? ENV['RACK_ENV'] : 'development'
 
 database_config_file = File.read('config/database.yml')
 

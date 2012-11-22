@@ -1,4 +1,4 @@
-require './lib/activerecord'
+require './config/boot'
 
 module SocialCamara
   class API < Grape::API
