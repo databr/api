@@ -14,8 +14,8 @@ describe DeputadoXMLParser do
     end
 
     it 'returns deputados info' do
-      expect(parser.deputados.map{|d| d[:idecadastro] }).to eq(["74016", "74210", "74319", "74324", "74421"])
-      expect(parser.deputados.first.keys).to eq([:idecadastro, :idparlamentar, :nome, :nomeparlamentar, :sexo, :uf, :partido, :gabinete, :anexo, :fone, :email, :comissoes])
+      expect(parser.deputados.map{|d| d[:cadastro_id] }).to eq(["74016", "74210", "74319", "74324", "74421"])
+      expect(parser.deputados.first.keys).to eq([:cadastro_id, :parlamentar_id, :nome, :nome_parlamentar, :sexo, :uf, :partido, :gabinete, :anexo, :fone, :email, :comissoes])
     end
   end
 end

@@ -11,19 +11,20 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121116173211) do
+ActiveRecord::Schema.define(:version => 20121122040505) do
 
   create_table "deputados", :force => true do |t|
-    t.string  "name"
-    t.string  "cadastro_id"
+    t.string  "nome"
+    t.integer "cadastro_id",      :limit => 255
     t.string  "nome_parlamentar"
     t.string  "sexo"
     t.string  "uf"
     t.integer "partido_id"
-    t.string  "gabinete"
-    t.string  "anexo"
+    t.integer "gabinete",         :limit => 255
+    t.integer "anexo",            :limit => 255
     t.string  "fone"
     t.string  "email"
+    t.integer "parlamentar_id"
   end
 
 end
