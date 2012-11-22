@@ -13,5 +13,6 @@ namespace :data do
   desc "get deputados"
   task :deputados => :enviroment do
     Deputado.save_from_pesquisa_parser
+    Deputado.save_from_deputado_xml_parser
   end
 end
