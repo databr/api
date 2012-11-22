@@ -5,7 +5,7 @@ describe DeputadoXMLParser do
 
   before do
     stub_request(:get, 'http://www.camara.gov.br/SitCamaraWS/Deputados.asmx/ObterDeputados').
-      to_return(:status => 200, :body => File.read('spec/fixtures/deputados.xml'), :headers => {:'Content-Type' => 'text/html'})
+      to_return(:status => 200, :body => File.read('spec/fixtures/deputados.xml'))
   end
 
   describe '#deputados' do
