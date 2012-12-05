@@ -12,6 +12,7 @@ end
 
 group :development do
   gem 'sqlite3'
+  gem 'shotgun'
 end
 
 group :test do
