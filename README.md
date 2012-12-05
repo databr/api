@@ -4,3 +4,15 @@
 
 E se os Deputados tivesse uma rede social? E se nessa rede social eles fizessem post sobre os videos, os audios, os votos, etc dele? Se podessemos ver as relações de um deputados com os outros?
 
+## API Project
+
+Esse projeto consiste em um API com os dados da câmara, bem como os bot para buscar os dados
+
+### Instalação
+..
+
+### rake data:deputados
+…
+
+### Contribua
+...
