@@ -5,6 +5,7 @@ gem 'activerecord'
 gem 'rake'
 gem 'standalone_migrations'
 gem 'grape'
+gem 'rack-cors', :require => 'rack/cors'
 
 group :production do
   gem 'pg'
