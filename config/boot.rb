@@ -8,6 +8,7 @@ require 'active_record'
 if ENV['USE_PARSER'] == 'true'
   require './data/camara_parser'
   Dir[File.join("data/*.rb")].each {|f| require File.absolute_path(f) }
+  Dir[File.join("lib/services/*.rb")].each {|f| require File.absolute_path(f) }
 end
 
 Dir[File.join("lib/models/*.rb")].each {|f| require File.absolute_path(f) }
