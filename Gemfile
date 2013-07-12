@@ -14,6 +14,8 @@ end
 group :development, :test do
   gem 'sqlite3'
   gem 'shotgun'
+  gem 'autotest'
+  gem 'ZenTest', '4.9.2'
 end
 
 group :test do
