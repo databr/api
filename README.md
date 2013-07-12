@@ -18,4 +18,9 @@ $ bundle exec rspec spec
 …
 
 ### Contribua
-...
+
+1. Fork o projeto
+2. Crie um feature-branch ($ git checkout -b myfeaturebranch master)
+3. Trabalhe com commits pequenos e objetivos
+4. Atualiza esse branch no github ($ git push origin myfeaturebranch)
+5. Mande um pull-request
