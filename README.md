@@ -9,7 +9,10 @@ E se os Deputados tivesse uma rede social? E se nessa rede social eles fizessem 
 Esse projeto consiste em um API com os dados da câmara, bem como os bot para buscar os dados
 
 ### Instalação
-..
+
+$ bundle install
+$ rake db:create db:migrate db:test:prepare
+$ bundle exec rspec spec
 
 ### rake data:deputados
 …
