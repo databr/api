@@ -1,4 +1,4 @@
-class DeputadoXMLParser  < CamaraParser
+class DeputadoXMLParser < CamaraParser
   def initialize
     @url = "http://www.camara.gov.br/SitCamaraWS/Deputados.asmx/ObterDeputados"
     super
