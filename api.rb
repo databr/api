@@ -13,6 +13,11 @@ module SocialCamara
       get ":id" do
         Deputado.find(params[:id])
       end
+
+      get ":id/feed" do
+        deputado = Deputado.find(params[:id])
+        deputado.cotas
+      end
     end
   end
 end
