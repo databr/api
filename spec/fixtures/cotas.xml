@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<orgao nome="C�mara dos Deputados">
+  <DESPESAS>
+    <DESPESA>
+      <txNomeParlamentar>LUIS CARLOS HEINZE</txNomeParlamentar>
+      <nuCarteiraParlamentar>500</nuCarteiraParlamentar>
+      <nuLegislatura>2011</nuLegislatura>
+      <sgUF>RS</sgUF>
+      <sgPartido>PP</sgPartido>
+      <codLegislatura>54</codLegislatura>
+      <numSubCota>12</numSubCota>
+      <txtDescricao>ASSINATURA DE PUBLICA��ES</txtDescricao>
+      <txtBeneficiario>CAPAX DEI EDITORA</txtBeneficiario>
+      <txtCNPJCPF>02778649000163</txtCNPJCPF>
+      <txtNumero>00000158</txtNumero>
+      <indTipoDocumento>0</indTipoDocumento>
+      <datEmissao>2013-05-09T00:00:00</datEmissao>
+      <vlrDocumento>3500.00</vlrDocumento>
+      <vlrGlosa>0.00</vlrGlosa>
+      <vlrLiquido>3500.00</vlrLiquido>
+      <numMes>5</numMes>
+      <numAno>2013</numAno>
+      <numParcela>0</numParcela>
+      <numLote>1031032</numLote>
+      <numRessarcimento>4290</numRessarcimento>
+    </DESPESA>
+    <DESPESA>
+      <txNomeParlamentar>PAULO CESAR QUARTIERO</txNomeParlamentar>
+      <nuCarteiraParlamentar>6</nuCarteiraParlamentar>
+      <nuLegislatura>2011</nuLegislatura>
+      <sgUF>RR</sgUF>
+      <sgPartido>DEM</sgPartido>
+      <codLegislatura>54</codLegislatura>
+      <numSubCota>12</numSubCota>
+      <txtDescricao>ASSINATURA DE PUBLICA��ES</txtDescricao>
+      <txtBeneficiario>CAPAX DEI EDITORA</txtBeneficiario>
+      <txtCNPJCPF>02778649000163</txtCNPJCPF>
+      <txtNumero>00000147</txtNumero>
+      <indTipoDocumento>0</indTipoDocumento>
+      <datEmissao>2013-03-01T00:00:00</datEmissao>
+      <vlrDocumento>1000.00</vlrDocumento>
+      <vlrGlosa>0.00</vlrGlosa>
+      <vlrLiquido>1000.00</vlrLiquido>
+      <numMes>3</numMes>
+      <numAno>2013</numAno>
+      <numParcela>0</numParcela>
+      <numLote>1010676</numLote>
+      <numRessarcimento>4240</numRessarcimento>
+    </DESPESA>
+    <DESPESA>
+      <txNomeParlamentar>SARNEY FILHO</txNomeParlamentar>
+      <nuCarteiraParlamentar>85</nuCarteiraParlamentar>
+      <nuLegislatura>2011</nuLegislatura>
+      <sgUF>MA</sgUF>
+      <sgPartido>PV</sgPartido>
+      <codLegislatura>54</codLegislatura>
+      <numSubCota>12</numSubCota>
+      <txtDescricao>ASSINATURA DE PUBLICA��ES</txtDescricao>
+      <txtBeneficiario>INFOGLOBO COMUNICA��O E PARTICIPA��ES S.A.</txtBeneficiario>
+      <txtCNPJCPF>60452752000115</txtCNPJCPF>
+      <txtNumero>1700663</txtNumero>
+      <indTipoDocumento>0</indTipoDocumento>
+      <datEmissao>2013-04-02T00:00:00</datEmissao>
+      <vlrDocumento>923.90</vlrDocumento>
+      <vlrGlosa>0.00</vlrGlosa>
+      <vlrLiquido>923.90</vlrLiquido>
+      <numMes>3</numMes>
+      <numAno>2013</numAno>
+      <numParcela>0</numParcela>
+      <numLote>1019390</numLote>
+      <numRessarcimento>4248</numRessarcimento>
+    </DESPESA>
+    <DESPESA>
+      <txNomeParlamentar>MILTON MONTI</txNomeParlamentar>
+      <nuCarteiraParlamentar>374</nuCarteiraParlamentar>
+      <nuLegislatura>2011</nuLegislatura>
+      <sgUF>SP</sgUF>
+      <sgPartido>PR</sgPartido>
+      <codLegislatura>54</codLegislatura>
+      <numSubCota>12</numSubCota>
+      <txtDescricao>ASSINATURA DE PUBLICA��ES</txtDescricao>
+      <txtBeneficiario>INFOGLOBO COMUNICA��O E PARTICIPA��ES S.A.</txtBeneficiario>
+      <txtCNPJCPF>60452752000115</txtCNPJCPF>
+      <txtNumero>1877315</txtNumero>
+      <indTipoDocumento>0</indTipoDocumento>
+      <datEmissao>2013-04-26T00:00:00</datEmissao>
+      <vlrDocumento>858.90</vlrDocumento>
+      <vlrGlosa>0.00</vlrGlosa>
+      <vlrLiquido>858.90</vlrLiquido>
+      <numMes>4</numMes>
+      <numAno>2013</numAno>
+      <numParcela>0</numParcela>
+      <numLote>1029192</numLote>
+      <numRessarcimento>4306</numRessarcimento>
+    </DESPESA>
+  </DESPESAS>
+</orgao>
