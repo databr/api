@@ -23,7 +23,7 @@ class DeputadoXMLParser < CamaraParser
 
       deputado = {}
       deputadoxml.children.each do |c|
-        deputado[map_attributes[c.name]] = c.text
+        deputado[map_attributes[c.name]] = c.text unless map_attributes[c.name].nil?
       end
       deputado
     end
