@@ -3,8 +3,12 @@ class CotaCrawlerService
     file = 'db/data/cota_2013.xml'
     parser = CotaXMLParser.new(file)
     parser.cotas.each do |cota|
-      deputado = Deputado.find_or_create_by_nome_parlamentar(cota.delete(:nome_parlamentar))
-      deputado.save!
+      deputado = Deputado.where(nome_parlamentar: cota[:nome_parlamentar]).first
+      if deputado.nil?
+        File.open('deputado_not_found', 'a') {|f| f.puts(cota) }
+        next
+      end
+      cota.delete(:nome_parlamentar)
       deputado.cotas.create! cota
     end
   end
