@@ -14,11 +14,12 @@
 ActiveRecord::Schema.define(:version => 20130713141000) do
 
   create_table "cotas", :force => true do |t|
-    t.string  "deputado_id"
+    t.integer "deputado_id"
     t.string  "carteira_parlamentar"
     t.string  "legislatura"
     t.string  "uf"
     t.string  "partido"
+    t.integer "partido_id"
     t.string  "codigo_legislatura"
     t.string  "sub_cota"
     t.string  "descricao"
@@ -38,17 +39,17 @@ ActiveRecord::Schema.define(:version => 20130713141000) do
   end
 
   create_table "deputados", :force => true do |t|
+    t.integer "partido_id"
+    t.integer "cadastro_id"
+    t.integer "parlamentar_id"
     t.string  "nome"
-    t.integer "cadastro_id",      :limit => 255
     t.string  "nome_parlamentar"
     t.string  "sexo"
     t.string  "uf"
-    t.integer "partido_id"
-    t.integer "gabinete",         :limit => 255
-    t.integer "anexo",            :limit => 255
+    t.integer "gabinete"
+    t.integer "anexo"
     t.string  "fone"
     t.string  "email"
-    t.integer "parlamentar_id"
   end
 
 end
