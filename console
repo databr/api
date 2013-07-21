@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+ENV['USE_PARSER'] = 'true'
+require './config/boot'
+
+Pry.start
