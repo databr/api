@@ -10,12 +10,12 @@ module SocialCamara
         Deputado.all
       end
 
-      get ":id" do
-        Deputado.find(params[:id])
+      get ":uri" do
+        Deputado.find_by_uri(params[:uri])
       end
 
-      get ":id/feed" do
-        deputado = Deputado.find(params[:id])
+      get ":uri/feed" do
+        deputado = Deputado.find_by_uri(params[:uri])
         deputado.cotas
       end
     end
