@@ -18,12 +18,12 @@ group :development, :test do
   gem 'shotgun'
   gem 'autotest'
   gem 'ZenTest', '4.9.2'
+  gem 'pry'
 end
 
 group :test do
   gem 'shoulda-matchers'
   gem 'rspec'
   gem 'autotest'
-  gem 'pry'
   gem 'webmock'
 end
