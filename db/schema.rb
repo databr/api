@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130721023700) do
+ActiveRecord::Schema.define(:version => 20130721033800) do
 
   create_table "cotas", :force => true do |t|
     t.integer "deputado_id"
@@ -51,6 +51,7 @@ ActiveRecord::Schema.define(:version => 20130721023700) do
     t.string  "fone"
     t.string  "email"
     t.string  "uri"
+    t.string  "image_url"
   end
 
 end
