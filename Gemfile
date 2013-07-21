@@ -7,6 +7,7 @@ gem 'standalone_migrations'
 gem 'grape'
 gem 'rack-cors', :require => 'rack/cors'
 gem 'rubyzip'
+gem 'thin'
 
 group :production do
   gem 'pg'
