@@ -19,6 +19,7 @@ namespace :data do
   task :deputados => :enviroment do
     DeputadoCrawlerService.save_from_pesquisa_parser
     DeputadoCrawlerService.save_from_deputado_xml_parser
+    DeputadoImageService.save_images_from_deputies_json_parser
   end
 
   desc "run all data tasks"
