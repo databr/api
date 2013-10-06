@@ -23,5 +23,5 @@ namespace :data do
   end
 
   desc "run all data tasks"
-  task :all => [:deputados, :cotas]
+  task :all => ['db:create', 'db:migrate', :deputados, :cotas]
 end
