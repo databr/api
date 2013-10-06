@@ -27,7 +27,7 @@ class CotaCrawlerService
 
     system "rm #{dest}"
     Zip::ZipFile.open(file) do |zipfile|
-      zipfile.extract(entry, dest)
+      zipfile.extract('AnoAtual.xml', dest)
     end
 
     yield(dest)
