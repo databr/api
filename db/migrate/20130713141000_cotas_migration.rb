@@ -15,7 +15,7 @@ class CotasMigration < ActiveRecord::Migration
       t.string :cnpjcpf
       t.string :numero
       t.string :tipo_documento
-      t.string :data_emissao
+      t.datetime :data_emissao
       t.decimal :valor_documento, :precision => 10, :scale => 2
       t.decimal :valor_glossa, :precision => 10, :scale => 2
       t.decimal :valor_liquido, :precision => 10, :scale => 2

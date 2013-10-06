@@ -8,6 +8,7 @@ class CotaCrawlerService
         deputado = Deputado.where(nome_parlamentar: cota[:nome_parlamentar]).first
         print "Creating cota..."
         cota.delete(:nome_parlamentar)
+         cota[:data_emissao] = cota[:data_emissao].nil? ? Time.new(cota[:ano], cota[:mes]) : Time.iso8601(cota[:data_emissao])
         if deputado.nil?
           Cota.create! cota
         else
