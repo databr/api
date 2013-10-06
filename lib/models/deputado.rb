@@ -1,5 +1,6 @@
 class Deputado < ActiveRecord::Base
-  validates_presence_of :nome_parlamentar, :cadastro_id
+  validates :nome_parlamentar, presence: true
+  validates :cadastro_id, uniqueness: true, presence: true
 
   has_many :cotas
 
