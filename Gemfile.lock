@@ -1,7 +1,6 @@
 GEM
   remote: http://rubygems.org/
   specs:
-    ZenTest (4.9.2)
     actionpack (3.2.8)
       activemodel (= 3.2.8)
       activesupport (= 3.2.8)
@@ -25,8 +24,6 @@ GEM
       multi_json (~> 1.0)
     addressable (2.3.2)
     arel (3.0.2)
-    autotest (4.4.6)
-      ZenTest (>= 4.4.1)
     builder (3.0.3)
     coderay (1.0.8)
     crack (0.3.1)
@@ -131,9 +128,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  ZenTest (= 4.9.2)
   activerecord
-  autotest
   grape
   mechanize
   pg
