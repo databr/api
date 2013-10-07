@@ -54,4 +54,18 @@ ActiveRecord::Schema.define(:version => 20130721033800) do
     t.string  "image_url"
   end
 
+  create_table "events", :force => true do |t|
+    t.integer  "session_id"
+    t.datetime "starts_at"
+    t.string   "local"
+    t.text     "title"
+    t.text     "description"
+  end
+
+  create_table "videos", :force => true do |t|
+    t.integer "event_id"
+    t.integer "deputado_id"
+    t.string  "video_url"
+  end
+
 end

@@ -1,7 +1,7 @@
 class CotasMigration < ActiveRecord::Migration
   def change
     create_table :cotas do |t|
-      t.string :id
+      t.string :id # TODO: check it
       t.integer :deputado_id
       t.string :carteira_parlamentar
       t.string :legislatura
