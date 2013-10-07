@@ -9,6 +9,7 @@ gem 'rack-cors', :require => 'rack/cors'
 gem 'rubyzip'
 gem 'thin'
 gem 'pg'
+gem 'harvestman'
 
 group :development, :test do
   gem 'shotgun'

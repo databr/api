@@ -39,6 +39,8 @@ GEM
       multi_xml
       rack
       rack-mount
+    harvestman (0.1.1)
+      nokogiri (~> 1.5.6)
     hashie (1.2.0)
     hike (1.2.1)
     i18n (0.6.1)
@@ -58,7 +60,7 @@ GEM
     multi_xml (0.5.1)
     net-http-digest_auth (1.2.1)
     net-http-persistent (2.8)
-    nokogiri (1.5.5)
+    nokogiri (1.5.10)
     ntlm-http (0.1.1)
     pg (0.14.1)
     pry (0.9.10)
@@ -130,6 +132,7 @@ PLATFORMS
 DEPENDENCIES
   activerecord
   grape
+  harvestman
   mechanize
   pg
   pry
