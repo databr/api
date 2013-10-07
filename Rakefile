@@ -22,6 +22,11 @@ namespace :data do
     DeputadoImageService.save_images_from_deputies_json_parser
   end
 
+  desc "get video data"
+  task :video => :enviroment do
+    DeputadoVideoService.save_video_from_deputados_parser
+  end
+
   desc "run all data tasks"
-  task :all => ['db:create', 'db:migrate', :deputados, :cotas]
+  task :all => ['db:create', 'db:migrate', :deputados, :cotas, :video]
 end
