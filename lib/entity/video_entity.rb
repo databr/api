@@ -1,3 +1,5 @@
+require 'digest/md5'
+
 class VideoEntity < BaseEntity
   protected
     def type
@@ -7,10 +9,13 @@ class VideoEntity < BaseEntity
     def attributes_for(model)
       deputado = model.deputado
       attributes = {}
+      attributes[:id] = "video:#{model.id}"
       attributes[:type] = type
       attributes[:published_at] = model.event.starts_at
       attributes[:verb] = "Postei"
-      attributes[:object] = model.video_url
+      attributes[:object] = "http://localhost:4003/video/#{Digest::MD5.hexdigest(model.video_url.gsub("&d=1", ""))}.mp4"
+      attributes[:video_url] = "http://localhost:4003/video/#{Digest::MD5.hexdigest(model.video_url.gsub("&d=1", ""))}.mp4"
+      attributes[:video_url_raw] = model.video_url
       attributes[:subject] = {name: deputado.nome_parlamentar, image: deputado.image_url, url: "/#{deputado.uri}"}
       attributes[:location] = {title: model.event.local, url: "#"}
       attributes[:in] = {name: model.event.title, url: "#"}

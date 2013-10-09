@@ -7,6 +7,7 @@ class CotaEntity < BaseEntity
     def attributes_for(model)
       deputado = model.deputado
       attributes = {}
+      attributes[:id] = "cota:#{model.id}"
       attributes[:type] = type
       attributes[:published_at] = model.data_emissao
       attributes[:verb] = "Gastei"
