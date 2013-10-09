@@ -22,7 +22,9 @@ module SocialCamara
 
       get ":uri/feed" do
         deputado = Deputado.find_by_uri(params[:uri])
-        CotaEntity.new(deputado.cotas).results
+        cotas = CotaEntity.new(deputado.cotas.limit(30)).results
+        videos = VideoEntity.new(deputado.videos.limit(30)).results
+        Aggregator.build([cotas, videos])
       end
     end
   end
