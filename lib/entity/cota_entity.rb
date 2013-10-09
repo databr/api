@@ -1,33 +1,32 @@
-class CotaEntity
-  def initialize(cotas)
-    @cotas = cotas
-  end
-
-  def results
-    by_year = @cotas.group_by{|c| c.data_emissao.beginning_of_year }
-    @results = []
-    by_year.keys.sort.reverse.each do |_key|
-      data = {year: _key.year}
-      year_cotas = by_year[_key]
-      year_total = get_total(year_cotas)
-      data[:total] = year_total
-      data[:month] = []
-      by_month = year_cotas.group_by{|c| c.data_emissao.beginning_of_month }
-      by_month.keys.sort.reverse.each do |_month_key|
-        data_month = {month: _month_key.month}
-        month_cotas = by_month[_month_key]
-        month_total = get_total(month_cotas)
-        data_month[:total] = month_total
-        data_month[:data] = month_cotas.map(&:attributes)
-        data[:month] << data_month
-      end
-      @results << data
+class CotaEntity < BaseEntity
+  protected
+    def type
+      @type ||= :money
     end
-    @results
-  end
 
-  private
+    def attributes_for(model)
+      deputado = model.deputado
+      attributes = {}
+      attributes[:type] = type
+      attributes[:published_at] = model.data_emissao
+      attributes[:verb] = "Gastei"
+      attributes[:object] = model.descricao
+      attributes[:subject] = {name: deputado.nome_parlamentar, image: deputado.image_url}
+      attributes[:location] = {title: model.beneficiario, url: "#"}
+      attributes[:value] = model.valor_documento.to_f
+      attributes
+    end
+
     def get_total(cotas)
       cotas.map(&:valor_liquido).reduce(&:+)
+    end
+
+    def group_by(type, data)
+      case type
+      when :month
+        data.group_by{|c| c.data_emissao.beginning_of_month }
+      when :year
+        data.group_by{|c| c.data_emissao.beginning_of_year }
+      end
     end
 end
