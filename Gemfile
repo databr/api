@@ -10,6 +10,7 @@ gem 'rubyzip'
 gem 'thin'
 gem 'pg'
 gem 'harvestman'
+gem 'amatch'
 
 group :development, :test do
   gem 'shotgun'
