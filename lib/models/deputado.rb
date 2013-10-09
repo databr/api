@@ -3,6 +3,7 @@ class Deputado < ActiveRecord::Base
   validates :cadastro_id, uniqueness: true, presence: true
 
   has_many :cotas
+  has_many :videos
 
   before_save :set_uri
 
