@@ -18,13 +18,19 @@ class DeputadosVideoParser < PesquisaDeputadosParser
         local = css('.descricao .local')
         description = css('.descricao').strip.gsub(local, '')
 
-        video_path = @document.css(".midia a").attribute('href').value
+        begin
+          video_path = @document.css(".midia a").attribute('href').value
+        rescue
+          next
+        end
         video_page_url = "#{DeputadosVideoParser::URLS[:video_page]}/#{URI.escape(video_path)}"
 
         _video_page_url = URI.parse(video_page_url)
-        query =Hash[_video_page_url.query.split("&").map{|x| x.split("=") }]
+        query = Hash[_video_page_url.query.split("&").map{|x| x.split("=") }]
 
-        event = Event.first_or_create session_id: query['codSessao'], starts_at: datetime, title: title, local: local, description: description
+        unless event = Event.where(session_id: query['codSessao']).first
+          event = Event.create session_id: query['codSessao'], starts_at: datetime, title: title, local: local, description: description
+        end
         puts "Event: #{title} at #{local} #{datetime}"
 
         nome_parlamentar = URI.unescape query['dep']
