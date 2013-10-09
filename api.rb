@@ -3,6 +3,12 @@ require './config/boot'
 module SocialCamara
   class API < Grape::API
     format :json
+    logger LOGGER
+    helpers do
+      def logger
+        LOGGER
+      end
+    end
 
     resource :deputados do
       desc "Returns all deputados"

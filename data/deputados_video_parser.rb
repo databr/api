@@ -8,8 +8,6 @@ class DeputadosVideoParser < PesquisaDeputadosParser
 
   def videos
     Harvestman.crawl "#{URLS[:video]}?dep=*", deputados.map{|d| URI.escape(d[:nome_parlamentar]) }, :plain do
-      require 'pry'
-      binding.pry
       css('#content .listaTransmissoes li') do
         date_raw, hour_raw = css('.timestamp').strip.split(' - ')
         date = date_raw.split("/")
