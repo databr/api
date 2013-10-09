@@ -90,6 +90,7 @@ end
 Dir[File.join("lib/models/*.rb")].each {|f| require File.absolute_path(f) }
 Dir[File.join("lib/entity/*.rb")].each {|f| require File.absolute_path(f) }
 
+require 'aggregator'
 
 database_config_file = File.read('config/database.yml')
 
