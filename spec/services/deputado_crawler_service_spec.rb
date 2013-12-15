@@ -9,7 +9,6 @@ describe DeputadoCrawlerService do
       to_return(:status => 200, :body => File.read('spec/fixtures/deputados.xml'))
   end
 
-
   describe '.save_from_pesquisa_parser' do
     it 'saves from pesquisa parser' do
       DeputadoCrawlerService.save_from_pesquisa_parser
