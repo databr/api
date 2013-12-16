@@ -1,3 +1,5 @@
+# encoding: UTF-8
+#
 class DeputadoCrawlerService
   def self.save_from_pesquisa_parser
     parser = PesquisaDeputadosParser.new

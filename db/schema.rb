@@ -11,7 +11,16 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131008171203) do
+ActiveRecord::Schema.define(:version => 20131215173444) do
+
+  create_table "abouts", :force => true do |t|
+    t.integer "cadastro_id"
+    t.string  "title"
+    t.text    "body"
+    t.string  "section_key"
+  end
+
+  add_index "abouts", ["cadastro_id"], :name => "index_abouts_on_cadastro_id"
 
   create_table "cotas", :force => true do |t|
     t.integer  "deputado_id"
@@ -54,6 +63,8 @@ ActiveRecord::Schema.define(:version => 20131008171203) do
     t.string  "image_url"
     t.string  "other_name"
   end
+
+  add_index "deputados", ["uri"], :name => "index_deputados_on_uri"
 
   create_table "events", :force => true do |t|
     t.integer  "session_id"
