@@ -17,4 +17,15 @@ class DeputadoCrawlerService
       deputado.update_attributes deputado_result
     end
   end
+
+  def self.save_from_deputado_about_parser
+    parser = PesquisaDeputadosParser.new
+    parser.deputados.each do |deputado|
+      DeputadoAboutParser.new(deputado[:id]).sections.each do |section|
+        title = section.title #.force_encoding('iso8859-1').encode('utf-8')
+        body = section.text   #.force_encoding('iso8859-1').encode('utf-8')
+        About.create!(cadastro_id: deputado[:id], title: title, body: body, section_key: Digest::MD5.hexdigest(title)) unless section.text.strip.empty?
+      end
+    end
+  end
 end

@@ -46,14 +46,14 @@ describe PesquisaDeputadosParser do
     end
   end
 
-  describe 'video_url' do
-    it 'returns the video url' do
-      expect(subject.video_url).to eq('http://www2.camara.leg.br/atividade-legislativa/webcamara/resultadoDep')
-    end
+  # describe 'video_url' do
+  #   it 'returns the video url' do
+  #     expect(subject.video_url).to eq('http://www2.camara.leg.br/atividade-legislativa/webcamara/resultadoDep')
+  #   end
 
-    it 'returns the video url of deputado' do
-      nome_parlamentar = 'TIRIRICA'
-      expect(subject.video_url(nome_parlamentar)).to eq("http://www2.camara.leg.br/atividade-legislativa/webcamara/resultadoDep?dep=#{nome_parlamentar}")
-    end
-  end
+  #   it 'returns the video url of deputado' do
+  #     nome_parlamentar = 'TIRIRICA'
+  #     expect(subject.video_url(nome_parlamentar)).to eq("http://www2.camara.leg.br/atividade-legislativa/webcamara/resultadoDep?dep=#{nome_parlamentar}")
+  #   end
+  # end
 end

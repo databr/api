@@ -2,6 +2,7 @@ development:
   adapter: postgresql
   database: socialcamara
   host: localhost
+  encoding: unicode
 
 test:
   adapter: sqlite3

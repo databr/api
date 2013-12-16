@@ -101,6 +101,7 @@ if env == 'production'
 end
 
 database_config = YAML.load(database_config_file)[env]
+ActiveRecord::Base.include_root_in_json = false
 ActiveRecord::Base.logger = LOGGER
 ActiveRecord::Base.establish_connection(database_config)
 
