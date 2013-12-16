@@ -20,11 +20,16 @@ module SocialCamara
         Deputado.find_by_uri(params[:uri])
       end
 
-      get ":uri/feed" do
+      get ":uri/about" do
         deputado = Deputado.find_by_uri(params[:uri])
-        cotas = CotaEntity.new(deputado.cotas.limit(30)).results
-        videos = VideoEntity.new(deputado.videos.limit(30)).results
-        Aggregator.build([cotas, videos])
+        About.where(cadastro_id: deputado.cadastro_id)
+      end
+
+      get ":uri/feed" do
+        # deputado = Deputado.find_by_uri(params[:uri])
+        # cotas = CotaEntity.new(deputado.cotas.limit(30)).results
+        # videos = VideoEntity.new(deputado.videos.limit(30)).results
+        Aggregator.build([[], []])
       end
     end
   end
