@@ -1,8 +1,16 @@
 require "rubygems"
 require "bundler"
 Bundler.require
+require 'rspec/core/rake_task'
 
 StandaloneMigrations::Tasks.load_tasks
+
+begin
+  RSpec::Core::RakeTask.new(:spec)
+  task :default  => :spec
+rescue
+end
+
 
 namespace :data do
   task :enviroment do
