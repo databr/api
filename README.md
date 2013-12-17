@@ -28,6 +28,14 @@ Server
   $ rake db:create db:migrate db:test:prepare
   $ bundle exec rspec spec
 ```
+### Rodando o servidor
+
+```
+  $ cd socialcamara-api
+  $ bundle exec rackup -p 5001 # 5001 é a porta do servidor, uma escolha pessoal, mas é importante ter em mente que vai usar isso quando for subir o frontend
+```
+
+Acesse [http://127.0.0.1:5001/deputados](http://127.0.0.1:5001/deputados)
 
 ### Bots
 
