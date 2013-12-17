@@ -3,8 +3,9 @@
 
 ## API
 
-Esse repositório consiste na API do projeto,([caso esteja interessado no frontend](https://github.com/dukex/socialcamara-site)), é responsabilidade dessa API prover todos os dados que o frontend precisa, isso inclui códigos do bot que busca os dados e o servidor para responder as chamadas do frontend
+Esse repositório consiste na API do projeto,([caso esteja interessado no frontend](https://github.com/dukex/socialcamara-site)), é responsabilidade dessa API prover todos os dados que o frontend precisa, isso inclui códigos do bot que busca os dados e o servidor para responder as chamadas do frontend.
 
+Esse projeto é feito em ruby versão 2.0.0
 
 Bot
 
