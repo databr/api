@@ -4,7 +4,7 @@ class DeputadoCrawlerService
   def self.save_from_pesquisa_parser
     parser = PesquisaDeputadosParser.new
     parser.deputados.each do |deputado|
-      Deputado.first_or_create! nome_parlamentar: deputado[:nome_parlamentar], cadastro_id: deputado[:id]
+      Deputado.where(nome_parlamentar: deputado[:nome_parlamentar], cadastro_id: deputado[:id]).create!
     end
   end
 
