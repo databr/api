@@ -13,7 +13,7 @@ module SocialCamara
     resource :deputados do
       desc "Returns all deputados"
       get do
-        if deputados = REDIS.hgetall('dep')
+        if ENV['USE_CACHE'] == 'true' && deputados = REDIS.hgetall('dep')
           deputados.map{|i, d| Oj.load(d) }
         else
           Deputado.all.map{ |deputado|
