@@ -13,7 +13,14 @@ module SocialCamara
     resource :deputados do
       desc "Returns all deputados"
       get do
-        Deputado.all
+        if deputados = REDIS.hgetall('dep')
+          deputados.map{|i, d| Oj.load(d) }
+        else
+          Deputado.all.map{ |deputado|
+             REDIS.hset('dep', deputado.id, Oj.dump(deputado.attributes) )
+             deputado
+          }
+        end
       end
 
       get ":uri" do
