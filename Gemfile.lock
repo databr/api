@@ -30,6 +30,7 @@ GEM
     coderay (1.0.8)
     crack (0.3.1)
     daemons (1.1.9)
+    dalli (2.6.4)
     diff-lcs (1.1.3)
     domain_name (0.5.4)
       unf (~> 0.0.3)
@@ -56,6 +57,7 @@ GEM
       nokogiri (~> 1.4)
       ntlm-http (~> 0.1, >= 0.1.1)
       webrobots (~> 0.0, >= 0.0.9)
+    memcachier (0.0.2)
     method_source (0.8.1)
     mime-types (1.19)
     multi_json (1.3.6)
@@ -64,6 +66,7 @@ GEM
     net-http-persistent (2.8)
     nokogiri (1.5.10)
     ntlm-http (0.1.1)
+    oj (2.5.1)
     pg (0.14.1)
     pry (0.9.10)
       coderay (~> 1.0.5)
@@ -90,6 +93,7 @@ GEM
     rake (10.0.1)
     rdoc (3.12)
       json (~> 1.4)
+    redis (3.0.6)
     rspec (2.12.0)
       rspec-core (~> 2.12.0)
       rspec-expectations (~> 2.12.0)
@@ -135,13 +139,17 @@ PLATFORMS
 DEPENDENCIES
   activerecord
   amatch
+  dalli
   grape
   harvestman
   mechanize
+  memcachier
+  oj
   pg
   pry
   rack-cors
   rake
+  redis
   rspec
   rubyzip
   shotgun

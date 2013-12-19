@@ -11,6 +11,10 @@ gem 'thin'
 gem 'pg'
 gem 'harvestman'
 gem 'amatch'
+gem 'memcachier'
+gem 'dalli'
+gem 'redis'
+gem 'oj'
 
 group :development, :test do
   gem 'shotgun'

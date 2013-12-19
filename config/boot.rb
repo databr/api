@@ -4,7 +4,6 @@ require 'bundler'
 Bundler.require(:default, env)
 
 require 'active_record'
-
 require 'logger'
 
 class ApiLogger
@@ -106,3 +105,12 @@ ActiveRecord::Base.include_root_in_json = false
 ActiveRecord::Base.logger = LOGGER
 ActiveRecord::Base.establish_connection(database_config)
 
+#CACHE = Dalli::Client.new(ENV["MEMCACHIER_SERVERS"].split(","),
+#                    {:username => ENV["MEMCACHIER_USERNAME"],
+#                     :password => ENV["MEMCACHIER_PASSWORD"],
+#                     :failover => true,
+#                     :socket_timeout => 1.5,
+#                     :socket_failure_delay => 0.2
+#                    })
+uri = URI.parse(ENV["REDISTOGO_URL"])
+REDIS = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
