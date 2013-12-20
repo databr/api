@@ -19,20 +19,29 @@ Server
 * [/lib/models/](https://github.com/dukex/socialcamara-api/tree/master/lib/models) Os modelos, usando [activerecord](http://api.rubyonrails.org/classes/ActiveRecord/Base.html)
 
 
+### Pré-Instalação
+
+
+* Postgresql [[download](http://www.postgresql.org/download/)] Não tem nada de mais, tem como utilizar mysql ou até mesmo sqlite, em produção é Postgresql, para test é sqlite por exemplo
+* Redis [[download](http://redis.io/download)]
+  
+  
 ### Instalação
 
 ```
-  $ git clone https://github.com/dukex/socialcamara-api
-  $ cd socialcamara-api
-  $ bundle install
-  $ rake db:create db:migrate db:test:prepare
-  $ bundle exec rspec spec
+$ git clone https://github.com/dukex/socialcamara-api
+$ cd socialcamara-api
+$ bundle install
+$ cp config/database.yml{.example,}
+$ rake db:create db:migrate db:test:prepare
+$ bundle exec rspec spec
 ```
+
 ### Rodando o servidor
 
 ```
-  $ cd socialcamara-api
-  $ bundle exec rackup -p 5001 # 5001 é a porta do servidor, uma escolha pessoal, mas é importante ter em mente que vai usar isso quando for subir o frontend
+$ cd socialcamara-api
+$ bundle exec rackup -p 5001 # 5001 é a porta do servidor, uma escolha pessoal, mas é importante ter em mente que vai usar isso quando for subir o frontend
 ```
 
 Acesse [http://127.0.0.1:5001/deputados](http://127.0.0.1:5001/deputados)
@@ -42,7 +51,7 @@ Acesse [http://127.0.0.1:5001/deputados](http://127.0.0.1:5001/deputados)
 Para rodar os bots é bem simples, rode:
 
 ```
-  rake data:all
+rake data:all
 ```
 
 Para mais informações veja o arquivo [Rakefile](https://github.com/dukex/socialcamara-api/blob/master/Rakefile#L7-L33)
