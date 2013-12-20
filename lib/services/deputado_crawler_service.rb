@@ -23,9 +23,15 @@ class DeputadoCrawlerService
     parser = PesquisaDeputadosParser.new
     parser.deputados.each do |deputado|
       DeputadoAboutParser.new(deputado[:id]).sections.each do |section|
+        next if section.text.strip.empty?
         title = section.title #.force_encoding('iso8859-1').encode('utf-8')
         body = section.text   #.force_encoding('iso8859-1').encode('utf-8')
-        About.create!(cadastro_id: deputado[:id], title: title, body: body, section_key: Digest::MD5.hexdigest(title)) unless section.text.strip.empty?
+        section_key = Digest::MD5.hexdigest(title)
+        if about = About.where(cadastro_id: deputado[:id], section_key: section_key).first
+          about.update_attributes body: body
+        else
+          About.create!(cadastro_id: deputado[:id], title: title, body: body, section_key: section_key, token: Digest::MD5.hexdigest(body))
+        end
       end
     end
   end
