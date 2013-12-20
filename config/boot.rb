@@ -112,5 +112,6 @@ ActiveRecord::Base.establish_connection(database_config)
 #                     :socket_timeout => 1.5,
 #                     :socket_failure_delay => 0.2
 #                    })
-uri = URI.parse(ENV["REDISTOGO_URL"])
+
+uri = URI.parse(ENV["REDISTOGO_URL"] || "redis://127.0.0.1:6379")
 REDIS = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
