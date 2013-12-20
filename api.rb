@@ -13,18 +13,11 @@ module SocialCamara
     resource :deputados do
       desc "Returns all deputados"
       get do
-        if ENV['USE_CACHE'] == 'true' && deputados = REDIS.hgetall('dep')
-          deputados.map{|i, d| Oj.load(d) }
-        else
-          Deputado.all.map{ |deputado|
-             REDIS.hset('dep', deputado.id, Oj.dump(deputado.attributes) )
-             deputado
-          }
-        end
+        Deputado.allcached
       end
 
       get ":uri" do
-        Deputado.find_by_uri(params[:uri])
+        Deputado.cached(params[:uri])
       end
 
       get ":uri/about" do
