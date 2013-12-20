@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131215173444) do
+ActiveRecord::Schema.define(:version => 20131220123509) do
 
   create_table "abouts", :force => true do |t|
     t.integer "cadastro_id"
@@ -73,6 +73,19 @@ ActiveRecord::Schema.define(:version => 20131215173444) do
     t.text     "title"
     t.text     "description"
   end
+
+  create_table "propositions", :force => true do |t|
+    t.integer  "cadastro_id"
+    t.integer  "proposition_id"
+    t.string   "name"
+    t.string   "number"
+    t.string   "year"
+    t.datetime "presentations_at"
+    t.text     "body"
+  end
+
+  add_index "propositions", ["cadastro_id"], :name => "index_propositions_on_cadastro_id"
+  add_index "propositions", ["proposition_id"], :name => "index_propositions_on_proposition_id"
 
   create_table "videos", :force => true do |t|
     t.integer "event_id"

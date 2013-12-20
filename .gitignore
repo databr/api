@@ -2,3 +2,4 @@
 deputado_not_found
 tmp/
 app.log
+config/database.yml
