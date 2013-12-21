@@ -37,6 +37,11 @@ namespace :data do
     DeputadoVideoService.save_video_from_deputados_parser
   end
 
+  desc "get proposition data"
+  task proposition: :enviroment do
+    DeputadoPropositionsService.save_propositions
+  end
+
   desc "run all data tasks"
-  task :all => ['db:create', 'db:migrate', :deputados, :cotas, :video]
+  task :all => ['db:create', 'db:migrate', :deputados, :cotas, :video, :proposition]
 end

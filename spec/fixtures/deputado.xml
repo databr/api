@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<deputados>
+  <deputado>
+    <ideCadastro>74016</ideCadastro>
+    <idParlamentar>531071</idParlamentar>
+    <nome>ANTONIO DA CONCEIÇÃO COSTA FERREIRA</nome>
+    <nomeParlamentar>COSTA FERREIRA</nomeParlamentar>
+    <sexo>masculino</sexo>
+    <uf>MA</uf>
+    <partido>PSC</partido>
+    <gabinete>554</gabinete>
+    <anexo>4</anexo>
+    <fone>3215-5554</fone>
+    <email>dep.costaferreira@camara.gov.br</email>
+    <comissoes>
+      <titular>
+        <comissao nome="Comissão Especial destinada a efetuar estudos e apresentar propostas com relação ao Projeto de Lei nº 4378, de 1998, do Sr. Milton Mendes, que &quot;regula as relações jurídicas entre a agroindústria e o produtor rural integrado e dá outras providências&quot;" sigla="CEAGRIRU" />
+        <comissao nome="Comissão de Educação e Cultura" sigla="CEC" />
+        <comissao nome="Comissão Especial destinada a promover estudos e proposições para a reformulação do ensino médio." sigla="CEENSI" />
+        <comissao nome="Comissão Especial destinada a efetuar estudos, levantar as proposições em tramitação e apresentar propostas em relação à temática envolvendo o aprimoramento do Estado, das Instituições e da Democracia brasileira" sigla="CEESTA" />
+        <comissao nome="Comissão Especial destinada a proferir parecer à Proposta de Emenda à Constituição nº 32-A, de 1999, do Sr. Pompeo de Mattos, que &quot;determina a concessão de bolsas de estudos e crédito educativo para o ensino médio e superior aos estudantes carentes em instituições privadas, acrescentando inciso VIII ao art. 208 da Constituição Federal&quot;" sigla="PEC03299" />
+        <comissao nome="Comissão Especial destinada a proferir parecer ao Projeto de Lei nº 7420, de 2006, da Sra. Professora Raquel Teixeira, que &quot;dispõe sobre a qualidade da educação básica e a responsabilidade dos gestores públicos na sua promoção&quot;" sigla="PL742006" />
+        <comissao nome="Subcomissão Especial da Rio + 20" sigla="SUBRJ+20" />
+      </titular>
+      <suplente>
+        <comissao nome="Comissão da Amazônia, Integração Nacional e de Desenvolvimento Regional" sigla="CAINDR" />
+        <comissao nome="Comissão de Ciência e Tecnologia, Comunicação e Informática" sigla="CCTCI" />
+        <comissao nome="Comissão de Legislação Participativa" sigla="CLP" />
+      </suplente>
+    </comissoes>
+  </deputado>
+</deputados>
