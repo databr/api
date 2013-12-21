@@ -4,7 +4,6 @@ class DeputadoAboutParser < CamaraParser
     super()
   end
 
-
   def sections
     @parser.search("#bioDeputado .bioOutros").map do |section|
       OpenStruct.new title: (section/".bioOutrosTitulo").text().gsub(':', ''),

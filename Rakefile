@@ -26,6 +26,7 @@ namespace :data do
 
   desc "get deputados"
   task :deputados => :enviroment do
+    puts "\e[32mSarting deputados data... \e[0m"
     DeputadoCrawlerService.save_from_pesquisa_parser
     DeputadoCrawlerService.save_from_deputado_xml_parser
     DeputadoCrawlerService.save_from_deputado_about_parser
