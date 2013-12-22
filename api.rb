@@ -24,6 +24,11 @@ module SocialCamara
         Deputado.about(params[:uri])
       end
 
+      get ":uri/propositions" do
+        deputado = Deputado.cached(params[:uri])
+        Proposition.order("presentations_at DESC").where(cadastro_id: deputado['cadastro_id'])
+      end
+
       get ":uri/feed" do
         # deputado = Deputado.find_by_uri(params[:uri])
         # cotas = CotaEntity.new(deputado.cotas.limit(30)).results
