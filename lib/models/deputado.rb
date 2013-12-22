@@ -23,7 +23,7 @@ class Deputado < ActiveRecord::Base
     abouts = Oj.load(about_cached) if about_cached
     unless about_cached
       abouts = About.where(cadastro_id: deputado['cadastro_id'])
-      CACHE.set("a:#{deputado['cadastro_id']}", Oj.dump(abouts.map(&:attributes)), ((60)*60)*3 )
+      CACHE.set("a:#{deputado['cadastro_id']}", Oj.dump(abouts.map(&:attributes)), ((60)*60)*3) if ENV['USE_CACHE'] == 'true'
     end
     abouts
   end
@@ -33,7 +33,7 @@ class Deputado < ActiveRecord::Base
       deputados.map{|i, d| Oj.load(d) }
     else
       Deputado.order("nome_parlamentar").all.map do |deputado|
-        REDIS.hset('dep', deputado.uri, Oj.dump(deputado.attributes) )
+        REDIS.hset('dep', deputado.uri, Oj.dump(deputado.attributes)) if ENV['USE_CACHE'] == 'true'
         deputado
       end
     end
