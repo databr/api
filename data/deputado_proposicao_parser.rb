@@ -1,7 +1,7 @@
 class DeputadoProposicaoParser < CamaraParser
   def initialize(deputado, year = Time.now.year)
     partName = deputado.nome_parlamentar.split(" ").first
-    @url = "http://www.camara.gov.br/SitCamaraWS/Proposicoes.asmx/ListarProposicoes?sigla=PL&numero=&ano=#{year}&datApresentacaoIni=&datApresentacaoFim=&autor=&parteNomeAutor=#{partName}&siglaPartidoAutor=&siglaUFAutor=&generoAutor=&codEstado=&codOrgaoEstado=&emTramitacao=&idTipoAutor="
+    @url = "http://www.camara.gov.br/SitCamaraWS/Proposicoes.asmx/ListarProposicoes?sigla=&numero=&ano=#{year}&datApresentacaoIni=&datApresentacaoFim=&autor=&parteNomeAutor=#{partName}&siglaPartidoAutor=&siglaUFAutor=&generoAutor=&codEstado=&codOrgaoEstado=&emTramitacao=&idTipoAutor="
     super()
   end
 
