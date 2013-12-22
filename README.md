@@ -24,8 +24,9 @@ Server
 
 * Postgresql [[download](http://www.postgresql.org/download/)] Não tem nada de mais, tem como utilizar mysql ou até mesmo sqlite, em produção é Postgresql, para test é sqlite por exemplo
 * Redis [[download](http://redis.io/download)]
-  
-  
+* Memcached [[download](http://memcached.org/)]
+
+
 ### Instalação
 
 ```
