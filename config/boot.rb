@@ -105,13 +105,13 @@ ActiveRecord::Base.include_root_in_json = false
 ActiveRecord::Base.logger = LOGGER
 ActiveRecord::Base.establish_connection(database_config)
 
-#CACHE = Dalli::Client.new(ENV["MEMCACHIER_SERVERS"].split(","),
-#                    {:username => ENV["MEMCACHIER_USERNAME"],
-#                     :password => ENV["MEMCACHIER_PASSWORD"],
-#                     :failover => true,
-#                     :socket_timeout => 1.5,
-#                     :socket_failure_delay => 0.2
-#                    })
+CACHE = Dalli::Client.new((ENV["MEMCACHED_SERVERS"]||"localhost:11211").split(",") ,
+                    {:username => ENV["MEMCACHED_USERNAME"],
+                     :password => ENV["MEMCACHED_PASSWORD"],
+                     :failover => true,
+                     :socket_timeout => 1.5,
+                     :socket_failure_delay => 0.2
+                    })
 
-uri = URI.parse(ENV["REDISTOGO_URL"] || "redis://127.0.0.1:6379")
+uri = URI.parse(ENV["REDIS_URL"] || "redis://127.0.0.1:6379")
 REDIS = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)

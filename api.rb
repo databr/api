@@ -21,8 +21,7 @@ module SocialCamara
       end
 
       get ":uri/about" do
-        deputado = Deputado.find_by_uri(params[:uri])
-        About.where(cadastro_id: deputado.cadastro_id)
+        Deputado.about(params[:uri])
       end
 
       get ":uri/feed" do
