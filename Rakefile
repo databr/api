@@ -26,7 +26,7 @@ namespace :data do
 
   desc "get deputados"
   task :deputados => :enviroment do
-    puts "\e[32mSarting deputados data... \e[0m"
+    puts "\e[32mStarting deputados data... \e[0m"
     DeputadoCrawlerService.save_from_pesquisa_parser
     DeputadoCrawlerService.save_from_deputado_xml_parser
     DeputadoCrawlerService.save_from_deputado_about_parser
@@ -40,6 +40,7 @@ namespace :data do
 
   desc "get proposition data"
   task proposition: :enviroment do
+    puts "\e[32mStarting propositions data... \e[0m"
     DeputadoPropositionsService.save_propositions
   end
 

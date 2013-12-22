@@ -27,11 +27,11 @@ class DeputadoCrawlerService
     puts "\e[32m  * Starting save_from_deputado_about_parser\e[0m"
     Deputado.all.each do |deputado|
       DeputadoAboutParser.new(deputado.cadastro_id).sections.each do |section|
+        title = section.title #.force_encoding('iso8859-1').encode('utf-8')
         if section.text.strip.empty?
-          puts "\e[31m    - Section #{title}(#{deputado.id}) empty :( \e[0m"
+          puts "\e[31m    - Section #{title.gsub(/\s+/, " ").strip}(#{deputado.id}) empty :( \e[0m"
           next
         end
-        title = section.title #.force_encoding('iso8859-1').encode('utf-8')
         body = section.text   #.force_encoding('iso8859-1').encode('utf-8')
         section_key = Digest::MD5.hexdigest(title)
         if about = About.where(cadastro_id: deputado.cadastro_id, section_key: section_key).first
@@ -39,7 +39,7 @@ class DeputadoCrawlerService
           about.update_attributes body: body
         else
           puts "\e[32m    * Creating #{title}(#{deputado.id}) from deputado about parser\e[0m"
-          About.create!(cadastro_id: deputado.cadastro_id, title: title, body: body, section_key: section_key, token: Digest::MD5.hexdigest(body))
+          About.create!(cadastro_id: deputado.cadastro_id, title: title, body: body, section_key: section_key)
         end
       end
     end
