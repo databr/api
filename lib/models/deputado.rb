@@ -23,7 +23,6 @@ class Deputado < ActiveRecord::Base
     abouts = Oj.load(about_cached) if about_cached
     unless about_cached
       abouts = About.where(cadastro_id: deputado['cadastro_id'])
-      binding.pry
       CACHE.set("a:#{deputado['cadastro_id']}", Oj.dump(abouts.all), ((60)*60)*3 )
     end
     abouts
