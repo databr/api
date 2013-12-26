@@ -1,12 +1,15 @@
 # enconding: utf-8
 class PropositionEntity < BaseEntity
   protected
+    def the_model
+      Proposition
+    end
+
     def type
       @type ||= :project
     end
 
     def attributes_for(model)
-      deputado = model.deputado
       attributes = {}
       attributes[:id] = "project:#{model.id}"
       attributes[:type] = type
@@ -14,7 +17,7 @@ class PropositionEntity < BaseEntity
       attributes[:verb] = "Aprensentei"
       attributes[:object] = model.name
       attributes[:content] = model.body
-      attributes[:subject] = {name: deputado.nome_parlamentar, image: deputado.image_url}
+      attributes[:subject] = {name: @deputado.nome_parlamentar, image: @deputado.image_url}
       attributes[:location] = {title: "Camara", url: "#"}
       attributes
     end

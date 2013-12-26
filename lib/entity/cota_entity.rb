@@ -1,18 +1,21 @@
 class CotaEntity < BaseEntity
   protected
+    def the_model
+      Cota
+    end
+
     def type
       @type ||= :money
     end
 
     def attributes_for(model)
-      deputado = model.deputado
       attributes = {}
       attributes[:id] = "cota:#{model.id}"
       attributes[:type] = type
       attributes[:published_at] = model.data_emissao
       attributes[:verb] = "Gastei"
       attributes[:object] = model.descricao
-      attributes[:subject] = {name: deputado.nome_parlamentar, image: deputado.image_url}
+      attributes[:subject] = {name: @deputado.nome_parlamentar, image: @deputado.image_url}
       attributes[:location] = {title: model.beneficiario, url: "#"}
       attributes[:value] = model.valor_documento.to_f
       attributes

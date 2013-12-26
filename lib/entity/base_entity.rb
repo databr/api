@@ -1,10 +1,14 @@
 class BaseEntity
-  def initialize(models)
-    @models = models
+  def initialize(deputado)
+    @deputado = deputado
+  end
+
+  def models
+    @models ||= the_model.to_feed(@deputado)
   end
 
   def results
-    by_year = group_by :year, @models
+    by_year = group_by :year, models
     @results = []
     by_year.keys.sort.reverse.each do |_key|
       data = {year: _key.year}
