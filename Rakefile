@@ -21,7 +21,7 @@ namespace :data do
 
   desc "get cota data"
   task :cotas => :enviroment do
-    # CotaCrawlerService.save_from_cota_xml_parser
+    CotaCrawlerService.save_from_cota_xml_parser
   end
 
   desc "get deputados"

@@ -2,35 +2,44 @@
 #
 class CotaCrawlerService
   def self.save_from_cota_xml_parser
-    #unzip('db/data/cota_2013.xml.zip') do |file|
-    start = Time.now.to_i
-    file = 'db/data/cota_2013.xml'
-    parser = CotaXMLParser.new(file)
-    parser.cotas.each_slice(50) do |slice_cotas|
-      slice_cotas.each do |cota|
-        next if Cota.where(numero: cota[:numero]).first
-        deputado = Deputado.where(nome_parlamentar: cota[:nome_parlamentar]).first
-        cota[:data_emissao] = cota[:data_emissao].nil? ? Time.new(cota[:ano], cota[:mes], 1, 0, 0, 0, '-03:00') : Time.iso8601("#{cota[:data_emissao]}-03:00")
-        if deputado.nil?
-          unless deputado = Deputado.where(other_name: cota[:nome_parlamentar]).first
-            begin
-              deputado = search(cota[:nome_parlamentar], 6);
-              deputado.update_attribute :other_name, cota[:nome_parlamentar]
-            rescue
-              open('not_found', 'a') do |f|
-                f << cota
-              end
-              next
-            end
+    puts "\e[32m* Starting cota parser \e[0m"
+    start = Time.now
+    unzip('db/data/cota_2013.xml.zip') do |file|
+      # file = 'db/data/cota_2013.xml'
+      puts "\e[32m  * Unziped and get #{file} \e[0m"
+      parser = CotaXMLParser.new(file)
+      parser.cotas.each_slice(50) do |slice_cotas|
+        slice_cotas.each do |cota|
+          puts "\e[32m    * Try save #{cota[:numero]}\e[0m"
+          if Cota.where(numero: cota[:numero]).first
+            puts "\e[31m    - Cota #{cota[:numero]} already on database\e[0m"
+            puts "    "
+            next
           end
+          cota[:data_emissao] = cota[:data_emissao].nil? ? Time.new(cota[:ano], cota[:mes], 1, 0, 0, 0, '-03:00') : Time.iso8601("#{cota[:data_emissao]}-03:00")
+
+          puts "\e[32m    * Get deputado: #{cota[:nome_parlamentar]}\e[0m"
+          deputado = get_deputado(cota[:nome_parlamentar])
+
+          if deputado.nil?
+            puts "\e[31m    - Not found deputado: #{cota[:nome_parlamentar]}\e[0m"
+            puts "    "
+            open('not_found', 'w') do |f|
+              f << "#{cota}\n"
+            end
+            next
+          end
+          puts "\e[32m    * Found deputado: #{cota[:nome_parlamentar]} is ##{deputado.id}\e[0m"
+          puts "\e[32m    * Creating cota: #{cota[:numero]}\e[0m"
+
+          cota.delete(:nome_parlamentar)
+          cota[:deputado_id] = deputado.id
+          Cota.create! cota
+          puts "    "
         end
-        cota.delete(:nome_parlamentar)
-        deputado.cotas.create cota
-        puts "."
       end
     end
-    #end
-    puts "Finished!: #{Time.now.to_i - start}"
+    puts "Finished!: #{(start-Time.now) / 60}"
   end
 
   def self.unzip(file, &block)
@@ -47,14 +56,24 @@ class CotaCrawlerService
     yield(dest)
   end
 
-  def self.search(name, words, where_old = nil, try_matchs = false)
+  def self.get_deputado(nome_parlamentar)
+    deputado = Deputado.where(nome_parlamentar: nome_parlamentar).first
+    deputado = Deputado.where(other_name: nome_parlamentar).first unless deputado
+    #unless deputado
+      #deputado = search(nome_parlamentar, 6)
+      #deputado.update_attribute :other_name, nome_parlamentar if deputado
+    #end
+    deputado
+  end
+
+  def self.search(name, words, where_old = nil)
+    puts "\e[32m    * Try search #{name} with #{words} words\e[0m"
     return matchs(name, where_old) if words == 0
     regexp = Regexp.new("\\w{#{words}}")
     match = name.match(regexp)
     return matchs(name, Deputado.all) if match.nil? && match.to_s.length == 0
     deputados = (where_old || Deputado).where('nome_parlamentar LIKE ?', "%#{match}%")
-    return matchs(name, deputados) if try_matchs
-    return search(name, words+1, nil, true) if deputados.count == 0
+    return search(name, 0, Deputado.all) if deputados.count == 0
     if deputados.count > 1
       search(name, words-1, deputados)
     else
@@ -67,6 +86,6 @@ class CotaCrawlerService
     m = Sellers.new(search)
     result = m.match(possibles.map(&:nome_parlamentar))
     match_index = result.index(result.min)
-    possibles[match_index]
+    possibles[match_index] if match_index
   end
 end
