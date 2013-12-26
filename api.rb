@@ -26,18 +26,15 @@ module SocialCamara
 
       get ":uri/propositions" do
         deputado = Deputado.cached(params[:uri])
-        Proposition.order("presentations_at DESC").where(cadastro_id: deputado['cadastro_id'])
+        Proposition.order("presentations_at DESC").where(cadastro_id: deputado.cadastro_id)
       end
 
       get ":uri/feed" do
         deputado = Deputado.cached(params[:uri])
-        # cotas = CotaEntity.new(deputado.cotas.limit(30)).results
-        # videos = VideoEntity.new(deputado.videos.limit(30)).results
-        propositions = Proposition.order("presentations_at DESC").where(cadastro_id: deputado['cadastro_id'])
-        Aggregator.build([PropositionEntity.new(propositions).results])
+        cotas = CotaEntity.new(deputado).results
+        propositions = PropositionEntity.new(deputado).results
+        Aggregator.build([cotas, propositions])
       end
     end
   end
 end
-
-
