@@ -17,7 +17,7 @@ class PropositionEntity < BaseEntity
       attributes[:type] = type
       attributes[:published_at] = model.presentations_at
       attributes[:verb] = 'Aprensentei'
-      attributes[:object] = model.name
+      attributes[:object] = { name: model.name, url: model.url }
       attributes[:content] = model.body
       attributes[:subject] = { name: @deputado.nome_parlamentar, image: @deputado.image_url }
       attributes[:location] = { title: 'Camara', url: '#' }

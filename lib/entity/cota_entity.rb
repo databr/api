@@ -18,7 +18,7 @@ class CotaEntity < BaseEntity
       attributes[:type] = type
       attributes[:published_at] = model.data_emissao
       attributes[:verb] = 'Gastei'
-      attributes[:object] = model.descricao
+      attributes[:object] = { name: model.descricao }
       attributes[:subject] = { name: @deputado.nome_parlamentar, image: @deputado.image_url }
       attributes[:location] = { title: model.beneficiario, url: '#' }
       attributes[:value] = model.valor_documento.to_f
