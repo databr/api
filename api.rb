@@ -27,8 +27,7 @@ module SocialCamara
       end
 
       get ':uri/propositions' do
-        deputado = Deputado.cached(params[:uri])
-        Proposition.order('presentations_at DESC').where(cadastro_id: deputado.cadastro_id)
+        Deputado.propositions(params[:uri])
       end
 
       get ':uri/feed' do

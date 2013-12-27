@@ -4,11 +4,9 @@ class Aggregator
     @aggregate = {}
     sets.flatten.each do |data|
       @aggregate[data[:year]] ||= {}
-      @aggregate[data[:year]][:total] = data[:total] if data[:total]
       @aggregate[data[:year]][:month] ||= {}
       data[:month].each do |month|
         @aggregate[data[:year]][:month][month[:month]] ||= {}
-        @aggregate[data[:year]][:month][month[:month]][:total] = month[:total] if month[:total]
         @aggregate[data[:year]][:month][month[:month]][:data] ||= []
         @aggregate[data[:year]][:month][month[:month]][:data] << month[:data]
         @aggregate[data[:year]][:month][month[:month]][:data].flatten!

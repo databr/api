@@ -40,6 +40,17 @@ class Deputado < ActiveRecord::Base
     end
   end
 
+  def self.propositions(uri)
+    deputado = cached(uri)
+    propositions_cached = CACHE.get("p:#{deputado.cadastro_id}") if ENV['USE_CACHE'] == 'true'
+    propositions = Oj.load(propositions_cached) if propositions_cached
+    unless propositions_cached
+      propositions = Proposition.order('presentations_at DESC').where(cadastro_id: deputado.cadastro_id)
+      CACHE.set("p:#{deputado.cadastro_id}", Oj.dump(propositions.map(&:attributes)), ((60) * 60) * 3) if ENV['USE_CACHE'] == 'true'
+    end
+    propositions
+  end
+
   private
 
   def set_uri
