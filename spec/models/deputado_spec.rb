@@ -11,12 +11,12 @@ describe Deputado do
 
   describe 'update_path' do
     it 'set uri' do
-      deputado = Deputado.create! nome_parlamentar: 'Duke Khaos', cadastro_id: 1
-      expect(deputado.uri).to eq('duke-khaos')
+      deputado = Deputado.create! nome_parlamentar: 'Duke X', cadastro_id: 1
+      expect(deputado.uri).to eq('duke-x')
     end
     it 'transliterate' do
-      deputado = Deputado.create! nome_parlamentar: 'Duké Khãos', cadastro_id: 1
-      expect(deputado.uri).to eq('duke-khaos')
+      deputado = Deputado.create! nome_parlamentar: 'Duké µx', cadastro_id: 1
+      expect(deputado.uri).to eq('duke-x')
     end
   end
 end

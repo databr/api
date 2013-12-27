@@ -41,7 +41,10 @@ class DeputadoCrawlerService
           about.update_attributes body: body
         else
           puts "\e[32m    * Creating #{title}(#{deputado[:id]}) from deputado about parser\e[0m"
-          About.create!(cadastro_id: deputado[:id], title: title, body: body, section_key: section_key)
+          About.create!(cadastro_id: deputado[:id],
+                        title: title,
+                        body: body,
+                        section_key: section_key)
         end
       end
     end
