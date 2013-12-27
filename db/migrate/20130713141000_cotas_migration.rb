@@ -1,3 +1,4 @@
+# encoding: utf-8
 class CotasMigration < ActiveRecord::Migration
   def change
     create_table :cotas do |t|
@@ -16,9 +17,9 @@ class CotasMigration < ActiveRecord::Migration
       t.string :numero
       t.string :tipo_documento
       t.datetime :data_emissao
-      t.decimal :valor_documento, :precision => 10, :scale => 2
-      t.decimal :valor_glossa, :precision => 10, :scale => 2
-      t.decimal :valor_liquido, :precision => 10, :scale => 2
+      t.decimal :valor_documento, precision: 10, scale: 2
+      t.decimal :valor_glossa, precision: 10, scale: 2
+      t.decimal :valor_liquido, precision: 10, scale: 2
       t.integer :mes
       t.integer :ano
       t.string :parcela

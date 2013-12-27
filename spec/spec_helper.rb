@@ -1,12 +1,13 @@
+# encoding: utf-8
 ENV['RACK_ENV'] = 'test'
 ENV['USE_PARSER'] = 'true'
+ENV['YEAR'] = '2013'
 
 require './config/boot'
 
 require 'webmock/rspec'
 
-Dir[File.join("spec/support/*.rb")].each {|f| require File.absolute_path(f) }
-
+Dir[File.join('spec/support/*.rb')].each { |f| require File.absolute_path(f) }
 
 RSpec.configure do |config|
   config.treat_symbols_as_metadata_keys_with_true_values = true
@@ -22,7 +23,7 @@ RSpec.configure do |config|
   config.around do |example|
     ActiveRecord::Base.transaction do
       example.run
-      raise ActiveRecord::Rollback
+      fail ActiveRecord::Rollback
     end
   end
 end

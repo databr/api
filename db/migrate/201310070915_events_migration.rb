@@ -1,3 +1,4 @@
+# encoding: utf-8
 class EventsMigration < ActiveRecord::Migration
   def change
     create_table :events do |t|
@@ -10,4 +11,3 @@ class EventsMigration < ActiveRecord::Migration
     end
   end
 end
-

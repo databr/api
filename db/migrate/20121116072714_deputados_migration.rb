@@ -1,3 +1,4 @@
+# encoding: utf-8
 class DeputadosMigration < ActiveRecord::Migration
   def change
     create_table :deputados do |t|

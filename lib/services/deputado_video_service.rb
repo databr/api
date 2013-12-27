@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'harvestman'
 
 class DeputadoVideoService
@@ -6,4 +7,3 @@ class DeputadoVideoService
     parser.videos
   end
 end
-

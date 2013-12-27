@@ -1,3 +1,4 @@
+# encoding: utf-8
 class DeputadoAboutParser < CamaraParser
   def initialize(cadastro_id)
     @url = "http://www2.camara.leg.br/deputados/pesquisa/layouts_deputados_biografia?pk=#{cadastro_id}"
@@ -5,9 +6,9 @@ class DeputadoAboutParser < CamaraParser
   end
 
   def sections
-    @parser.search("#bioDeputado .bioOutros").map do |section|
-      OpenStruct.new title: (section/".bioOutrosTitulo").text().gsub(':', ''),
-                     text: (section/".bioOutrosTexto").text()
+    @parser.search('#bioDeputado .bioOutros').map do |section|
+      OpenStruct.new title: (section/'.bioOutrosTitulo').text.gsub(':', ''),
+                     text: (section/'.bioOutrosTexto').text
     end
   end
 end

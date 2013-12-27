@@ -1,3 +1,4 @@
+# encoding: utf-8
 class VideoMigration < ActiveRecord::Migration
   def change
     create_table :videos do |t|

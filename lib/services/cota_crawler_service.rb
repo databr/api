@@ -13,7 +13,7 @@ class CotaCrawlerService
           puts "\e[32m    * Try save #{cota[:numero]}\e[0m"
           if Cota.where(numero: cota[:numero]).first
             puts "\e[31m    - Cota #{cota[:numero]} already on database\e[0m"
-            puts "    "
+            puts '    '
             next
           end
           cota[:data_emissao] = cota[:data_emissao].nil? ? Time.new(cota[:ano], cota[:mes], 1, 0, 0, 0, '-03:00') : Time.iso8601("#{cota[:data_emissao]}-03:00")
@@ -23,7 +23,7 @@ class CotaCrawlerService
 
           if deputado.nil?
             puts "\e[31m    - Not found deputado: #{cota[:nome_parlamentar]}\e[0m"
-            puts "    "
+            puts '    '
             open('not_found', 'w') do |f|
               f << "#{cota}\n"
             end
@@ -35,17 +35,17 @@ class CotaCrawlerService
           cota.delete(:nome_parlamentar)
           cota[:deputado_id] = deputado.id
           Cota.create! cota
-          puts "    "
+          puts '    '
         end
       end
     end
-    puts "Finished!: #{(start-Time.now) / 60}"
+    puts "Finished!: #{(start - Time.now) / 60}"
   end
 
   def self.unzip(file, &block)
     require 'zip/zipfilesystem'
     xml_file = file.gsub('.zip', '')
-    entry = xml_file.split("/").last
+    entry = xml_file.split('/').last
     dest = "tmp/#{entry}"
 
     system "rm #{dest}"
@@ -59,10 +59,10 @@ class CotaCrawlerService
   def self.get_deputado(nome_parlamentar)
     deputado = Deputado.where(nome_parlamentar: nome_parlamentar).first
     deputado = Deputado.where(other_name: nome_parlamentar).first unless deputado
-    #unless deputado
-      #deputado = search(nome_parlamentar, 6)
-      #deputado.update_attribute :other_name, nome_parlamentar if deputado
-    #end
+    # unless deputado
+      # deputado = search(nome_parlamentar, 6)
+      # deputado.update_attribute :other_name, nome_parlamentar if deputado
+    # end
     deputado
   end
 
@@ -75,7 +75,7 @@ class CotaCrawlerService
     deputados = (where_old || Deputado).where('nome_parlamentar LIKE ?', "%#{match}%")
     return search(name, 0, Deputado.all) if deputados.count == 0
     if deputados.count > 1
-      search(name, words-1, deputados)
+      search(name, words - 1, deputados)
     else
       deputados.first
     end

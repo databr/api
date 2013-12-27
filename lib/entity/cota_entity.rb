@@ -1,5 +1,9 @@
+# encoding: utf-8
+#
 class CotaEntity < BaseEntity
+
   protected
+
     def the_model
       Cota
     end
@@ -13,10 +17,10 @@ class CotaEntity < BaseEntity
       attributes[:id] = "cota:#{model.id}"
       attributes[:type] = type
       attributes[:published_at] = model.data_emissao
-      attributes[:verb] = "Gastei"
+      attributes[:verb] = 'Gastei'
       attributes[:object] = model.descricao
-      attributes[:subject] = {name: @deputado.nome_parlamentar, image: @deputado.image_url}
-      attributes[:location] = {title: model.beneficiario, url: "#"}
+      attributes[:subject] = { name: @deputado.nome_parlamentar, image: @deputado.image_url }
+      attributes[:location] = { title: model.beneficiario, url: '#' }
       attributes[:value] = model.valor_documento.to_f
       attributes
     end
@@ -28,9 +32,9 @@ class CotaEntity < BaseEntity
     def group_by(type, data)
       case type
       when :month
-        data.group_by{|c| c.data_emissao.beginning_of_month }
+        data.group_by { |c| c.data_emissao.beginning_of_month }
       when :year
-        data.group_by{|c| c.data_emissao.beginning_of_year }
+        data.group_by { |c| c.data_emissao.beginning_of_year }
       end
     end
 end

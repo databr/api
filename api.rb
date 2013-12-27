@@ -1,3 +1,5 @@
+# encoding: utf-8
+#
 require './config/boot'
 
 module SocialCamara
@@ -11,25 +13,25 @@ module SocialCamara
     end
 
     resource :deputados do
-      desc "Returns all deputados"
+      desc 'Returns all deputados'
       get do
         Deputado.allcached
       end
 
-      get ":uri" do
+      get ':uri' do
         Deputado.cached(params[:uri])
       end
 
-      get ":uri/about" do
+      get ':uri/about' do
         Deputado.about(params[:uri])
       end
 
-      get ":uri/propositions" do
+      get ':uri/propositions' do
         deputado = Deputado.cached(params[:uri])
-        Proposition.order("presentations_at DESC").where(cadastro_id: deputado.cadastro_id)
+        Proposition.order('presentations_at DESC').where(cadastro_id: deputado.cadastro_id)
       end
 
-      get ":uri/feed" do
+      get ':uri/feed' do
         deputado = Deputado.cached(params[:uri])
         cotas = CotaEntity.new(deputado).results
         propositions = PropositionEntity.new(deputado).results

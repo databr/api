@@ -1,3 +1,4 @@
+# encoding: utf-8
 class PesquisaDeputadosParser < CamaraParser
   URLS = {
     complete_info: 'http://www.camara.gov.br/internet/Deputado/dep_Detalhe.asp',
@@ -5,7 +6,7 @@ class PesquisaDeputadosParser < CamaraParser
   }
 
   def initialize
-    @url = "http://www2.camara.leg.br/deputados/pesquisa"
+    @url = 'http://www2.camara.leg.br/deputados/pesquisa'
     super()
   end
 
@@ -24,11 +25,12 @@ class PesquisaDeputadosParser < CamaraParser
   private
 
   def search_deputados
-    deputados = @parser.search("#deputado option")
-    deputados.map do |deputado|
-      id =  deputado.attr("value").split("?").last
-      {nome_parlamentar: deputado.text, id: id} unless id.nil?
-    end.delete_if{|i| i.nil?}
+    deputados = @parser.search('#deputado option')
+    deputados = deputados.map do |deputado|
+      id =  deputado.attr('value').split('?').last
+      { nome_parlamentar: deputado.text, id: id } unless id.nil?
+    end
+    deputados.delete_if { |i| i.nil? }
   end
 
   def url(name, param, id = nil)

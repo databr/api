@@ -1,3 +1,4 @@
+# encoding: utf-8
 class PropositionMigration < ActiveRecord::Migration
   def change
     create_table :propositions do |t|

@@ -4,8 +4,8 @@ require 'spec_helper'
 
 describe PesquisaDeputadosParser do
   before do
-    stub_request(:get, 'http://www2.camara.leg.br/deputados/pesquisa').
-      to_return(:status => 200, :body => File.read('spec/fixtures/pesquisa.html'), :headers => {:'Content-Type' => 'text/html'})
+    stub_request(:get, 'http://www2.camara.leg.br/deputados/pesquisa')
+      .to_return(status: 200, body: File.read('spec/fixtures/pesquisa.html'), headers: { :'Content-Type' => 'text/html' })
   end
 
   describe '#deputados' do
@@ -15,11 +15,11 @@ describe PesquisaDeputadosParser do
 
     it 'returns names and id of deputados' do
       expect(subject.deputados).to eq([
-        {id: '141463', nome_parlamentar: 'ABELARDO CAMARINHA'},
-        {id: '74354', nome_parlamentar: 'ZENALDO COUTINHO'},
-        {id: '73933', nome_parlamentar: 'ZEQUINHA MARINHO'},
-        {id: '74145', nome_parlamentar: 'ZEZÉU RIBEIRO'},
-        {id: '160625', nome_parlamentar: 'ZOINHO'}
+        { id: '141463', nome_parlamentar: 'ABELARDO CAMARINHA' },
+        { id: '74354', nome_parlamentar: 'ZENALDO COUTINHO' },
+        { id: '73933', nome_parlamentar: 'ZEQUINHA MARINHO' },
+        { id: '74145', nome_parlamentar: 'ZEZÉU RIBEIRO' },
+        { id: '160625', nome_parlamentar: 'ZOINHO' }
       ])
     end
   end
@@ -30,7 +30,7 @@ describe PesquisaDeputadosParser do
     end
 
     it 'returns the complete info url to deputado' do
-      deputado_id = "232"
+      deputado_id = '232'
       expect(subject.complete_info_url(deputado_id)).to eq("http://www.camara.gov.br/internet/Deputado/dep_Detalhe.asp?id=#{deputado_id}")
     end
   end
@@ -41,7 +41,7 @@ describe PesquisaDeputadosParser do
     end
 
     it 'returns the complete info url to deputado' do
-      deputado_id = "232"
+      deputado_id = '232'
       expect(subject.bio_url(deputado_id)).to eq("http://www2.camara.leg.br/deputados/pesquisa/layouts_deputados_biografia?pk=#{deputado_id}")
     end
   end

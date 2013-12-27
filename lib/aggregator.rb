@@ -1,3 +1,4 @@
+# encoding: utf-8
 class Aggregator
   def self.build(sets)
     @aggregate = {}
@@ -15,7 +16,7 @@ class Aggregator
     end
     @result = []
     @aggregate.keys.sort.reverse.each do |_key|
-      data = {year: _key}
+      data = { year: _key }
       year_data = @aggregate[_key]
       data[:total] = year_data[:total]
       data[:month] = []

@@ -2,8 +2,8 @@
 #
 class DeputadoPropositionsService
   def self.save_propositions
-    parser = DeputadoXMLParser.new
-    parser.deputados.each do |deputado|
+    parser_xml = DeputadoXMLParser.new
+    parser_xml.deputados.each do |deputado|
       begin
         parser = DeputadoProposicaoParser.new(OpenStruct.new(deputado), ENV['YEAR'])
         parser.propositions.each do |proposition_data|

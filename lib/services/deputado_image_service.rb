@@ -1,12 +1,12 @@
+# encoding: utf-8
 class DeputadoImageService
   def self.save_images_from_deputies_json_parser
-    parser = DeputiesJsonParser.new('db/data/deputies.json')
     puts "\e[32m  * Starting save_images_from_deputies_json_parser\e[0m"
-    parser.deputados.each do |deputado_data|
-      deputado = Deputado.find_by_parlamentar_id(deputado_data["id_dep"])
+    DeputiesJsonParser.new('db/data/deputies.json').parser.each do |deputado_data|
+      deputado = Deputado.find_by_parlamentar_id(deputado_data['id_dep'])
       if deputado
         puts "\e[32m    * Saving image to #{deputado.nome_parlamentar}(#{deputado.id}) from json parser\e[0m"
-        deputado.update_attribute :image_url, deputado_data["image_urls"].first
+        deputado.update_attribute :image_url, deputado_data['image_urls'].first
       end
     end
     Deputado.where(image_url: nil).each do |deputado|

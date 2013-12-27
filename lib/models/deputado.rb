@@ -1,3 +1,5 @@
+# encoding: utf-8
+#
 class Deputado < ActiveRecord::Base
   validates :nome_parlamentar, presence: true
   validates :cadastro_id, uniqueness: true, presence: true
@@ -10,7 +12,7 @@ class Deputado < ActiveRecord::Base
     deputado = OpenStruct.new(Oj.load(cached_deputado)) if cached_deputado
     unless cached_deputado
       deputado = find_by_uri(uri).attributes
-      REDIS.hset('dep', deputado.uri, Oj.dump(deputado) )
+      REDIS.hset('dep', deputado.uri, Oj.dump(deputado))
     end
     deputado
   end
@@ -21,16 +23,17 @@ class Deputado < ActiveRecord::Base
     abouts = Oj.load(about_cached) if about_cached
     unless about_cached
       abouts = About.where(cadastro_id: deputado.cadastro_id)
-      CACHE.set("a:#{deputado.cadastro_id}", Oj.dump(abouts.map(&:attributes)), ((60)*60)*3) if ENV['USE_CACHE'] == 'true'
+      CACHE.set("a:#{deputado.cadastro_id}", Oj.dump(abouts.map(&:attributes)), ((60) * 60) * 3) if ENV['USE_CACHE'] == 'true'
     end
     abouts
   end
 
   def self.allcached
-    if ENV['USE_CACHE'] == 'true' && deputados = REDIS.hgetall('dep')
-      deputados.map{|i, d| Oj.load(d) }
+    deputados = REDIS.hgetall('dep')
+    if ENV['USE_CACHE'] == 'true' && deputados
+      deputados.map { |i, d| Oj.load(d) }
     else
-      Deputado.order("nome_parlamentar").all.map do |deputado|
+      Deputado.order('nome_parlamentar').all.map do |deputado|
         REDIS.hset('dep', deputado.uri, Oj.dump(deputado.attributes)) if ENV['USE_CACHE'] == 'true'
         deputado
       end
@@ -38,7 +41,8 @@ class Deputado < ActiveRecord::Base
   end
 
   private
+
   def set_uri
-    self.uri = self.nome_parlamentar.parameterize
+    self.uri = nome_parlamentar.parameterize
   end
 end
