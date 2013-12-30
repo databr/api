@@ -1,10 +1,8 @@
 # encoding: utf-8
 #
 class CotaEntity < BaseEntity
-
   protected
-
-    def the_model
+    def model_class
       Cota
     end
 
@@ -12,14 +10,15 @@ class CotaEntity < BaseEntity
       @type ||= :money
     end
 
+    def verb
+      'Gastei'
+    end
+
     def attributes_for(model)
-      attributes = {}
-      attributes[:id] = "cota:#{model.id}"
-      attributes[:type] = type
+      attributes = _attributes
+      attributes[:id] = "cotas-#{model.id}"
       attributes[:published_at] = model.data_emissao
-      attributes[:verb] = 'Gastei'
       attributes[:object] = { name: model.descricao }
-      attributes[:subject] = { name: @deputado.nome_parlamentar, image: @deputado.image_url }
       attributes[:location] = { title: model.beneficiario, url: '#' }
       attributes[:value] = model.valor_documento.to_f
       attributes

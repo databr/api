@@ -5,8 +5,20 @@ class BaseEntity
     @deputado = deputado
   end
 
+  def _attributes
+    attributes = {}
+    attributes[:subject] = {
+      name: @deputado['nome_parlamentar'],
+      image: @deputado['image_url'],
+      url: "/#{@deputado['uri']}"
+    }
+    attributes[:verb] = verb
+    attributes[:type] = type
+    attributes
+  end
+
   def models
-    @models ||= the_model.to_feed(@deputado)
+    @models ||= model_class.to_feed(@deputado)
   end
 
   def results

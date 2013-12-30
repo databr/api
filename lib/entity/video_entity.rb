@@ -11,7 +11,6 @@ class VideoEntity < BaseEntity
 
     def attributes_for(model)
       deputado = model.deputado
-      attributes = {}
       attributes[:id] = "video:#{model.id}"
       attributes[:type] = type
       attributes[:published_at] = model.event.starts_at
