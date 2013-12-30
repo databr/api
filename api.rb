@@ -32,8 +32,8 @@ module SocialCamara
 
       get ':uri/feed' do
         deputado = Deputado.cached_by_uri(params[:uri])
-        cotas = CotaEntity.new(deputado).results
-        propositions = PropositionEntity.new(deputado).results
+        cotas = CotaOnFeedEntity.new(deputado).results
+        propositions = PropositionOnFeedEntity.new(deputado).results
         Aggregator.build([cotas, propositions])
       end
     end

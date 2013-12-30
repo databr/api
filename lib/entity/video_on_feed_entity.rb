@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'digest/md5'
 
-class VideoEntity < BaseEntity
+class VideoOnFeedEntity < BaseOnFeedEntity
 
   protected
 

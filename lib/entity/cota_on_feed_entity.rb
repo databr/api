@@ -1,6 +1,6 @@
 # encoding: utf-8
 #
-class CotaEntity < BaseEntity
+class CotaOnFeedEntity < BaseOnFeedEntity
   protected
     def model_class
       Cota

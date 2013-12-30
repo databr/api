@@ -1,6 +1,6 @@
 # encoding: utf-8
 #
-class BaseEntity
+class BaseOnFeedEntity
   def initialize(deputado)
     @deputado = deputado
   end
