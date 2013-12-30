@@ -19,7 +19,7 @@ module SocialCamara
       end
 
       get ':uri' do
-        Deputado.cached(params[:uri])
+        Deputado.cached_by_uri(params[:uri])
       end
 
       get ':uri/about' do
@@ -31,7 +31,7 @@ module SocialCamara
       end
 
       get ':uri/feed' do
-        deputado = Deputado.cached(params[:uri])
+        deputado = Deputado.cached_by_uri(params[:uri])
         cotas = CotaEntity.new(deputado).results
         propositions = PropositionEntity.new(deputado).results
         Aggregator.build([cotas, propositions])
