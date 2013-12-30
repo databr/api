@@ -14,7 +14,7 @@ if ENV['USE_PARSER'] == 'true'
   Dir[File.join('lib/services/*.rb')].each { |f| require File.absolute_path(f) }
 end
 
-require './lib/entity/base_entity.rb'
+require './lib/entity/base_on_feed_entity.rb'
 Dir[File.join('lib/models/*.rb')].each { |f| require File.absolute_path(f) }
 Dir[File.join('lib/entity/*.rb')].each { |f| require File.absolute_path(f) }
 
