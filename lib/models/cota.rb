@@ -9,6 +9,6 @@ class Cota < ActiveRecord::Base
   end
 
   def self.to_feed(deputado)
-    where(deputado_id: deputado.id).order('data_emissao DESC')
+    where(deputado_id: deputado['id']).order('data_emissao DESC')
   end
 end
