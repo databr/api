@@ -16,7 +16,7 @@ class CotaOnFeedEntity < BaseOnFeedEntity
 
     def attributes_for(model)
       attributes = _attributes
-      attributes[:id] = "cotas-#{model.id}"
+      attributes[:id] = "cota-#{model.id}"
       attributes[:published_at] = model.data_emissao
       attributes[:object] = { name: model.descricao }
       attributes[:location] = { title: model.beneficiario, url: '#' }
