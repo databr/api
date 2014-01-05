@@ -30,6 +30,12 @@ module SocialCamara
         Deputado.propositions(params[:uri])
       end
 
+      get ':uri/post/:id' do
+        type, id = params[:id].split("-")
+        data = Deputado.send(type, params[:uri], id)
+        present data, with: "#{type.capitalize}Entity".constantize
+      end
+
       get ':uri/feed' do
         deputado = Deputado.cached_by_uri(params[:uri])
         cotas = CotaOnFeedEntity.new(deputado).results

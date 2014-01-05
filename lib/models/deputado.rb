@@ -66,6 +66,16 @@ class Deputado < ActiveRecord::Base
     propositions
   end
 
+  def self.proposition(deputado_uri, id)
+    deputado = cached_by_uri(deputado_uri)
+    Proposition.where(cadastro_id: deputado['cadastro_id'], proposition_id: id).first
+  end
+
+  def self.cota(deputado_uri, id)
+    deputado = cached_by_uri(deputado_uri)
+    Cota.where(id: id, deputado_id: deputado['id']).first
+  end
+
   private
 
   def set_uri
