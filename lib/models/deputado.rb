@@ -13,18 +13,18 @@ class Deputado < ActiveRecord::Base
     unless cached_deputado
       deputado = find_by_uri(uri).attributes
       REDIS.hset('dep', deputado['uri'], Oj.dump(deputado))
-      REDIS.hset('dep', deputado['cadastro_id'], Oj.dump(deputado))
+      REDIS.hset('dep_by_id', deputado['cadastro_id'], Oj.dump(deputado))
     end
     deputado
   end
 
   def self.cached_by_cadastro_id(cadastro_id)
-    cached_deputado = REDIS.hget('dep', cadastro_id) if ENV['USE_CACHE'] == 'true'
+    cached_deputado = REDIS.hget('dep_by_id', cadastro_id) if ENV['USE_CACHE'] == 'true'
     deputado = Oj.load(cached_deputado) if cached_deputado
     unless cached_deputado
       deputado = find_by_cadastro_id(cadastro_id).attributes
       REDIS.hset('dep', deputado['uri'], Oj.dump(deputado))
-      REDIS.hset('dep', deputado['cadastro_id'], Oj.dump(deputado))
+      REDIS.hset('dep_by_id', deputado['cadastro_id'], Oj.dump(deputado))
     end
     deputado
   end
@@ -42,13 +42,13 @@ class Deputado < ActiveRecord::Base
 
   def self.allcached
     deputados = REDIS.hgetall('dep')
-    if ENV['USE_CACHE'] == 'true' && deputados
-      deputados.map { |i, d| Oj.load(d) }
+    if ENV['USE_CACHE'] == 'true' && !deputados.empty?
+      deputados.sort_by { |i,_| i }.map { |_, d| Oj.load(d) }
     else
       Deputado.order('nome_parlamentar').all.map do |deputado|
         if ENV['USE_CACHE'] == 'true'
           REDIS.hset('dep', deputado.uri, Oj.dump(deputado.attributes))
-          REDIS.hset('dep', deputado.cadastro_id, Oj.dump(deputado))
+          REDIS.hset('dep_by_id', deputado.cadastro_id, Oj.dump(deputado))
         end
         deputado
       end
