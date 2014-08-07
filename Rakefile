@@ -33,6 +33,10 @@ namespace :data do
     DeputadoImageService.save_images_from_deputies_json_parser
   end
 
+  task image: :enviroment do
+    DeputadoImageService.save_images_from_deputies_json_parser
+  end
+
   desc 'get video data'
   task video: :enviroment do
     DeputadoVideoService.save_video_from_deputados_parser
