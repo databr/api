@@ -7,14 +7,21 @@ class Deputado < ActiveRecord::Base
   before_save :set_uri
   has_many :cotas
 
-  def self.cached_by_uri(uri)
+  def self.cached_by_uri(uri, with_about = false)
     cached_deputado = REDIS.hget('dep', uri) if ENV['USE_CACHE'] == 'true'
     deputado = Oj.load(cached_deputado) if cached_deputado
     unless cached_deputado
-      deputado = find_by_uri(uri).attributes
+       deputado = if by_uri = where(uri: uri).first
+                     by_uri
+                  else
+                    where(cadastro_id: uri).first
+                  end.attributes
       REDIS.hset('dep', deputado['uri'], Oj.dump(deputado))
       REDIS.hset('dep_by_id', deputado['cadastro_id'], Oj.dump(deputado))
     end
+
+    deputado['id'] = deputado['cadastro_id']
+    deputado['sobre'] =  Deputado.about(uri) if with_about
     deputado
   end
 

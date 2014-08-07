@@ -11,6 +11,9 @@ module SocialCamara
         LOGGER
       end
     end
+    before do
+      header "Access-Control-Allow-Origin", "*"
+    end
 
     resource :deputados do
       desc 'Returns all deputados'
@@ -19,7 +22,7 @@ module SocialCamara
       end
 
       get ':uri' do
-        Deputado.cached_by_uri(params[:uri])
+        {deputado: Deputado.cached_by_uri(params[:uri], true)}
       end
 
       get ':uri/about' do
