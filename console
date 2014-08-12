@@ -1,7 +1,0 @@
-# encoding: utf-8
-#!/usr/bin/env ruby
-
-ENV['USE_PARSER'] = 'true'
-require './config/boot'
-
-Pry.start
