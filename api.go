@@ -5,7 +5,7 @@ import (
 
 	"github.com/camarabook/camarabook-api/models"
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
+	"gopkg.in/mgo.v2/bson"
 )
 
 // database
@@ -17,9 +17,9 @@ func databaseMiddleware() gin.HandlerFunc {
 	}
 }
 
-func getDB(c *gin.Context) gorm.DB {
+func getDB(c *gin.Context) models.Database {
 	database, _ := c.Get("database")
-	return database.(gorm.DB)
+	return database.(models.Database)
 }
 
 // cors
@@ -29,27 +29,18 @@ func corsMiddleware() gin.HandlerFunc {
 	}
 }
 
-// entities
-
-type ParliamentarianEntity struct {
-	models.Parliamentarian
-}
-
 // Handlers
 func getParliamentarian(c *gin.Context) {
 	uri := c.Params.ByName("uri")
 	DB := getDB(c)
 
-	var p ParliamentarianEntity
+	var p models.Parliamentarian
 
-	err := DB.Table("parliamentarians").Where("uri = ?", uri).Find(&p).Error
+	err := DB.FindOne(bson.M{"id": uri}, &p)
 
 	if err != nil {
 		c.JSON(404, gin.H{"error": "404", "status": err.Error()})
 	} else {
-		var about []models.ParliamentarianAbout
-		DB.Where("parliamentarian_id = ?", p.RegisterId).Find(&about)
-		p.About = about
 		c.JSON(200, gin.H{"parliamentarian": p})
 	}
 }
