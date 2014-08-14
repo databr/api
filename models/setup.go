@@ -33,24 +33,24 @@ func New() Database {
 	return database
 }
 
-func (d Database) FindAll(t interface{}) error {
-	return d.collection(t).Find(bson.M{}).All(t)
+func (d Database) FindAll(results interface{}) error {
+	return d.collection(results).Find(bson.M{}).All(results)
 }
 
-func (d Database) FindOne(query, t interface{}) error {
-	return d.collection(t).Find(query).One(t)
+func (d Database) FindOne(query, result interface{}) error {
+	return d.collection(result).Find(query).One(result)
 }
 
 func (d Database) Create(data interface{}) error {
 	return d.collection(data).Insert(data)
 }
 
-func (d Database) Update(query, update interface{}, t interface{}) error {
-	return d.collection(t).Update(query, update)
+func (d Database) Update(query, data interface{}, _type interface{}) error {
+	return d.collection(_type).Update(query, data)
 }
 
-func (d Database) Upsert(query, data interface{}) (*mgo.ChangeInfo, error) {
-	return d.collection(data).Upsert(query, data)
+func (d Database) Upsert(query, data interface{}, _type interface{}) (*mgo.ChangeInfo, error) {
+	return d.collection(_type).Upsert(query, data)
 }
 
 func (d Database) collection(t interface{}) *mgo.Collection {
