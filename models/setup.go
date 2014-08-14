@@ -73,6 +73,8 @@ func (d Database) collection(t interface{}) *mgo.Collection {
 
 type Parliamentarian popolo.Person
 
+type Party popolo.Organization
+
 // helper
 func MakeUri(txt string) string {
 	re := regexp.MustCompile(`\W`)
