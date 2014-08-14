@@ -7,6 +7,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/camarabook/go-popolo"
 	. "github.com/fiam/gounidecode/unidecode"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
@@ -68,6 +69,9 @@ func (d Database) collection(t interface{}) *mgo.Collection {
 	return d.current.C(collection)
 }
 
+// Parliamentarian
+
+type Parliamentarian popolo.Person
 
 // helper
 func makeUri(txt string) string {
