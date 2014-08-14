@@ -25,10 +25,10 @@ func New() Database {
 	mgo.SetDebug(false)
 	mgo.SetLogger(logger)
 
-	session, err := mgo.Dial("dev")
+	session, err := mgo.Dial(os.Getenv("MONGO_URL"))
 	checkErr(err)
 
-	database.current = session.DB("camarabook")
+	database.current = session.DB(os.Getenv("DATABASE_NAME"))
 
 	return database
 }
