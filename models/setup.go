@@ -74,7 +74,7 @@ func (d Database) collection(t interface{}) *mgo.Collection {
 type Parliamentarian popolo.Person
 
 // helper
-func makeUri(txt string) string {
+func MakeUri(txt string) string {
 	re := regexp.MustCompile(`\W`)
 	uri := Unidecode(txt)
 	uri = re.ReplaceAllString(uri, "")
