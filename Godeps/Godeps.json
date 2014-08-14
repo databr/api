@@ -1,0 +1,27 @@
+{
+	"ImportPath": "github.com/camarabook/camarabook-api",
+	"GoVersion": "go1.3",
+	"Deps": [
+		{
+			"ImportPath": "github.com/camarabook/go-popolo",
+			"Rev": "b897ea6bfcf809233b7be4a1fbb29a6c7cd38721"
+		},
+		{
+			"ImportPath": "github.com/fiam/gounidecode/unidecode",
+			"Rev": "311ebb7422d3ff70cc1d064c5a297520ff5f304a"
+		},
+		{
+			"ImportPath": "github.com/gin-gonic/gin",
+			"Comment": "v0.3-3-gc3abaf9",
+			"Rev": "c3abaf9afcd167475951249d5a406ba10b24a1d9"
+		},
+		{
+			"ImportPath": "github.com/julienschmidt/httprouter",
+			"Rev": "7deadb6844d2c6ff1dfb812eaa439b87cdaedf20"
+		},
+		{
+			"ImportPath": "gopkg.in/mgo.v2",
+			"Rev": "dc255bb679efa273b6544a03261c4053505498a4"
+		}
+	]
+}
