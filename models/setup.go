@@ -41,6 +41,10 @@ func (d Database) FindOne(query, result interface{}) error {
 	return d.collection(result).Find(query).One(result)
 }
 
+func (d Database) Find(query, result interface{}) error {
+	return d.collection(result).Find(query).All(result)
+}
+
 func (d Database) Create(data interface{}) error {
 	return d.collection(data).Insert(data)
 }
