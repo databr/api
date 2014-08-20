@@ -6,6 +6,7 @@ import (
 	"reflect"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/camarabook/go-popolo"
 	. "github.com/fiam/gounidecode/unidecode"
@@ -20,10 +21,9 @@ type Database struct {
 func New() Database {
 	var database Database
 
-	logger := log.New(os.Stdout, "LOG: ", log.Ldate|log.Ltime|log.Lshortfile)
-
-	mgo.SetDebug(false)
-	mgo.SetLogger(logger)
+	// logger := log.New(os.Stdout, "LOG: ", log.Ldate|log.Ltime|log.Lshortfile)
+	//mgo.SetDebug(false)
+	//mgo.SetLogger(logger)
 
 	session, err := mgo.Dial(os.Getenv("MONGO_URL"))
 	checkErr(err)
@@ -75,6 +75,19 @@ type Parliamentarian popolo.Person
 
 type Party popolo.Organization
 
+type Company popolo.Organization
+
+type Quota struct {
+	Company         string
+	Date            time.Time
+	Parliamentarian string
+	Order           string
+	Value           float64
+
+	PassengerName string
+	Route         string
+	Ticket        string
+}
 // helper
 func MakeUri(txt string) string {
 	re := regexp.MustCompile(`\W`)
