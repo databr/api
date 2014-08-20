@@ -92,6 +92,47 @@ type Quota struct {
 	Route         string
 	Ticket        string
 }
+
+func (q *Quota) ToActivity(DB Database) Activity {
+	var p Parliamentarian
+	log.Println("ID", q.Parliamentarian)
+	err := DB.FindOne(bson.M{"id": q.Parliamentarian}, &p)
+	checkErr(err)
+
+	var c Company
+	err = DB.FindOne(bson.M{"id": q.Company}, &c)
+	checkErr(err)
+
+	content := map[string]interface{}{
+		"value": q.Value,
+		"verb":  "Gastei",
+	}
+
+	if q.Route != "" {
+		content["text"] = "com Passagem Aérea " + q.Route + "<br /><br />" + "Bilhete: " + q.Ticket + "<br />"
+		if q.PassengerName != "" && q.PassengerName != *p.Name {
+			content["text"] = content["text"].(string) + "Passageiro " + q.PassengerName
+		}
+	}
+
+	return Activity{
+		Author:      p,
+		Location:    c,
+		PublishedAt: q.Date,
+		ID:          MakeUri(q.Order),
+		Content:     content,
+	}
+}
+
+// Activity
+type Activity struct {
+	ID          string                 `json:"id"`
+	Author      Parliamentarian        `json:"author"`
+	Location    interface{}            `json:"location"`
+	PublishedAt time.Time              `json:"published_at"`
+	Content     map[string]interface{} `json:"content"`
+}
+
 // helper
 func MakeUri(txt string) string {
 	re := regexp.MustCompile(`\W`)

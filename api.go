@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"os"
 
 	"github.com/camarabook/camarabook-api/models"
@@ -45,6 +46,21 @@ func getParliamentarian(c *gin.Context) {
 	}
 }
 
+func getParliamentarianActivities(c *gin.Context) {
+	uri := c.Params.ByName("uri")
+	DB := getDB(c)
+	activities := make([]models.Activity, 0)
+
+	var q []models.Quota
+	DB.Find(bson.M{"parliamentarian": uri}, &q)
+	for _, item := range q {
+		log.Println(item)
+		activities = append(activities, item.ToActivity(DB))
+	}
+
+	c.JSON(200, gin.H{"activities": activities})
+}
+
 func main() {
 	r := gin.New()
 
@@ -60,6 +76,7 @@ func main() {
 		})
 
 		v1.GET("/parliamentarians/:uri", getParliamentarian)
+		v1.GET("/parliamentarians/:uri/activities", getParliamentarianActivities)
 	}
 
 	r.Run(":" + os.Getenv("PORT"))
