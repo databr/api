@@ -5,34 +5,21 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type CamarabookService struct {
+type ParliamentariansService struct {
+	*gin.Engine
 }
 
-func (cs *CamarabookService) Run() *gin.Engine {
+func (cs *ParliamentariansService) Run() {
 	databaseDB := models.New()
 
 	parliamentarianResource := &ParliamentarianResource{DB: databaseDB}
 
-	r := gin.Default()
-	r.Use(gin.Logger())
-	r.Use(gin.Recovery())
-	r.Use(corsMiddleware())
-
-	v1 := r.Group("/v1")
+	v1 := cs.Group("/v1")
 	{
 		v1.GET("/parliamentarians", func(c *gin.Context) {
 			c.String(200, "Hi!")
 		})
 
 		v1.GET("/parliamentarians/:uri", parliamentarianResource.Get)
-		v1.GET("/parliamentarians/:uri/activities", parliamentarianResource.GetActivities)
-	}
-
-	return r
-}
-
-func corsMiddleware() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 	}
 }
