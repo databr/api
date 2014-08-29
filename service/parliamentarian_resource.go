@@ -1,7 +1,9 @@
 package service
 
 import (
+	"fmt"
 	"os"
+	"strconv"
 
 	"github.com/camarabook/camarabook-api/models"
 	"github.com/camarabook/go-popolo"
@@ -9,10 +11,35 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+const (
+	PER_PAGE_LIMIT = 100
+)
+
 var API_ROOT string
 
 func init() {
 	API_ROOT = os.Getenv("API_ROOT")
+}
+
+func pagination(resourceURI string,
+	database models.Database,
+	limit,
+	currentPage int,
+	resourceClass interface{},
+) map[string]interface{} {
+	total, _ := database.Count(resourceClass)
+
+	pagination := map[string]interface{}{}
+
+	if currentPage > 1 {
+		pagination["previous"] = fmt.Sprintf("%s/%s/?page=%d", API_ROOT, resourceURI, currentPage-1)
+	}
+
+	if total > (limit * currentPage) {
+		pagination["next"] = fmt.Sprintf("%s/%s/?page=%d", API_ROOT, resourceURI, currentPage+1)
+	}
+
+	return pagination
 }
 
 type ParliamentarianResource struct {
@@ -33,7 +60,13 @@ func (r *ParliamentarianResource) Index(c *gin.Context) {
 		}
 	}
 
-	err := r.DB.Find(search, &p)
+	pageS := query.Get("page")
+	if pageS == "" {
+		pageS = "1"
+	}
+	page, _ := strconv.Atoi(pageS)
+
+	err := r.DB.Find(search, PER_PAGE_LIMIT, page, &p)
 
 	if err != nil {
 		c.JSON(500, gin.H{"error": "500", "message": err.Error()})
@@ -42,7 +75,16 @@ func (r *ParliamentarianResource) Index(c *gin.Context) {
 			p = make([]*models.Parliamentarian, 0)
 		}
 		setLinks(p)
-		c.JSON(200, gin.H{"parliamentarians": p})
+		c.JSON(200, gin.H{
+			"parliamentarians": p,
+			"paging": pagination(
+				"v1/parliamentarians",
+				r.DB,
+				PER_PAGE_LIMIT,
+				page,
+				models.Parliamentarian{},
+			),
+		})
 	}
 }
 
