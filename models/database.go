@@ -38,8 +38,13 @@ func (d Database) FindOne(query, result interface{}) error {
 	return d.collection(result).Find(query).One(result)
 }
 
-func (d Database) Find(query, result interface{}) error {
-	return d.collection(result).Find(query).All(result)
+func (d Database) Find(query interface{}, limit, page int, result interface{}) error {
+	offset := limit * (page - 1)
+	return d.collection(result).Find(query).Sort("id").Limit(limit).Skip(offset).All(result)
+}
+
+func (d Database) Count(resource interface{}) (int, error) {
+	return d.collection(resource).Count()
 }
 
 func (d Database) Create(data interface{}) error {
