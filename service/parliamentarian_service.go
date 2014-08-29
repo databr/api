@@ -16,9 +16,7 @@ func (cs *ParliamentariansService) Run() {
 
 	v1 := cs.Group("/v1")
 	{
-		v1.GET("/parliamentarians", func(c *gin.Context) {
-			c.String(200, "Hi!")
-		})
+		v1.GET("/parliamentarians", parliamentarianResource.Index)
 
 		v1.GET("/parliamentarians/:uri", parliamentarianResource.Get)
 	}
