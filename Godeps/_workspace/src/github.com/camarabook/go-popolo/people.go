@@ -2,8 +2,6 @@ package popolo
 
 import "time"
 
-const DateSpec = "2006-01-02"
-
 // Using spec from http://popoloproject.com/
 
 type Person struct {
@@ -21,7 +19,7 @@ type Person struct {
 	Email            *string         `json:"email"`             // A preferred email address
 	Gender           *string         `json:"gender"`            // A gender
 	BirthDate        Date            `json:"birth_date"`        // A date of birth
-	DeathDate        Date            `json:"death_date"`        // A date of death
+	DeathDate        DateTime        `json:"death_date"`        // A date of death
 	Image            *string         `json:"image"`             // A URL of a head shot
 	Summary          *string         `json:"summary"`           // A one-line account of a person's life
 	Biography        *string         `json:"biography"`         // An extended account of a person's life
@@ -56,7 +54,7 @@ type ContactDetail struct {
 	Label      *string   `json:"label"`       // A human-readable label for the contact detail
 	Type       *string   `json:"type"`        //  [required] A type of medium, e.g. 'fax' or 'email'
 	Value      *string   `json:"value"`       // [required] A value, e.g. a phone number or email address
-	Note       *string   `json:"node"`        // A note, e.g. for grouping contact details by physical location
+	Note       *string   `json:"note"`        // A note, e.g. for grouping contact details by physical location
 	ValidFrom  Date      `json:"valid_from"`  // The date from which the contact detail is valid",
 	ValidUntil Date      `json:"valid_until"` // The date from which the contact detail is no longer valid",
 	CreatedAt  time.Time `json:"created_at"`  // The time at which the resource was created
@@ -66,20 +64,12 @@ type ContactDetail struct {
 
 type Link struct {
 	Url  *string `json:"url"`  // A URL
-	Note *string `json:"node"` // A note, e.g. 'Wikipedia page'
+	Note *string `json:"note"` // A note, e.g. 'Wikipedia page'
 }
 
 type Membership struct{}
 
 type Source Link
 
-type Date struct {
-	time.Time
-}
-
 type Area struct{} // TODO
 type Post struct{} // TODO
-
-func (d Date) MarshalJSON() ([]byte, error) {
-	return []byte(d.Format(`"` + DateSpec + `"`)), nil
-}

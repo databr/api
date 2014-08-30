@@ -1,10 +1,10 @@
 {
 	"ImportPath": "github.com/camarabook/camarabook-api",
-	"GoVersion": "go1.3",
+	"GoVersion": "go1.3.1",
 	"Deps": [
 		{
 			"ImportPath": "github.com/camarabook/go-popolo",
-			"Rev": "44997d73c11264c5a5140e8e487ba9a15cc0c361"
+			"Rev": "4876646fc2ec001af6456732965b862b9cfc37df"
 		},
 		{
 			"ImportPath": "github.com/fiam/gounidecode/unidecode",
