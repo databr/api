@@ -76,7 +76,8 @@ func (r *ParliamentarianResource) Index(c *gin.Context) {
 		c.JSON(500, gin.H{"error": "500", "message": err.Error()})
 	} else {
 		if len(p) == 0 {
-			p = make([]*models.Parliamentarian, 0)
+			c.JSON(200, gin.H{"parliamentarians": []string{}})
+			return
 		}
 		setLinks(p)
 		gzipJSON(c, 200, gin.H{
