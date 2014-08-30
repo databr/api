@@ -9,9 +9,12 @@ deps:
 	go get github.com/fiam/gounidecode/unidecode
 	go get
 
-deploy:
+save_deps:
 	godep save
 	git add --all Godeps/
 	git commit -m "updated deps"
+
+deploy:
+	make save_deps -i
 	git push heroku master
-	
+	git push origin master
