@@ -1,9 +1,13 @@
 package service
 
 import (
+	"compress/gzip"
+	"encoding/json"
 	"fmt"
+	"io"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/camarabook/camarabook-api/models"
 	"github.com/camarabook/go-popolo"
@@ -75,7 +79,7 @@ func (r *ParliamentarianResource) Index(c *gin.Context) {
 			p = make([]*models.Parliamentarian, 0)
 		}
 		setLinks(p)
-		c.JSON(200, gin.H{
+		gzipJSON(c, 200, gin.H{
 			"parliamentarians": p,
 			"paging": pagination(
 				"v1/parliamentarians",
@@ -98,7 +102,7 @@ func (r *ParliamentarianResource) Get(c *gin.Context) {
 	if err != nil {
 		c.JSON(404, gin.H{"error": "404", "message": err.Error()})
 	} else {
-		c.JSON(200, gin.H{"parliamentarian": p})
+		gzipJSON(c, 200, gin.H{"parliamentarian": p})
 	}
 }
 
@@ -119,4 +123,25 @@ func getLink(p *models.Parliamentarian) []popolo.Link {
 
 func toPtr(s string) *string {
 	return &s
+}
+
+func gzipJSON(c *gin.Context, code int, data ...interface{}) {
+	var writer io.Writer
+
+	w := c.Writer
+	r := c.Request
+
+	w.WriteHeader(code)
+	w.Header().Set("Content-Type", "application/json")
+
+	if strings.Contains(r.Header.Get("Accept-Encoding"), "gzip") {
+		gz := gzip.NewWriter(w)
+		w.Header().Set("Content-Encoding", "gzip")
+		defer gz.Close()
+		writer = gz
+	} else {
+		writer = w
+	}
+
+	json.NewEncoder(writer).Encode(data[0])
 }
