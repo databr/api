@@ -19,10 +19,14 @@ const (
 	PER_PAGE_LIMIT = 100
 )
 
-var API_ROOT string
+var (
+	API_ROOT string
+	ENV      string
+)
 
 func init() {
 	API_ROOT = os.Getenv("API_ROOT")
+	ENV = os.Getenv("ENV")
 }
 
 func pagination(resourceURI string,
@@ -135,7 +139,7 @@ func gzipJSON(c *gin.Context, code int, data ...interface{}) {
 	w.WriteHeader(code)
 	w.Header().Set("Content-Type", "application/json")
 
-	if strings.Contains(r.Header.Get("Accept-Encoding"), "gzip") {
+	if ENV != "development" && strings.Contains(r.Header.Get("Accept-Encoding"), "gzip") {
 		gz := gzip.NewWriter(w)
 		w.Header().Set("Content-Encoding", "gzip")
 		defer gz.Close()
