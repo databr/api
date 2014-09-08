@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/camarabook/go-popolo"
+	"github.com/databr/go-popolo"
 	. "github.com/fiam/gounidecode/unidecode"
 )
 
