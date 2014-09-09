@@ -1,9 +1,10 @@
 package main
 
 import (
+	"log"
 	"os"
 
-	"github.com/camarabook/camarabook-api/service"
+	"github.com/databr/api/service"
 	"github.com/gin-gonic/gin"
 )
 
@@ -16,6 +17,7 @@ func main() {
 	scamarabook := service.ParliamentariansService{r}
 	scamarabook.Run()
 
+	log.Println("Listening port", os.Getenv("PORT"))
 	r.Run(":" + os.Getenv("PORT"))
 }
 
