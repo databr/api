@@ -1,7 +1,7 @@
 package service
 
 import (
-	"github.com/camarabook/camarabook-api/models"
+	"github.com/databr/api/models"
 	"github.com/gin-gonic/gin"
 )
 
