@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"net/http"
 	"os"
 	"strconv"
 	"strings"
@@ -139,7 +140,7 @@ func gzipJSON(c *gin.Context, code int, data ...interface{}) {
 	w.WriteHeader(code)
 	w.Header().Set("Content-Type", "application/json")
 
-	if ENV != "development" && strings.Contains(r.Header.Get("Accept-Encoding"), "gzip") {
+	if useGzip(r.Header) {
 		gz := gzip.NewWriter(w)
 		w.Header().Set("Content-Encoding", "gzip")
 		defer gz.Close()
@@ -149,4 +150,11 @@ func gzipJSON(c *gin.Context, code int, data ...interface{}) {
 	}
 
 	json.NewEncoder(writer).Encode(data[0])
+}
+
+func useGzip(h http.Header) bool {
+	return ENV != "development" &&
+		strings.Contains(h.Get("User-Agent"), "Mozilla") &&
+		strings.Contains(h.Get("User-Agent"), "Opera") &&
+		strings.Contains(h.Get("Accept-Encoding"), "gzip")
 }
