@@ -1,1 +1,1 @@
-web: camarabook-api
+web: api
