@@ -1,9 +1,9 @@
 {
-	"ImportPath": "github.com/camarabook/camarabook-api",
+	"ImportPath": "github.com/databr/api",
 	"GoVersion": "go1.3.1",
 	"Deps": [
 		{
-			"ImportPath": "github.com/camarabook/go-popolo",
+			"ImportPath": "github.com/databr/go-popolo",
 			"Rev": "4876646fc2ec001af6456732965b862b9cfc37df"
 		},
 		{
