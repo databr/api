@@ -35,8 +35,9 @@ func pagination(resourceURI string,
 	limit,
 	currentPage int,
 	resourceClass interface{},
+	query bson.M,
 ) map[string]interface{} {
-	total, _ := database.Count(resourceClass)
+	total, _ := database.Count(resourceClass, query)
 
 	pagination := map[string]interface{}{}
 
@@ -93,6 +94,7 @@ func (r *ParliamentarianResource) Index(c *gin.Context) {
 				PER_PAGE_LIMIT,
 				page,
 				models.Parliamentarian{},
+				search,
 			),
 		})
 	}

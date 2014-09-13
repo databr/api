@@ -43,8 +43,8 @@ func (d Database) Find(query interface{}, limit, page int, result interface{}) e
 	return d.collection(result).Find(query).Sort("id").Limit(limit).Skip(offset).All(result)
 }
 
-func (d Database) Count(resource interface{}) (int, error) {
-	return d.collection(resource).Count()
+func (d Database) Count(resource interface{}, query bson.M) (int, error) {
+	return d.collection(resource).Find(query).Count()
 }
 
 func (d Database) Create(data interface{}) error {
