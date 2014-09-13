@@ -21,7 +21,7 @@ func New() Database {
 	// mgo.SetDebug(false)
 	// mgo.SetLogger(logger)
 
-	log.Println("Trying connect to", os.Getenv("MONGO_URL"))
+	log.Println("Trying connect to", os.Getenv("MONGO_URL"), "on", os.Getenv("DATABASE_NAME"))
 	session, err := mgo.Dial(os.Getenv("MONGO_URL"))
 	checkErr(err)
 
