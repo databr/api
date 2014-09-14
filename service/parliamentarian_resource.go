@@ -86,7 +86,8 @@ func (r *ParliamentarianResource) Index(c *gin.Context) {
 			return
 		}
 		setLinks(p)
-		gzipJSON(c, 200, gin.H{
+
+		data := gin.H{
 			"parliamentarians": p,
 			"paging": pagination(
 				"v1/parliamentarians",
@@ -96,7 +97,9 @@ func (r *ParliamentarianResource) Index(c *gin.Context) {
 				models.Parliamentarian{},
 				search,
 			),
-		})
+		}
+
+		c.Render(200, DataRender{c.Request}, data)
 	}
 }
 
@@ -110,7 +113,7 @@ func (r *ParliamentarianResource) Get(c *gin.Context) {
 	if err != nil {
 		c.JSON(404, gin.H{"error": "404", "message": err.Error()})
 	} else {
-		gzipJSON(c, 200, gin.H{"parliamentarian": p})
+		c.Render(200, DataRender{c.Request}, gin.H{"parliamentarian": p})
 	}
 }
 
@@ -133,30 +136,43 @@ func toPtr(s string) *string {
 	return &s
 }
 
-func gzipJSON(c *gin.Context, code int, data ...interface{}) {
-	var writer io.Writer
+type DataRender struct {
+	r *http.Request
+}
 
-	w := c.Writer
-	r := c.Request
-
+func (render DataRender) Render(w http.ResponseWriter, code int, data ...interface{}) error {
 	w.WriteHeader(code)
 	w.Header().Set("Content-Type", "application/json")
 
-	if useGzip(r.Header) {
+	if render.r.URL.Query().Get("pretty") == "true" {
+		out, err := json.MarshalIndent(data[0], "", "    ")
+		if err != nil {
+			return err
+		}
+		w.Write(out)
+		return nil
+	}
+
+	writer := render.gzip(w)
+	return json.NewEncoder(writer).Encode(data[0])
+}
+
+func (render DataRender) gzip(w http.ResponseWriter) io.Writer {
+	if render.shouldGzipResonse() {
 		gz := gzip.NewWriter(w)
 		w.Header().Set("Content-Encoding", "gzip")
 		defer gz.Close()
-		writer = gz
+		return gz
 	} else {
-		writer = w
+		return w
 	}
-
-	json.NewEncoder(writer).Encode(data[0])
 }
 
-func useGzip(h http.Header) bool {
+func (render DataRender) shouldGzipResonse() bool {
+	h := render.r.Header
 	return ENV != "development" &&
 		strings.Contains(h.Get("User-Agent"), "Mozilla") &&
 		strings.Contains(h.Get("User-Agent"), "Opera") &&
-		strings.Contains(h.Get("Accept-Encoding"), "gzip")
+		strings.Contains(h.Get("Accept-Encoding"), "gzip") &&
+		render.r.URL.Query().Get("pretty") != "true"
 }
