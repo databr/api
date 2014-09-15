@@ -58,25 +58,25 @@ type Link struct {
 }
 
 type Party struct {
-	Id               string                  `json:"id"`                         // The organization's unique identifier
-	Name             string                  `json:"name"`                       // A primary name, e.g. a legally recognized name
-	OtherNames       []OtherNames            `json:"other_names,omitempty"`      // Alternate or former names
-	Identifiers      []*Identifier           `json:"identifiers,omitempty"`      // Issued identifiers
-	Classification   string                  `json:"classification,omitempty"`   // An organization category, e.g. committee
-	ParentId         string                  `json:"parent_id,omitempty"`        //The ID of the organization that contains this organization
-	Parent           *popolo.Organization    `json:"parent,omitempty"`           // The organization that contains this organization
-	AreaId           string                  `json:"area_id,omitempty"`          // The ID of the geographic area to which this organization is related
-	Area             *popolo.Area            `json:"area,omitempty"`             // The geographic area to which this organization is related
-	FoundingDate     string                  `json:"founding_date,omitempty"`    // A date of founding
-	DissoulutionDate string                  `json:"dissolution_date,omitempty"` // A date of dissolution
-	Image            string                  `json:"image,omitempty"`            // A URL of a head shot
-	ContactDetails   []*popolo.ContactDetail `json:"contact_details,omitempty"`  // Means of contacting the person
-	Links            []Link                  `json:"link,omitempty"`             // URLs to documents about the person
-	Memberships      []popolo.Membership     `json:"memberships,omitempty"`      // Memberships
-	Posts            []popolo.Post           `json:"posts,omitempty"`            // Posts within the organization
-	CreatedAt        time.Time               `json:"created_at,omitempty"`       // The time at which the resource was created
-	UpdatedAt        time.Time               `json:"updated_at,omitempty"`       // The time at which the resource was last modified
-	Sources          []Source                `json:"sources,omitempty"`          // URLs to documents from which the person is derived
+	Id               string               `json:"id"`                         // The organization's unique identifier
+	Name             string               `json:"name"`                       // A primary name, e.g. a legally recognized name
+	OtherNames       []OtherNames         `json:"other_names,omitempty"`      // Alternate or former names
+	Identifiers      []*Identifier        `json:"identifiers,omitempty"`      // Issued identifiers
+	Classification   string               `json:"classification,omitempty"`   // An organization category, e.g. committee
+	ParentId         string               `json:"parent_id,omitempty"`        //The ID of the organization that contains this organization
+	Parent           *popolo.Organization `json:"parent,omitempty"`           // The organization that contains this organization
+	AreaId           string               `json:"area_id,omitempty"`          // The ID of the geographic area to which this organization is related
+	Area             *popolo.Area         `json:"area,omitempty"`             // The geographic area to which this organization is related
+	FoundingDate     string               `json:"founding_date,omitempty"`    // A date of founding
+	DissoulutionDate string               `json:"dissolution_date,omitempty"` // A date of dissolution
+	Image            string               `json:"image,omitempty"`            // A URL of a head shot
+	ContactDetails   []ContactDetail      `json:"contact_details,omitempty"`  // Means of contacting the person
+	Links            []Link               `json:"link,omitempty"`             // URLs to documents about the person
+	Memberships      []popolo.Membership  `json:"memberships,omitempty"`      // Memberships
+	Posts            []popolo.Post        `json:"posts,omitempty"`            // Posts within the organization
+	CreatedAt        time.Time            `json:"created_at,omitempty"`       // The time at which the resource was created
+	UpdatedAt        time.Time            `json:"updated_at,omitempty"`       // The time at which the resource was last modified
+	Sources          []Source             `json:"sources,omitempty"`          // URLs to documents from which the person is derived
 }
 
 type Company popolo.Organization
@@ -101,15 +101,15 @@ type Identifier struct {
 }
 
 type ContactDetail struct {
-	Label      string      `json:"label"`       // A human-readable label for the contact detail
-	Type       string      `json:"type"`        //  [required] A type of medium, e.g. 'fax' or 'email'
-	Value      string      `json:"value"`       // [required] A value, e.g. a phone number or email address
-	Note       string      `json:"note"`        // A note, e.g. for grouping contact details by physical location
-	ValidFrom  popolo.Date `json:"valid_from"`  // The date from which the contact detail is valid",
-	ValidUntil popolo.Date `json:"valid_until"` // The date from which the contact detail is no longer valid",
-	CreatedAt  time.Time   `json:"created_at"`  // The time at which the resource was created
-	UpdatedAt  time.Time   `json:"updated_at"`  // The time at which the resource was last modified
-	Sources    []Source    `json:"sources"`     // URLs to documents from which the person is derived
+	Label      string       `json:"label,omitempty"`       // A human-readable label for the contact detail
+	Type       string       `json:"type"`                  //  [required] A type of medium, e.g. 'fax' or 'email'
+	Value      string       `json:"value"`                 // [required] A value, e.g. a phone number or email address
+	Note       string       `json:"note,omitempty"`        // A note, e.g. for grouping contact details by physical location
+	ValidFrom  *popolo.Date `json:"valid_from,omitempty"`  // The date from which the contact detail is valid",
+	ValidUntil *popolo.Date `json:"valid_until,omitempty"` // The date from which the contact detail is no longer valid",
+	CreatedAt  time.Time    `json:"created_at,omitempty"`  // The time at which the resource was created
+	UpdatedAt  time.Time    `json:"updated_at,omitempty"`  // The time at which the resource was last modified
+	Sources    []Source     `json:"sources, omitempty"`    // URLs to documents from which the person is derived
 }
 
 // helper
