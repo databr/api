@@ -15,8 +15,8 @@ func main() {
 	r.Use(gin.Recovery())
 	r.Use(fixCorsMiddleware())
 
-	scamarabook := service.ParliamentariansService{r}
-	scamarabook.Run()
+	parliamentariansService := service.ParliamentariansService{r}
+	parliamentariansService.Run()
 
 	r.GET("/", func(c *gin.Context) {
 		http.Redirect(
