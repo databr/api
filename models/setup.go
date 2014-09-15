@@ -107,8 +107,8 @@ type ContactDetail struct {
 	Note       string       `json:"note,omitempty"`        // A note, e.g. for grouping contact details by physical location
 	ValidFrom  *popolo.Date `json:"valid_from,omitempty"`  // The date from which the contact detail is valid",
 	ValidUntil *popolo.Date `json:"valid_until,omitempty"` // The date from which the contact detail is no longer valid",
-	CreatedAt  time.Time    `json:"created_at,omitempty"`  // The time at which the resource was created
-	UpdatedAt  time.Time    `json:"updated_at,omitempty"`  // The time at which the resource was last modified
+	CreatedAt  *time.Time   `json:"created_at,omitempty"`  // The time at which the resource was created
+	UpdatedAt  *time.Time   `json:"updated_at,omitempty"`  // The time at which the resource was last modified
 	Sources    []Source     `json:"sources, omitempty"`    // URLs to documents from which the person is derived
 }
 
