@@ -18,6 +18,9 @@ func main() {
 	parliamentariansService := service.ParliamentariansService{r}
 	parliamentariansService.Run()
 
+	partiesService := service.PartiesService{r}
+	partiesService.Run()
+
 	r.GET("/", func(c *gin.Context) {
 		http.Redirect(
 			c.Writer,
