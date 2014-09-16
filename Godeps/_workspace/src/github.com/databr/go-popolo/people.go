@@ -25,7 +25,7 @@ type Person struct {
 	Biography        *string         `json:"biography"`         // An extended account of a person's life
 	NationalIdentify *string         `json:"national_identity"` // A national identity
 	ContactDetails   []ContactDetail `json:"contact_details"`   // Means of contacting the person
-	Links            []Link          `json:"link"`              // URLs to documents about the person
+	Links            []Link          `json:"links"`             // URLs to documents about the person
 	Memberships      []Membership    `json:"memberships"`       // Memberships
 	CreatedAt        time.Time       `json:"created_at"`        // The time at which the resource was created
 	UpdatedAt        time.Time       `json:"updated_at"`        // The time at which the resource was last modified

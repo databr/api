@@ -4,7 +4,7 @@
 	"Deps": [
 		{
 			"ImportPath": "github.com/databr/go-popolo",
-			"Rev": "4876646fc2ec001af6456732965b862b9cfc37df"
+			"Rev": "5e69ba3d8abdf65617c2f5ecd056cae120245552"
 		},
 		{
 			"ImportPath": "github.com/fiam/gounidecode/unidecode",
@@ -14,6 +14,11 @@
 			"ImportPath": "github.com/gin-gonic/gin",
 			"Comment": "v0.3-3-gc3abaf9",
 			"Rev": "c3abaf9afcd167475951249d5a406ba10b24a1d9"
+		},
+		{
+			"ImportPath": "github.com/influxdb/influxdb/client",
+			"Comment": "v0.8.1-71-g4b92d96",
+			"Rev": "4b92d96cb46118c3bc2d574fbd55488a8c4e678e"
 		},
 		{
 			"ImportPath": "github.com/julienschmidt/httprouter",
