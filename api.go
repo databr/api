@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/databr/api/middleware"
 	"github.com/databr/api/service"
 	"github.com/gin-gonic/gin"
 )
@@ -13,7 +14,7 @@ func main() {
 	r := gin.Default()
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
-	r.Use(fixCorsMiddleware())
+	r.Use(middleware.CORS())
 
 	parliamentariansService := service.ParliamentariansService{r}
 	parliamentariansService.Run()
@@ -31,10 +32,4 @@ func main() {
 
 	log.Println("Listening port", os.Getenv("PORT"))
 	r.Run(":" + os.Getenv("PORT"))
-}
-
-func fixCorsMiddleware() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-	}
 }
