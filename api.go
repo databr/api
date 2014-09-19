@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/xml"
 	"log"
 	"net/http"
 	"os"
@@ -22,6 +23,21 @@ func main() {
 
 	partiesService := service.PartiesService{r}
 	partiesService.Run()
+
+	r.GET("/status/pingdom", func(c *gin.Context) {
+		type Pingdom struct {
+			XMLName      xml.Name `xml:"pingdom_http_custom_check"`
+			Status       string   `xml:"status"`
+			ResponseTime string   `xml:"response_time"`
+		}
+
+		pingdom := &Pingdom{
+			Status:       "OK",
+			ResponseTime: "96.777",
+		}
+
+		c.XML(200, pingdom)
+	})
 
 	r.GET("/", func(c *gin.Context) {
 		http.Redirect(
