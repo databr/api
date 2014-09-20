@@ -37,13 +37,11 @@ func StatusPageIO() gin.HandlerFunc {
 
 			timestamp := strconv.Itoa(int(time.Now().Unix()))
 			value := int(latency / time.Millisecond)
-			log.Println("V", strconv.Itoa(value))
 
 			data := url.Values{}
 			data.Set("data[timestamp]", timestamp)
 			data.Set("data[value]", strconv.Itoa(value))
 
-			log.Println(requestURL, data)
 			r, err := http.NewRequest("POST", requestURL, bytes.NewBufferString(data.Encode()))
 			if err != nil {
 				return
