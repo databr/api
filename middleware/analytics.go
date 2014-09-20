@@ -11,7 +11,6 @@ import (
 var influxdbC *influxdb.Client
 
 func init() {
-
 	config := influxdb.ClientConfig{
 		Host:     os.Getenv("INFLUXDB_HOST"),
 		Username: os.Getenv("INFLUXDB_USERNAME"),
@@ -33,10 +32,10 @@ func Analytics() gin.HandlerFunc {
 		t := time.Now()
 
 		c.Next()
-		c_c := c.Copy()
+		cCopy := c.Copy()
 		latency := time.Since(t)
 		go func() {
-			status := c_c.Writer.Status()
+			status := cCopy.Writer.Status()
 
 			s := []*influxdb.Series{{
 				Name: "api_access",
@@ -44,7 +43,7 @@ func Analytics() gin.HandlerFunc {
 					"status", "latency", "value", "query",
 				},
 				Points: [][]interface{}{
-					{status, latency, c_c.Request.URL.Path, c_c.Request.URL.RawQuery},
+					{status, latency, cCopy.Request.URL.Path, cCopy.Request.URL.RawQuery},
 				},
 			}}
 

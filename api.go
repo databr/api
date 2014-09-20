@@ -17,6 +17,7 @@ func main() {
 	r.Use(gin.Recovery())
 	r.Use(middleware.CORS())
 	r.Use(middleware.Analytics())
+	r.Use(middleware.StatusPageIO())
 
 	parliamentariansService := service.ParliamentariansService{r}
 	parliamentariansService.Run()
