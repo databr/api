@@ -32,6 +32,11 @@ func Analytics() gin.HandlerFunc {
 		t := time.Now()
 
 		c.Next()
+
+		if c.Request.URL.Path == "/status/pingdom" {
+			return
+		}
+
 		cCopy := c.Copy()
 		latency := time.Since(t)
 		go func() {
