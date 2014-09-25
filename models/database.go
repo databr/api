@@ -30,6 +30,14 @@ func New() Database {
 	return database
 }
 
+func Ping() error {
+	session, err := mgo.Dial(os.Getenv("MONGO_URL"))
+	if err != nil {
+		return err
+	}
+	return session.Ping()
+}
+
 func (d Database) FindAll(results interface{}) error {
 	return d.collection(results).Find(bson.M{}).All(results)
 }
