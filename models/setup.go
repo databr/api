@@ -34,7 +34,7 @@ type Parliamentarian struct {
 	NationalIdentify string                 `json:"national_identity"` // A national identity
 	ContactDetails   []popolo.ContactDetail `json:"contact_details"`   // Means of contacting the person
 	Links            []Link                 `json:"links"`             // URLs to documents about the person
-	Memberships      []popolo.Membership    `json:"memberships"`       // Memberships
+	Memberships      []Membership           `json:"memberships"`       // Memberships
 	CreatedAt        time.Time              `json:"created_at"`        // The time at which the resource was created
 	UpdatedAt        time.Time              `json:"updated_at"`        // The time at which the resource was last modified
 	Sources          []Source               `json:"sources"`           // URLs to documents from which the person is derived
@@ -95,7 +95,7 @@ type Quota struct {
 }
 
 type Membership struct {
-	Id           bson.ObjectId `json:"id", bson:"_id"`
+	Id           bson.ObjectId `json:"id" bson:"_id,omitempty"`
 	Member       Rel           `json:"member"`
 	Organization Rel           `json:"organization"`
 	Label        string        `json:"label"`
