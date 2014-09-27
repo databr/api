@@ -7,6 +7,7 @@ import (
 
 	"github.com/databr/go-popolo"
 	. "github.com/fiam/gounidecode/unidecode"
+	"gopkg.in/mgo.v2/bson"
 )
 
 // Parliamentarian
@@ -91,6 +92,19 @@ type Quota struct {
 	PassengerName string
 	Route         string
 	Ticket        string
+}
+
+type Membership struct {
+	Id           bson.ObjectId `json:"id", bson:"_id"`
+	Member       Rel           `json:"member"`
+	Organization Rel           `json:"organization"`
+	Label        string        `json:"label"`
+	Role         string        `json:"role"`
+}
+
+type Rel struct {
+	Id   string `json:"id"`
+	Link string `json:"link"`
 }
 
 type Source Link
