@@ -100,6 +100,7 @@ type Membership struct {
 	Organization Rel           `json:"organization"`
 	Label        string        `json:"label"`
 	Role         string        `json:"role"`
+	Source       Source        `json:"source"`
 }
 
 type Rel struct {
