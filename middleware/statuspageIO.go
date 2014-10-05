@@ -5,25 +5,12 @@ import (
 	"log"
 	"net/http"
 	"net/url"
-	"os"
 	"strconv"
 	"time"
 
+	"github.com/databr/api/config"
 	"github.com/gin-gonic/gin"
 )
-
-var (
-	StatusPageIO_APIBase  = "https://api.statuspage.io/v1"
-	StatusPageIO_APIKEY   string
-	StatusPageIO_MetricID string
-	StatusPageIO_PageID   string
-)
-
-func init() {
-	StatusPageIO_APIKEY = os.Getenv("STATUSPAGEIO_API_KEY")
-	StatusPageIO_MetricID = os.Getenv("STATUSPAGEIO_METRIC_ID")
-	StatusPageIO_PageID = os.Getenv("STATUSPAGEIO_PAGE_ID")
-}
 
 func StatusPageIO() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -33,7 +20,10 @@ func StatusPageIO() gin.HandlerFunc {
 		latency := time.Since(t)
 
 		go func() {
-			requestURL := "" + StatusPageIO_APIBase + "/pages/" + StatusPageIO_PageID + "/metrics/" + StatusPageIO_MetricID + "/data.json"
+			if config.StatusPageIOEnable != "true" {
+				return
+			}
+			requestURL := "" + config.StatusPageIOApiBase + "/pages/" + config.StatusPageIOPageID + "/metrics/" + config.StatusPageIOMetricID + "/data.json"
 
 			timestamp := strconv.Itoa(int(time.Now().Unix()))
 			value := int(latency / time.Millisecond)
@@ -46,7 +36,7 @@ func StatusPageIO() gin.HandlerFunc {
 			if err != nil {
 				return
 			}
-			r.Header.Add("Authorization", "OAuth "+StatusPageIO_APIKEY)
+			r.Header.Add("Authorization", "OAuth "+config.StatusPageIOApiKey)
 			r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 			resp, err := http.DefaultClient.Do(r)

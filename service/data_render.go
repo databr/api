@@ -6,6 +6,8 @@ import (
 	"io"
 	"net/http"
 	"strings"
+
+	"github.com/databr/api/config"
 )
 
 type DataRender struct {
@@ -42,7 +44,7 @@ func (render DataRender) gzip(w http.ResponseWriter) io.Writer {
 
 func (render DataRender) shouldGzipResonse() bool {
 	h := render.r.Header
-	return ENV != "development" &&
+	return config.Env != "development" &&
 		strings.Contains(h.Get("User-Agent"), "Mozilla") &&
 		strings.Contains(h.Get("User-Agent"), "Opera") &&
 		strings.Contains(h.Get("Accept-Encoding"), "gzip") &&

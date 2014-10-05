@@ -3,6 +3,7 @@ package service
 import (
 	"strconv"
 
+	"github.com/databr/api/config"
 	"github.com/databr/api/models"
 	"github.com/gin-gonic/gin"
 	"gopkg.in/mgo.v2/bson"
@@ -106,7 +107,7 @@ func (r ParliamentarianResource) setMemberships(p []*models.Parliamentarian) {
 func (_ ParliamentarianResource) getLink(id string) []models.Link {
 	return []models.Link{
 		{
-			Url:  API_ROOT + "/v1/parliamentarians/" + id,
+			Url:  config.ApiRoot + "/v1/parliamentarians/" + id,
 			Note: "self",
 		},
 	}

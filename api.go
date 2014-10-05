@@ -4,10 +4,10 @@ import (
 	"encoding/xml"
 	"log"
 	"net/http"
-	"os"
 	"strconv"
 	"time"
 
+	"github.com/databr/api/config"
 	"github.com/databr/api/middleware"
 	"github.com/databr/api/models"
 	"github.com/databr/api/service"
@@ -61,6 +61,6 @@ func main() {
 			302)
 	})
 
-	log.Println("Listening port", os.Getenv("PORT"))
-	r.Run(":" + os.Getenv("PORT"))
+	log.Println("Listening port", config.Port)
+	r.Run(":" + config.Port)
 }

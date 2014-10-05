@@ -1,9 +1,9 @@
 package middleware
 
 import (
-	"os"
 	"time"
 
+	"github.com/databr/api/config"
 	"github.com/gin-gonic/gin"
 	influxdb "github.com/influxdb/influxdb/client"
 )
@@ -12,10 +12,10 @@ var influxdbC *influxdb.Client
 
 func init() {
 	config := influxdb.ClientConfig{
-		Host:     os.Getenv("INFLUXDB_HOST"),
-		Username: os.Getenv("INFLUXDB_USERNAME"),
-		Password: os.Getenv("INFLUXDB_PASSWORD"),
-		Database: os.Getenv("INFLUXDB_DATABASE"),
+		Host:     config.InfluxdbHost,
+		Username: config.InfluxdbUser,
+		Password: config.InfluxdbPassword,
+		Database: config.InfluxdbDatabase,
 		IsSecure: false,
 	}
 
