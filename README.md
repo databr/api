@@ -28,10 +28,6 @@ export ENV="development"
 export STATUSPAGEIO_ENABLE="false"
 export INFLUXDB_ENABLE="false"
 
-export MEMCACHE_URL="dev:11211"
-
-export DATABASE_URL="postgres://duke:duke@dev/databr?sslmode=disable"
-
 export TOKEN_PRIVATE_FILE="./tmp/token-private-file.rsa"
 ```
 

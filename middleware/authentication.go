@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"io/ioutil"
-	"log"
 
 	"github.com/databr/api/config"
 	"github.com/dgrijalva/jwt-go"
@@ -33,7 +32,6 @@ func Authentication() gin.HandlerFunc {
 			return publicKey, nil
 		})
 
-		log.Println("W", err)
 		if err == nil && token.Valid {
 			c.Set("app_id", token.Claims["app_id"])
 			c.Next()
@@ -47,5 +45,3 @@ func Authentication() gin.HandlerFunc {
 		}
 	}
 }
-
-//
