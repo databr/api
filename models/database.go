@@ -6,6 +6,7 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/databr/api/config"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -21,11 +22,11 @@ func New() Database {
 	// mgo.SetDebug(false)
 	// mgo.SetLogger(logger)
 
-	log.Println("Trying connect to", os.Getenv("MONGO_URL"), "on", os.Getenv("DATABASE_NAME"))
-	session, err := mgo.Dial(os.Getenv("MONGO_URL"))
+	log.Println("Trying connect to", config.MongoURL, "on", config.MongoDatabaseName)
+	session, err := mgo.Dial(config.MongoURL)
 	checkErr(err)
 
-	database.current = session.DB(os.Getenv("DATABASE_NAME"))
+	database.current = session.DB(config.MongoDatabaseName)
 
 	return database
 }

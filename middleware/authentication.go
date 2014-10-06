@@ -9,8 +9,7 @@ import (
 )
 
 var (
-	publicKey  []byte
-	privateKey []byte
+	publicKey []byte
 )
 
 func init() {
