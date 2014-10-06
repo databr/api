@@ -26,7 +26,7 @@ var (
 	MongoURL          string
 	MongoDatabaseName string
 
-	TokenPrivateFile string
+	PrivateKey string
 )
 
 func init() {
@@ -49,7 +49,7 @@ func init() {
 	MongoURL = env("MONGO_URL", false)
 	MongoDatabaseName = env("MONGO_DATABASE_NAME", false)
 
-	TokenPrivateFile = env("TOKEN_PRIVATE_FILE", true)
+	PrivateKey = env("PRIVATE_KEY", false)
 }
 
 func env(s string, optional bool) string {

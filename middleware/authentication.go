@@ -1,24 +1,10 @@
 package middleware
 
 import (
-	"io/ioutil"
-
 	"github.com/databr/api/config"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 )
-
-var (
-	publicKey []byte
-)
-
-func init() {
-	var err error
-	publicKey, err = ioutil.ReadFile(config.TokenPrivateFile + ".pub")
-	if err != nil {
-		panic(err)
-	}
-}
 
 func Authentication() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -28,7 +14,7 @@ func Authentication() gin.HandlerFunc {
 		}
 
 		token, err := jwt.ParseFromRequest(c.Request, func(token *jwt.Token) (interface{}, error) {
-			return publicKey, nil
+			return config.PrivateKey, nil
 		})
 
 		if err == nil && token.Valid {
