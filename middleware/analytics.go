@@ -33,6 +33,9 @@ func Analytics() gin.HandlerFunc {
 
 		c.Next()
 
+		if config.InfluxdbEnable != "true" {
+			return
+		}
 		if c.Request.URL.Path == "/status/pingdom" {
 			return
 		}
