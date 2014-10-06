@@ -44,14 +44,15 @@ func Analytics() gin.HandlerFunc {
 		latency := time.Since(t)
 		go func() {
 			status := cCopy.Writer.Status()
+			appId, _ := c.Get("app_id")
 
 			s := []*influxdb.Series{{
 				Name: "api_access",
 				Columns: []string{
-					"status", "latency", "value", "query",
+					"status", "latency", "value", "query", "app_id",
 				},
 				Points: [][]interface{}{
-					{status, latency, cCopy.Request.URL.Path, cCopy.Request.URL.RawQuery},
+					{status, latency, cCopy.Request.URL.Path, cCopy.Request.URL.RawQuery, appId},
 				},
 			}}
 

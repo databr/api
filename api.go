@@ -19,6 +19,7 @@ func main() {
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
 	r.Use(middleware.CORS())
+	r.Use(middleware.Authentication())
 	r.Use(middleware.Analytics())
 	r.Use(middleware.StatusPageIO())
 
