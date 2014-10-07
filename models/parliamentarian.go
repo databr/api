@@ -1,12 +1,9 @@
 package models
 
 import (
-	"regexp"
-	"strings"
 	"time"
 
 	"github.com/databr/go-popolo"
-	. "github.com/fiam/gounidecode/unidecode"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -125,19 +122,4 @@ type ContactDetail struct {
 	CreatedAt  *time.Time   `json:"created_at,omitempty"`  // The time at which the resource was created
 	UpdatedAt  *time.Time   `json:"updated_at,omitempty"`  // The time at which the resource was last modified
 	Sources    []Source     `json:"sources, omitempty"`    // URLs to documents from which the person is derived
-}
-
-// helper
-func MakeUri(txt string) string {
-	re := regexp.MustCompile(`\W`)
-	uri := Unidecode(txt)
-	uri = re.ReplaceAllString(uri, "")
-	uri = strings.ToLower(uri)
-	return uri
-}
-
-func checkErr(err error) {
-	if err != nil {
-		panic(err)
-	}
 }
