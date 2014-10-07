@@ -4,13 +4,14 @@ import (
 	"strconv"
 
 	"github.com/databr/api/config"
+	"github.com/databr/api/database"
 	"github.com/databr/api/models"
 	"github.com/gin-gonic/gin"
 	"gopkg.in/mgo.v2/bson"
 )
 
 type ParliamentarianResource struct {
-	DB models.Database
+	DB database.MongoDB
 }
 
 func (r *ParliamentarianResource) Index(c *gin.Context) {

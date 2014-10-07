@@ -4,13 +4,14 @@ import (
 	"log"
 	"strconv"
 
+	"github.com/databr/api/database"
 	"github.com/databr/api/models"
 	"github.com/gin-gonic/gin"
 	"gopkg.in/mgo.v2/bson"
 )
 
 type PartyResource struct {
-	DB models.Database
+	DB database.MongoDB
 }
 
 func (r *PartyResource) Index(c *gin.Context) {

@@ -1,7 +1,7 @@
 package service
 
 import (
-	"github.com/databr/api/models"
+	"github.com/databr/api/database"
 	"github.com/gin-gonic/gin"
 )
 
@@ -10,7 +10,7 @@ type ParliamentariansService struct {
 }
 
 func (cs *ParliamentariansService) Run() {
-	databaseDB := models.New()
+	databaseDB := database.NewMongoDB()
 
 	parliamentarianResource := &ParliamentarianResource{DB: databaseDB}
 

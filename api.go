@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"github.com/databr/api/config"
+	"github.com/databr/api/database"
 	"github.com/databr/api/middleware"
-	"github.com/databr/api/models"
 	"github.com/databr/api/service"
 	"github.com/gin-gonic/gin"
 )
@@ -33,7 +33,9 @@ func main() {
 		n := time.Now()
 		status := "OK"
 
-		err := models.Ping()
+		db := database.NewMongoDB()
+		err := db.Ping()
+
 		if err != nil {
 			status = err.Error()
 		}

@@ -18,6 +18,7 @@ func Authentication() gin.HandlerFunc {
 		})
 
 		if err == nil && token.Valid {
+
 			c.Set("app_id", token.Claims["app_id"])
 			c.Next()
 		} else {

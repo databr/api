@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/databr/api/config"
-	"github.com/databr/api/models"
+	"github.com/databr/api/database"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -13,7 +13,7 @@ const (
 )
 
 func pagination(resourceURI string,
-	database models.Database,
+	database database.MongoDB,
 	limit,
 	currentPage int,
 	resourceClass interface{},
