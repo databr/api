@@ -1,0 +1,59 @@
+---
+- hosts: all
+  vars:
+    http_port: 80
+    max_clients: 200
+    temp_dir: /tmp
+  remote_user: root
+  sudo: yes
+  tasks:
+    - name: Add mongo ppa key
+      sudo: yes
+      apt_key: >
+        keyserver=hkp://keyserver.ubuntu.com:80
+        id=7F0CEB10
+        state=present
+
+    - name: Add mongo sources list
+      sudo: yes
+      lineinfile: >
+        line="deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen"
+        dest=/etc/apt/sources.list.d/mongodb.list
+        state=present
+        create=yes
+
+    - name: Install mongo
+      sudo: yes
+      apt: name=mongodb-10gen state=latest update_cache=yes
+
+    - name: ensure apt cache is up to date
+      action: apt update_cache=yes
+
+    - name: ensure packages are installed
+      action: apt name={{item}}
+      with_items:
+          - postgresql
+          - libpq-dev
+
+    - name: download .deb
+      get_url: url={{ item.url }} dest={{ temp_dir }}/{{ item.file }}
+      with_items:
+        -
+          file: influxdb_latest_amd64.deb
+          url: http://s3.amazonaws.com/influxdb/influxdb_latest_amd64.deb
+
+    - name: ensure .deb are installed
+      command: dpkg --skip-same-version -i {{ temp_dir }}/{{ item }}
+      register: dpkg_result
+      changed_when: "dpkg_result.stdout.startswith('Selecting')"
+      with_items:
+        - influxdb_latest_amd64.deb
+
+    - name: make sure influxdb is running
+      service: name=influxdb state=running
+
+    - name: make sure mongodb is running
+      service: name=mongodb state=running
+
+    - name: make sure postgresql is running
+      service: name=postgresql state=running
