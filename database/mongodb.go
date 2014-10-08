@@ -1,7 +1,6 @@
 package database
 
 import (
-	"log"
 	"reflect"
 	"strings"
 
@@ -21,7 +20,6 @@ func NewMongoDB() MongoDB {
 	// mgo.SetDebug(false)
 	// mgo.SetLogger(logger)
 
-	log.Println("Trying connect to", config.MongoURL, "on", config.MongoDatabaseName)
 	session, err := mgo.Dial(config.MongoURL)
 	checkErr(err)
 
