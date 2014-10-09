@@ -1,3 +1,7 @@
+// Copyright 2014 Manu Martinez-Almeida.  All rights reserved.
+// Use of this source code is governed by a MIT style
+// license that can be found in the LICENSE file.
+
 package gin
 
 import (
@@ -245,6 +249,15 @@ func (c *Context) HTML(code int, name string, obj interface{}) {
 // Writes the given string into the response body and sets the Content-Type to "text/plain".
 func (c *Context) String(code int, format string, values ...interface{}) {
 	c.Render(code, render.Plain, format, values)
+}
+
+// Returns a HTTP redirect to the specific location.
+func (c *Context) Redirect(code int, location string) {
+	if code >= 300 && code <= 308 {
+		c.Render(code, render.Redirect, location)
+	} else {
+		panic(fmt.Sprintf("Cannot send a redirect with status code %d", code))
+	}
 }
 
 // Writes some data into the body stream and updates the HTTP code.

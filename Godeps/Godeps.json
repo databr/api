@@ -7,13 +7,18 @@
 			"Rev": "5e69ba3d8abdf65617c2f5ecd056cae120245552"
 		},
 		{
+			"ImportPath": "github.com/dgrijalva/jwt-go",
+			"Comment": "v2.1.0",
+			"Rev": "d82ad649e4ccf8c73f7e16fdbae22c16047b0962"
+		},
+		{
 			"ImportPath": "github.com/fiam/gounidecode/unidecode",
 			"Rev": "311ebb7422d3ff70cc1d064c5a297520ff5f304a"
 		},
 		{
 			"ImportPath": "github.com/gin-gonic/gin",
-			"Comment": "v0.3-3-gc3abaf9",
-			"Rev": "c3abaf9afcd167475951249d5a406ba10b24a1d9"
+			"Comment": "v0.4-8-g3b079bb",
+			"Rev": "3b079bb6f79ae501e73a5401c41b589f6616b61e"
 		},
 		{
 			"ImportPath": "github.com/influxdb/influxdb/client",
@@ -21,8 +26,16 @@
 			"Rev": "4b92d96cb46118c3bc2d574fbd55488a8c4e678e"
 		},
 		{
+			"ImportPath": "github.com/jinzhu/gorm",
+			"Rev": "11bfaba497a2aa5752c30705ea528d18fe68c73d"
+		},
+		{
 			"ImportPath": "github.com/julienschmidt/httprouter",
-			"Rev": "7deadb6844d2c6ff1dfb812eaa439b87cdaedf20"
+			"Rev": "46807412fe50aaceb73bb57061c2230fd26a1640"
+		},
+		{
+			"ImportPath": "github.com/lib/pq",
+			"Rev": "c6325123e6d45115749734a8bc35060ebac74d0e"
 		},
 		{
 			"ImportPath": "gopkg.in/mgo.v2",

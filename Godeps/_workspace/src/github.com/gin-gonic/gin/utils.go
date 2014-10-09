@@ -1,7 +1,13 @@
+// Copyright 2014 Manu Martinez-Almeida.  All rights reserved.
+// Use of this source code is governed by a MIT style
+// license that can be found in the LICENSE file.
+
 package gin
 
 import (
 	"encoding/xml"
+	"reflect"
+	"runtime"
 )
 
 type H map[string]interface{}
@@ -37,4 +43,8 @@ func filterFlags(content string) string {
 		}
 	}
 	return content
+}
+
+func funcName(f interface{}) string {
+	return runtime.FuncForPC(reflect.ValueOf(f).Pointer()).Name()
 }

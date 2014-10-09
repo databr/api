@@ -1,6 +1,11 @@
+// Copyright 2014 Manu Martinez-Almeida.  All rights reserved.
+// Use of this source code is governed by a MIT style
+// license that can be found in the LICENSE file.
+
 package gin
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin/render"
 	"github.com/julienschmidt/httprouter"
 	"html/template"
@@ -45,10 +50,15 @@ type (
 
 func (engine *Engine) handle404(w http.ResponseWriter, req *http.Request) {
 	c := engine.createContext(w, req, nil, engine.finalNoRoute)
-	c.Writer.setStatus(404)
+	// set 404 by default, useful for logging
+	c.Writer.WriteHeader(404)
 	c.Next()
 	if !c.Writer.Written() {
-		c.Data(404, MIMEPlain, []byte("404 page not found"))
+		if c.Writer.Status() == 404 {
+			c.Data(-1, MIMEPlain, []byte("404 page not found"))
+		} else {
+			c.Writer.WriteHeaderNow()
+		}
 	}
 	engine.cache.Put(c)
 }
@@ -76,13 +86,21 @@ func Default() *Engine {
 }
 
 func (engine *Engine) LoadHTMLGlob(pattern string) {
-	templ := template.Must(template.ParseGlob(pattern))
-	engine.SetHTMLTemplate(templ)
+	if gin_mode == debugCode {
+		engine.HTMLRender = render.HTMLDebug
+	} else {
+		templ := template.Must(template.ParseGlob(pattern))
+		engine.SetHTMLTemplate(templ)
+	}
 }
 
 func (engine *Engine) LoadHTMLFiles(files ...string) {
-	templ := template.Must(template.ParseFiles(files...))
-	engine.SetHTMLTemplate(templ)
+	if gin_mode == debugCode {
+		engine.HTMLRender = render.HTMLDebug
+	} else {
+		templ := template.Must(template.ParseFiles(files...))
+		engine.SetHTMLTemplate(templ)
+	}
 }
 
 func (engine *Engine) SetHTMLTemplate(templ *template.Template) {
@@ -108,12 +126,18 @@ func (engine *Engine) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 }
 
 func (engine *Engine) Run(addr string) {
+	if gin_mode == debugCode {
+		fmt.Println("[GIN-debug] Listening and serving HTTP on " + addr)
+	}
 	if err := http.ListenAndServe(addr, engine); err != nil {
 		panic(err)
 	}
 }
 
 func (engine *Engine) RunTLS(addr string, cert string, key string) {
+	if gin_mode == debugCode {
+		fmt.Println("[GIN-debug] Listening and serving HTTPS on " + addr)
+	}
 	if err := http.ListenAndServeTLS(addr, cert, key, engine); err != nil {
 		panic(err)
 	}
@@ -163,9 +187,15 @@ func (group *RouterGroup) pathFor(p string) string {
 func (group *RouterGroup) Handle(method, p string, handlers []HandlerFunc) {
 	p = group.pathFor(p)
 	handlers = group.combineHandlers(handlers)
+	if gin_mode == debugCode {
+		nuHandlers := len(handlers)
+		name := funcName(handlers[nuHandlers-1])
+		fmt.Printf("[GIN-debug] %-5s %-25s --> %s (%d handlers)\n", method, p, name, nuHandlers)
+	}
 	group.engine.router.Handle(method, p, func(w http.ResponseWriter, req *http.Request, params httprouter.Params) {
 		c := group.engine.createContext(w, req, params, handlers)
 		c.Next()
+		c.Writer.WriteHeaderNow()
 		group.engine.cache.Put(c)
 	})
 }

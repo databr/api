@@ -1,3 +1,7 @@
+// Copyright 2014 Manu Martinez-Almeida.  All rights reserved.
+// Use of this source code is governed by a MIT style
+// license that can be found in the LICENSE file.
+
 package gin
 
 import (
@@ -44,12 +48,11 @@ func Logger() HandlerFunc {
 		// save the IP of the requester
 		requester := c.Request.Header.Get("X-Real-IP")
 		// if the requester-header is empty, check the forwarded-header
-		if requester == "" {
+		if len(requester) == 0 {
 			requester = c.Request.Header.Get("X-Forwarded-For")
 		}
-
 		// if the requester is still empty, use the hard-coded address from the socket
-		if requester == "" {
+		if len(requester) == 0 {
 			requester = c.Request.RemoteAddr
 		}
 
