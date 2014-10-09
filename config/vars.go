@@ -29,7 +29,7 @@ var (
 	PrivateKey []byte
 
 	NewRelicLicense string
-	NewrelicAppName string
+	NewRelicAppName string
 )
 
 func init() {
@@ -55,7 +55,7 @@ func init() {
 	PrivateKey = []byte(env("PRIVATE_KEY", false))
 
 	NewRelicLicense = env("NEW_RELIC_LICENSE", true)
-	NewrelicAppName = env("NEW_RELIC_APP_NAME", true)
+	NewRelicAppName = env("NEW_RELIC_APP_NAME", true)
 }
 
 func env(s string, optional bool) string {

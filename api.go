@@ -20,7 +20,7 @@ func main() {
 	r.Use(middleware.Analytics())
 	r.Use(middleware.StatusPageIO())
 
-	middleware.InitNewrelicAgent(config.NewRelicLicense, config.NewrelicAppName, true)
+	middleware.InitNewrelicAgent(config.NewRelicLicense, config.NewRelicAppName, true)
 
 	parliamentarians := service.ParliamentariansService{r}
 	parliamentarians.Run()

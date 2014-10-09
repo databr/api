@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -22,7 +21,7 @@ func NewRelic() gin.HandlerFunc {
 func InitNewrelicAgent(license string, appname string, verbose bool) error {
 
 	if license == "" {
-		return fmt.Errorf("Please specify NewRelic license")
+		panic("Please specify NewRelic license")
 	}
 
 	agent = gorelic.NewAgent()
