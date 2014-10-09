@@ -17,7 +17,7 @@ func (cs MetroSPService) Run() {
 	v1 := cs.Group("/v1")
 	{
 		v1.GET("/sp/metro/lines", metrospResource.Lines)
-		v1.GET("/sp/metro/lines/:uri", metrospResource.GetLines)
-		v1.GET("/sp/metro/lines/:uri/status", metrospResource.GetLinesStatus)
+		v1.GET("/sp/metro/lines/:uri", metrospResource.GetLine)
+		v1.GET("/sp/metro/lines/:uri/status", metrospResource.GetLineStatus)
 	}
 }

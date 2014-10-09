@@ -7,10 +7,11 @@ type Line struct {
 	Name      string    `json:"name"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
+	Links     []Link    `json:"links"`
 }
 
 type Status struct {
-	Status    string    `json:"status"`
+	Status    string    `json:"message"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
