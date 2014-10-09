@@ -1,14 +1,10 @@
 package main
 
 import (
-	"encoding/xml"
 	"log"
 	"net/http"
-	"strconv"
-	"time"
 
 	"github.com/databr/api/config"
-	"github.com/databr/api/database"
 	"github.com/databr/api/middleware"
 	"github.com/databr/api/service"
 	"github.com/gin-gonic/gin"
@@ -23,38 +19,17 @@ func main() {
 	r.Use(middleware.Analytics())
 	r.Use(middleware.StatusPageIO())
 
-	parliamentariansService := service.ParliamentariansService{r}
-	parliamentariansService.Run()
+	parliamentarians := service.ParliamentariansService{r}
+	parliamentarians.Run()
 
-	partiesService := service.PartiesService{r}
-	partiesService.Run()
+	partians := service.PartiesService{r}
+	partians.Run()
 
-	r.GET("/status/pingdom", func(c *gin.Context) {
-		n := time.Now()
-		status := "OK"
+	metrosp := service.MetroSPService{r}
+	metrosp.Run()
 
-		db := database.NewMongoDB()
-		err := db.Ping()
-
-		if err != nil {
-			status = err.Error()
-		}
-
-		type Pingdom struct {
-			XMLName      xml.Name `xml:"pingdom_http_custom_check"`
-			Status       string   `xml:"status"`
-			ResponseTime string   `xml:"response_time"`
-		}
-
-		latency := int(time.Since(n) / time.Millisecond)
-
-		pingdom := &Pingdom{
-			Status:       status,
-			ResponseTime: strconv.Itoa(latency),
-		}
-
-		c.XML(200, pingdom)
-	})
+	pingdom := service.PingdomService{r}
+	pingdom.Run()
 
 	r.GET("/", func(c *gin.Context) {
 		http.Redirect(
