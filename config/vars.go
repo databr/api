@@ -27,6 +27,9 @@ var (
 	MongoDatabaseName string
 
 	PrivateKey []byte
+
+	NewRelicLicense string
+	NewrelicAppName string
 )
 
 func init() {
@@ -50,6 +53,9 @@ func init() {
 	MongoDatabaseName = env("MONGO_DATABASE_NAME", false)
 
 	PrivateKey = []byte(env("PRIVATE_KEY", false))
+
+	NewRelicLicense = env("NEW_RELIC_LICENSE", true)
+	NewrelicAppName = env("NEW_RELIC_APP_NAME", true)
 }
 
 func env(s string, optional bool) string {

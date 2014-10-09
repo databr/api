@@ -14,10 +14,13 @@ func main() {
 	r := gin.Default()
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
+	r.Use(middleware.NewRelic())
 	r.Use(middleware.CORS())
 	// r.Use(middleware.Authentication())
 	r.Use(middleware.Analytics())
 	r.Use(middleware.StatusPageIO())
+
+	middleware.InitNewrelicAgent(config.NewRelicLicense, config.NewrelicAppName, true)
 
 	parliamentarians := service.ParliamentariansService{r}
 	parliamentarians.Run()
