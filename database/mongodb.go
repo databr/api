@@ -10,10 +10,10 @@ import (
 )
 
 type MongoDB struct {
-	current *mgo.Database
+	Current *mgo.Database
 }
 
-func NewMongoDB() MongoDB {
+func NewMongoDB(options ...string) MongoDB {
 	var mongodb MongoDB
 
 	// logger := log.New(os.Stdout, "LOG: ", log.Ldate|log.Ltime|log.Lshortfile)
@@ -23,13 +23,17 @@ func NewMongoDB() MongoDB {
 	session, err := mgo.Dial(config.MongoURL)
 	checkErr(err)
 
-	mongodb.current = session.DB(config.MongoDatabaseName)
+	databaseName := config.MongoDatabaseName
+	if len(options) > 0 {
+		databaseName = options[0]
+	}
+	mongodb.Current = session.DB(databaseName)
 
 	return mongodb
 }
 
 func (m MongoDB) Ping() error {
-	return m.current.Session.Ping()
+	return m.Current.Session.Ping()
 }
 
 func (d MongoDB) FindAll(results interface{}) error {
@@ -78,5 +82,5 @@ func (d MongoDB) collection(t interface{}) *mgo.Collection {
 	}
 
 	collection := strings.ToLower(elem.Name())
-	return d.current.C(collection)
+	return d.Current.C(collection)
 }
