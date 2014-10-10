@@ -1,6 +1,8 @@
 package models
 
 type State struct {
+	Id                     string `json:"id"`
+	Name                   string `json:"name"`
 	Capital                string `json:"capital"`
 	Population             string `json:"population"`
 	Area                   string `json:"area"`

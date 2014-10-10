@@ -33,6 +33,9 @@ func main() {
 	parties := service.PartiesService{r}
 	parties.Run(databaseDB)
 
+	states := service.StatesService{r}
+	states.Run(databaseDB)
+
 	metrosp := service.MetroSPService{r}
 	metrosp.Run(databaseDB)
 

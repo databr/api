@@ -45,6 +45,8 @@ var _ = Describe("Service", func() {
 		parliamentarians.Run(databaseDB)
 		parties := service.PartiesService{r}
 		parties.Run(databaseDB)
+		states := service.StatesService{r}
+		states.Run(databaseDB)
 
 		recorder = httptest.NewRecorder()
 	})
@@ -98,7 +100,7 @@ var _ = Describe("Service", func() {
 			request, _ = http.NewRequest("GET", "/v1/parliamentarians/ze", nil)
 		})
 
-		Context("when the parliamentarian exist", func() {
+		Context("when the parliamentarian not found", func() {
 			It("returns a status code of 200", func() {
 				r.ServeHTTP(recorder, request)
 				Expect(recorder.Code).To(Equal(404))
@@ -174,7 +176,7 @@ var _ = Describe("Service", func() {
 			request, _ = http.NewRequest("GET", "/v1/parties/ppm", nil)
 		})
 
-		Context("when no parliamentarians exist", func() {
+		Context("when the party not found", func() {
 			It("returns a status code of 200", func() {
 				r.ServeHTTP(recorder, request)
 				Expect(recorder.Code).To(Equal(404))
@@ -186,7 +188,7 @@ var _ = Describe("Service", func() {
 			})
 		})
 
-		Context("when parliamentarians exist", func() {
+		Context("when the party exist", func() {
 			BeforeEach(func() {
 				databaseDB.Create(models.Party{Name: "PPM", Id: "ppm"})
 			})
@@ -201,6 +203,83 @@ var _ = Describe("Service", func() {
 
 				parliamentarianJSON := mapFromJSON(recorder.Body.Bytes())["party"].(map[string]interface{})
 				Expect(parliamentarianJSON["name"]).To(Equal("PPM"))
+			})
+		})
+	})
+
+	// --
+	Describe("GET /v1/states", func() {
+		BeforeEach(func() {
+			request, _ = http.NewRequest("GET", "/v1/states", nil)
+		})
+
+		Context("when no states exist", func() {
+			It("returns a status code of 200", func() {
+				r.ServeHTTP(recorder, request)
+				Expect(recorder.Code).To(Equal(200))
+			})
+
+			It("returns a empty body", func() {
+				r.ServeHTTP(recorder, request)
+				Expect(recorder.Body.String()).To(Equal("{\"states\":[]}\n"))
+			})
+		})
+
+		Context("when states exist", func() {
+			BeforeEach(func() {
+				databaseDB.Create(models.State{Name: "Sao Paulo"})
+				databaseDB.Create(models.State{Name: "Rio de Janeiro"})
+			})
+
+			It("returns a status code of 200", func() {
+				r.ServeHTTP(recorder, request)
+				Expect(recorder.Code).To(Equal(200))
+			})
+
+			It("returns those states in the body", func() {
+				r.ServeHTTP(recorder, request)
+
+				partiesJSON := mapFromJSON(recorder.Body.Bytes())["states"].([]interface{})
+				Expect(len(partiesJSON)).To(Equal(2))
+
+				partieJSON := partiesJSON[0].(map[string]interface{})
+				Expect(partieJSON["name"]).To(Equal("Sao Paulo"))
+			})
+		})
+	})
+
+	Describe("GET /v1/states/:uri", func() {
+		BeforeEach(func() {
+			request, _ = http.NewRequest("GET", "/v1/states/sp", nil)
+		})
+
+		Context("when the state was not found", func() {
+			It("returns a status code of 200", func() {
+				r.ServeHTTP(recorder, request)
+				Expect(recorder.Code).To(Equal(404))
+			})
+
+			It("returns a error body", func() {
+				r.ServeHTTP(recorder, request)
+				Expect(recorder.Body.String()).To(Equal("{\"error\":\"404\",\"message\":\"not found\"}\n"))
+			})
+		})
+
+		Context("when state exist", func() {
+			BeforeEach(func() {
+				databaseDB.Create(models.State{Name: "Sao Paulo", Id: "sp"})
+			})
+
+			It("returns a status code of 200", func() {
+				r.ServeHTTP(recorder, request)
+				Expect(recorder.Code).To(Equal(200))
+			})
+
+			It("returns the state in the body", func() {
+				r.ServeHTTP(recorder, request)
+
+				parliamentarianJSON := mapFromJSON(recorder.Body.Bytes())["state"].(map[string]interface{})
+				Expect(parliamentarianJSON["name"]).To(Equal("Sao Paulo"))
 			})
 		})
 	})
