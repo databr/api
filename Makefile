@@ -1,3 +1,6 @@
+test:
+	cd service &&	ginkgo -r --randomizeAllSpecs -cover
+
 server:
 	go get && fresh
 

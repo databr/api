@@ -9,9 +9,7 @@ type ParliamentariansService struct {
 	*gin.Engine
 }
 
-func (cs *ParliamentariansService) Run() {
-	databaseDB := database.NewMongoDB()
-
+func (cs *ParliamentariansService) Run(databaseDB database.MongoDB) {
 	parliamentarianResource := &ParliamentarianResource{DB: databaseDB}
 
 	v1 := cs.Group("/v1")

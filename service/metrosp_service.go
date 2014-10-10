@@ -9,9 +9,7 @@ type MetroSPService struct {
 	*gin.Engine
 }
 
-func (cs MetroSPService) Run() {
-	databaseDB := database.NewMongoDB()
-
+func (cs MetroSPService) Run(databaseDB database.MongoDB) {
 	metrospResource := &MetroSPResource{DB: databaseDB}
 
 	v1 := cs.Group("/v1")

@@ -9,9 +9,7 @@ type PartiesService struct {
 	*gin.Engine
 }
 
-func (cs *PartiesService) Run() {
-	databaseDB := database.NewMongoDB()
-
+func (cs *PartiesService) Run(databaseDB database.MongoDB) {
 	partyResource := &PartyResource{DB: databaseDB}
 
 	v1 := cs.Group("/v1")

@@ -33,7 +33,3 @@ func pagination(resourceURI string,
 
 	return pagination
 }
-
-func toPtr(s string) *string {
-	return &s
-}
