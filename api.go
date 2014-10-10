@@ -14,19 +14,20 @@ func main() {
 	r := gin.Default()
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
-	r.Use(middleware.NewRelic())
 	r.Use(middleware.CORS())
 	// r.Use(middleware.Authentication())
 	r.Use(middleware.Analytics())
 	r.Use(middleware.StatusPageIO())
-
-	middleware.InitNewrelicAgent(config.NewRelicLicense, config.NewRelicAppName, true)
+	if config.Env == "production" {
+		r.Use(middleware.NewRelic())
+		middleware.InitNewrelicAgent(config.NewRelicLicense, config.NewRelicAppName, true)
+	}
 
 	parliamentarians := service.ParliamentariansService{r}
 	parliamentarians.Run()
 
-	partians := service.PartiesService{r}
-	partians.Run()
+	parties := service.PartiesService{r}
+	parties.Run()
 
 	metrosp := service.MetroSPService{r}
 	metrosp.Run()
