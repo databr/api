@@ -2,6 +2,9 @@ language: go
 script: make test
 services:
   - mongodb
+install:
+  - go get github.com/onsi/ginkgo/ginkgo
+  - go get github.com/onsi/gomega
 go:
   - 1.3
   - tip
