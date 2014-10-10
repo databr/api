@@ -1,7 +1,8 @@
 test:
-	cd service &&	ginkgo -r --randomizeAllSpecs -cover
-	cd service && gover
-	cd service && goveralls -service travis-ci -coverprofile=service.coverprofile $COVERALLS_TOKEN
+	cd service &&	ginkgo -r --randomizeAllSpecs -cover -race
+
+coverage: test
+	go tool cover -html=service/service.coverprofile
 
 server:
 	go get && fresh

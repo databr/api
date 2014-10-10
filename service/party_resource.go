@@ -1,7 +1,6 @@
 package service
 
 import (
-	"log"
 	"strconv"
 
 	"github.com/databr/api/database"
@@ -28,7 +27,6 @@ func (r *PartyResource) Index(c *gin.Context) {
 	err := r.DB.Find(search, PER_PAGE_LIMIT, page, &p)
 
 	if err != nil {
-		log.Println(err)
 		c.JSON(500, gin.H{"error": "500", "message": err.Error()})
 	} else {
 		if len(p) == 0 {
