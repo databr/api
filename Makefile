@@ -1,15 +1,14 @@
 test:
 	cd service &&	ginkgo -r --randomizeAllSpecs -cover
+	cd service && gover
+	cd service && goveralls -service travis-ci -coverprofile=service.coverprofile $COVERALLS_TOKEN
 
 server:
 	go get && fresh
 
 deps:
-	go get github.com/gin-gonic/gin
-	go get github.com/pilu/fresh
-	go get gopkg.in/mgo.v2
-	go get github.com/camarabook/go-popolo
-	go get github.com/fiam/gounidecode/unidecode
+	go get github.com/tools/godep
+	godep restore
 	go get
 
 save_deps:

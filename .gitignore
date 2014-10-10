@@ -3,3 +3,4 @@ tmp
 camarabook-api
 .projectrc
 .vagrant
+service/service.coverprofile
