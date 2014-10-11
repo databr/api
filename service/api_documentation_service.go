@@ -65,8 +65,8 @@ func (a ApiDocumentationService) Run() {
 				},
 				"/parliamentarians/{id}": map[string]interface{}{
 					"get": map[string]interface{}{
-						"tags":   []string{"Parlamentares"},
-						"sumary": "Retorna dados de um parlamentar",
+						"tags":    []string{"Parlamentares"},
+						"summary": "Retorna dados de um parlamentar",
 						"parameters": []map[string]interface{}{
 							{
 								"name":        "id",
