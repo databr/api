@@ -24,7 +24,7 @@ func (a ApiDocumentationService) Run() {
 				"version":     "1.0.0",
 				"title":       "DataBR Console",
 				"contact": map[string]string{
-					"name": "contato@datanr.io",
+					"name": "contato@databr.io",
 				},
 			}
 			doc["host"] = strings.Replace(config.ApiRoot, "http://", "", -1)
@@ -260,13 +260,19 @@ func getFieldType(f reflect.StructField) reflect.Type {
 }
 
 func propertyType(s string) map[string]interface{} {
+	d := map[string]interface{}{}
+
 	if s == "time" {
 		s = "date-time"
 	}
 
-	return map[string]interface{}{
-		"type": s,
+	if s != "string" {
+		d["format"] = s
+		s = "string"
 	}
+
+	d["type"] = s
+	return d
 }
 
 func propertyArrayRef(s string) map[string]interface{} {
