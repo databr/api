@@ -27,5 +27,6 @@ go:
   - 1.3
   - tip
 deploy:
+  provider: heroku
   api_key:
     secure: P7LERXBprrVycognsWARpzWP8PCPND3K6/Kgx4ibnC4xnNKsR7eXmZEqmcoYzO/RZRWgpj8l1gUr+T/s3W5jB/kLIHuWmXggCu+hsLhVIXi9O3c7+MhpOT46ZbqoSxLQ2RlTpSojPok5/CbK9yyA4qnnPG5YBX9lWs8TdgFY++Q=
