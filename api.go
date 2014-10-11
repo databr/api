@@ -42,6 +42,14 @@ func main() {
 	pingdom := service.PingdomService{r}
 	pingdom.Run()
 
+	doc := service.ApiDocumentationService{r}
+	doc.Run()
+
+	r.OPTIONS("/*path", func(c *gin.Context) {
+		c.Writer.Header().Set("Allow", "GET, OPTIONS")
+		c.Abort(200)
+	})
+
 	r.GET("/", func(c *gin.Context) {
 		http.Redirect(
 			c.Writer,
