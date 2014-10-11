@@ -43,10 +43,18 @@ var _ = Describe("Service", func() {
 
 		parliamentarians := service.ParliamentariansService{r}
 		parliamentarians.Run(databaseDB)
+
 		parties := service.PartiesService{r}
 		parties.Run(databaseDB)
+
 		states := service.StatesService{r}
 		states.Run(databaseDB)
+
+		pingdom := service.PingdomService{r}
+		pingdom.Run()
+
+		doc := service.ApiDocumentationService{r}
+		doc.Run()
 
 		recorder = httptest.NewRecorder()
 	})
@@ -207,7 +215,6 @@ var _ = Describe("Service", func() {
 		})
 	})
 
-	// --
 	Describe("GET /v1/states", func() {
 		BeforeEach(func() {
 			request, _ = http.NewRequest("GET", "/v1/states", nil)
@@ -254,7 +261,7 @@ var _ = Describe("Service", func() {
 		})
 
 		Context("when the state was not found", func() {
-			It("returns a status code of 200", func() {
+			It("returns a status code of 404", func() {
 				r.ServeHTTP(recorder, request)
 				Expect(recorder.Code).To(Equal(404))
 			})
@@ -281,6 +288,23 @@ var _ = Describe("Service", func() {
 				parliamentarianJSON := mapFromJSON(recorder.Body.Bytes())["state"].(map[string]interface{})
 				Expect(parliamentarianJSON["name"]).To(Equal("Sao Paulo"))
 			})
+		})
+	})
+
+	Describe("GET /v1/doc", func() {
+		BeforeEach(func() {
+			request, _ = http.NewRequest("GET", "/v1/doc", nil)
+		})
+		It("returns a status code of 200", func() {
+			r.ServeHTTP(recorder, request)
+			Expect(recorder.Code).To(Equal(200))
+		})
+
+		It("returns a error body", func() {
+			r.ServeHTTP(recorder, request)
+			doc := mapFromJSON(recorder.Body.Bytes())
+			Expect(doc["host"]).To(Equal("localhost:3002"))
+			Expect(doc["basePath"]).To(Equal("/v1"))
 		})
 	})
 })
