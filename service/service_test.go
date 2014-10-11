@@ -293,18 +293,18 @@ var _ = Describe("Service", func() {
 
 	Describe("GET /v1/doc", func() {
 		BeforeEach(func() {
-			request, _ = http.NewRequest("GET", "/v1/doc", nil)
+			request, _ = http.NewRequest("GET", "/v1/doc?pretty=true", nil)
 		})
 		It("returns a status code of 200", func() {
 			r.ServeHTTP(recorder, request)
 			Expect(recorder.Code).To(Equal(200))
 		})
 
-		It("returns a error body", func() {
+		It("returns a doc", func() {
 			r.ServeHTTP(recorder, request)
 			doc := mapFromJSON(recorder.Body.Bytes())
-			Expect(doc["host"]).To(Equal("localhost:3002"))
 			Expect(doc["basePath"]).To(Equal("/v1"))
+			Expect(doc["swagger"]).To(Equal(2.0))
 		})
 	})
 })
