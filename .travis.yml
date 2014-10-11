@@ -2,6 +2,10 @@ language: go
 script: make test
 services:
   - mongodb
+addons:
+  postgresql: "9.3"
+before_script:
+  - psql -c 'create database travis_ci_test;' -U postgres
 install:
   - go get -v ./...
   - go get code.google.com/p/go.tools/cmd/cover
@@ -9,6 +13,16 @@ install:
   - go get github.com/onsi/ginkgo/ginkgo
   - go install github.com/onsi/ginkgo/ginkgo
   - export PATH=$PATH:$HOME/gopath/bin
+  - export API_ROOT="http://api.databr.io"
+  - export MONGO_DATABASE_NAME="databr"
+  - export MONGO_URL="mongodb://localhost"
+  - export PORT=3002
+  - export ENV="test"
+  - export STATUSPAGEIO_ENABLE="false"
+  - export MEMCACHE_URL="dev:11211"
+  - export DATABASE_URL="postgres://postgres@localhost/travis_ci_test?sslmode=disable"
+  - export INFLUXDB_ENABLE="false"
+  - export PRIVATE_KEY="s"
 go:
   - 1.3
   - tip
