@@ -13,6 +13,7 @@ type Line struct {
 	UpdatedAt time.Time `json:"updated_at"`
 	Links     []Link    `json:"links"`
 	Status    Status    `json:"status"`
+	Sources   []Source  `json:"sources"`
 }
 
 type Status struct {
@@ -22,4 +23,5 @@ type Status struct {
 	Links     []Link        `json:"links"`
 	CreatedAt time.Time     `json:"created_at"`
 	UpdatedAt time.Time     `json:"updated_at"`
+	Sources   []Source      `json:"sources"`
 }
