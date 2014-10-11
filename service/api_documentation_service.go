@@ -230,8 +230,8 @@ func generateDocumentation() map[string]interface{} {
 						"description": "ID da Linha, exemplo: linha1azul",
 						"required":    true,
 					}, {
-						"name":        "uri",
-						"in":          "status_id",
+						"name":        "status_id",
+						"in":          "path",
 						"description": "ID do Status",
 						"required":    true,
 					},
