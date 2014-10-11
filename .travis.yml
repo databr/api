@@ -1,7 +1,7 @@
 language: go
 script:
   - make test
-
+  - goveralls -coverprofile service/service.coverprofile $COVERALLS_TOKEN
 services:
   - mongodb
 addons:
