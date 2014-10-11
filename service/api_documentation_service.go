@@ -260,6 +260,10 @@ func getFieldType(f reflect.StructField) reflect.Type {
 }
 
 func propertyType(s string) map[string]interface{} {
+	if s == "time" {
+		s = "date-time"
+	}
+
 	return map[string]interface{}{
 		"type": s,
 	}
