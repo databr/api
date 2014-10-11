@@ -211,50 +211,69 @@ func (a ApiDocumentationService) Run() {
 				"Source":          generateDefinition(models.Source{}),
 				"OtherNames":      generateDefinition(models.OtherNames{}),
 				"Party":           generateDefinition(models.Party{}),
+				"Rel":             generateDefinition(models.Rel{}),
 			}
 
-			c.JSON(200, doc)
+			c.Render(200, DataRender{c.Request}, doc)
 		})
 	}
 }
 
-func generateDefinition(inter interface{}) map[string]map[string]map[string]string {
+func generateDefinition(inter interface{}) map[string]map[string]map[string]interface{} {
 	model := reflect.ValueOf(inter).Type()
-	d := map[string]map[string]map[string]string{
-		"properties": map[string]map[string]string{},
+
+	d := map[string]map[string]map[string]interface{}{
+		"properties": map[string]map[string]interface{}{},
 	}
 
 	for i := 0; i < model.NumField(); i++ {
-		v := model.Field(i)
+		field := model.Field(i)
+		key := getKey(field)
+		fType := getFieldType(field)
 
-		var typeS string
-		var ref string
-
-		elType := v.Type
-		if elType.Kind() == reflect.Ptr {
-			elType = v.Type.Elem()
-		}
-
-		switch elType.Kind() {
+		switch fType.Kind() {
 		case reflect.Struct:
-			typeS = strings.ToLower(elType.Name())
+			property := strings.ToLower(fType.Name())
+			d["properties"][key] = propertyType(property)
 		case reflect.Slice:
-			ref = elType.Elem().Name()
+			ref := fType.Elem().Name()
+			d["properties"][key] = propertyArrayRef(ref)
 		default:
-			typeS = elType.String()
-		}
-
-		key := strings.Split(v.Tag.Get("json"), ",")
-		if typeS == "" {
-			d["properties"][key[0]] = map[string]string{
-				"$ref": ref,
-			}
-		} else {
-			d["properties"][key[0]] = map[string]string{
-				"type": typeS,
-			}
+			property := fType.String()
+			d["properties"][key] = propertyType(property)
 		}
 	}
 
 	return d
+}
+
+func getKey(field reflect.StructField) string {
+	return strings.Split(field.Tag.Get("json"), ",")[0]
+}
+
+func getFieldType(f reflect.StructField) reflect.Type {
+	t := f.Type
+	if t.Kind() == reflect.Ptr {
+		t = t.Elem()
+	}
+	return t
+}
+
+func propertyType(s string) map[string]interface{} {
+	return map[string]interface{}{
+		"type": s,
+	}
+}
+
+func propertyArrayRef(s string) map[string]interface{} {
+	return map[string]interface{}{
+		"type":  "array",
+		"items": propertyRef(s),
+	}
+}
+
+func propertyRef(s string) map[string]interface{} {
+	return map[string]interface{}{
+		"$ref": s,
+	}
 }
