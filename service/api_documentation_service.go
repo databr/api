@@ -122,8 +122,8 @@ func generateDocumentation() map[string]interface{} {
 		"/parties/{id}": map[string]interface{}{
 			"get": map[string]interface{}{
 				"tags":        []string{"Partidos"},
-				"summary":     "Partidos politicos",
-				"description": "Retorna dados d",
+				"summary":     "Dados do Partido",
+				"description": "Retorna dados do Partido",
 				"parameters": []map[string]interface{}{
 					{
 						"name":        "id",
@@ -132,7 +132,6 @@ func generateDocumentation() map[string]interface{} {
 						"required":    true,
 					},
 				},
-
 				"responses": map[string]interface{}{
 					"200": map[string]interface{}{
 						"description": "Sucesso",
@@ -146,22 +145,111 @@ func generateDocumentation() map[string]interface{} {
 				},
 			},
 		},
-		"/states/sp/transport/trains/lines": map[string]interface{}{
+		"/states/sp/transports/trains/lines": map[string]interface{}{
 			"get": map[string]interface{}{
-				"summary": "Test",
-				"tags":    []string{"Transporte SP"},
+				"summary": "Linhas de Trem e Metro de São Paulo",
+				"tags":    []string{"Trens SP"},
+				"responses": map[string]interface{}{
+					"200": map[string]interface{}{
+						"description": "Sucesso",
+						"schema": map[string]interface{}{
+							"$ref": "#/definitions/LinesResponse",
+						},
+					},
+					"500": map[string]interface{}{
+						"description": "Erro interno",
+					},
+				},
 			},
 		},
-		"/states/sp/transport/trains/lines/{uri}": map[string]interface{}{
+		"/states/sp/transports/trains/lines/{uri}": map[string]interface{}{
 			"get": map[string]interface{}{
-				"summary": "Test",
-				"tags":    []string{"Transporte SP"},
+				"summary": "Dados da linha solicitada",
+				"tags":    []string{"Trens SP"},
+				"parameters": []map[string]interface{}{
+					{
+						"name":        "uri",
+						"in":          "path",
+						"description": "ID da Linha, exemplo: linha1azul",
+						"required":    true,
+					},
+				},
+				"responses": map[string]interface{}{
+					"200": map[string]interface{}{
+						"description": "Sucesso",
+						"schema": map[string]interface{}{
+							"$ref": "#/definitions/LineResponse",
+						},
+					},
+					"500": map[string]interface{}{
+						"description": "Erro interno",
+					},
+					"404": map[string]interface{}{
+						"description": "Linha de Trem não encontrada",
+					},
+				},
 			},
 		},
-		"/states/sp/transport/trains/lines/{uri}/statuses": map[string]interface{}{
+		"/states/sp/transports/trains/lines/{uri}/statuses": map[string]interface{}{
 			"get": map[string]interface{}{
-				"summary": "Test",
-				"tags":    []string{"Transporte SP"},
+				"summary":     "Retorna Ultimos Status da Linha",
+				"description": "Histórico da linha, um novo status é criado quando o status da linha muda, caso contratio apenas é atualizado o campo updated_at",
+				"tags":        []string{"Trens SP"},
+				"parameters": []map[string]interface{}{
+					{
+						"name":        "uri",
+						"in":          "path",
+						"description": "ID da Linha, exemplo: linha1azul",
+						"required":    true,
+					},
+				},
+				"responses": map[string]interface{}{
+					"200": map[string]interface{}{
+						"description": "Sucesso",
+						"schema": map[string]interface{}{
+							"$ref": "#/definitions/StatusesResponse",
+						},
+					},
+					"500": map[string]interface{}{
+						"description": "Erro interno",
+					},
+					"404": map[string]interface{}{
+						"description": "Linha de Trem não encontrada",
+					},
+				},
+			},
+		},
+		"/states/sp/transports/trains/lines/{uri}/statuses/{status_id}": map[string]interface{}{
+			"get": map[string]interface{}{
+				"summary": "Retorna Status solicitado",
+				"tags":    []string{"Trens SP"},
+				"parameters": []map[string]interface{}{
+					{
+						"name":        "uri",
+						"in":          "path",
+						"description": "ID da Linha, exemplo: linha1azul",
+						"required":    true,
+					}, {
+						"name":        "uri",
+						"in":          "status_id",
+						"description": "ID do Status",
+						"required":    true,
+					},
+				},
+				"responses": map[string]interface{}{
+					"200": map[string]interface{}{
+						"description": "Sucesso",
+						"schema": map[string]interface{}{
+							"$ref": "#/definitions/StatusResponse",
+						},
+					},
+					"500": map[string]interface{}{
+						"description": "Erro interno",
+					},
+					"404": map[string]interface{}{
+						"description": "Linha de Trem ou Status não encontrada",
+					},
+				},
 			},
 		},
 	}
@@ -192,7 +280,10 @@ func generateDocumentation() map[string]interface{} {
 					"$ref": "Pagging",
 				},
 				"parties": map[string]interface{}{
-					"$ref": "Party",
+					"type": "array",
+					"items": map[string]interface{}{
+						"$ref": "Party",
+					},
 				},
 			},
 		},
@@ -203,7 +294,46 @@ func generateDocumentation() map[string]interface{} {
 				},
 			},
 		},
-
+		"LinesResponse": map[string]interface{}{
+			"properties": map[string]interface{}{
+				"paging": map[string]interface{}{
+					"$ref": "Pagging",
+				},
+				"lines": map[string]interface{}{
+					"type": "array",
+					"items": map[string]interface{}{
+						"$ref": "Line",
+					},
+				},
+			},
+		},
+		"LineResponse": map[string]interface{}{
+			"properties": map[string]interface{}{
+				"line": map[string]interface{}{
+					"$ref": "Line",
+				},
+			},
+		},
+		"StatusesResponse": map[string]interface{}{
+			"properties": map[string]interface{}{
+				"paging": map[string]interface{}{
+					"$ref": "Pagging",
+				},
+				"statuses": map[string]interface{}{
+					"type": "array",
+					"items": map[string]interface{}{
+						"$ref": "Status",
+					},
+				},
+			},
+		},
+		"StatusResponse": map[string]interface{}{
+			"properties": map[string]interface{}{
+				"status": map[string]interface{}{
+					"$ref": "Status",
+				},
+			},
+		},
 		"Pagging": map[string]interface{}{
 			"properties": map[string]interface{}{
 				"next": map[string]interface{}{
@@ -224,6 +354,9 @@ func generateDocumentation() map[string]interface{} {
 		"Party":           generateDefinition(models.Party{}),
 		"Rel":             generateDefinition(models.Rel{}),
 		"Identifier":      generateDefinition(models.Identifier{}),
+		"Line":            generateDefinition(models.Line{}),
+		"Link":            generateDefinition(models.Link{}),
+		"Status":          generateDefinition(models.Status{}),
 	}
 	return doc
 }

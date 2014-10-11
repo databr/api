@@ -36,9 +36,6 @@ func main() {
 	states := service.StatesService{r}
 	states.Run(databaseDB)
 
-	metrosp := service.MetroSPService{r}
-	metrosp.Run(databaseDB)
-
 	pingdom := service.PingdomService{r}
 	pingdom.Run()
 
