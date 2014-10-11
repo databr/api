@@ -18,16 +18,15 @@ func Authentication() gin.HandlerFunc {
 		})
 
 		if err == nil && token.Valid {
-
 			c.Set("app_id", token.Claims["app_id"])
 			c.Next()
 		} else {
+			c.Error(err, nil)
 			c.JSON(401, map[string]interface{}{
 				"error":        "token invalid",
 				"message":      "Token is invalid, check your request and try again",
 				"server_error": err.Error(),
 			})
-			c.Abort(401)
 		}
 	}
 }
