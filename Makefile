@@ -1,8 +1,7 @@
 test:
-	cd service && go test
+	cd service && ginkgo -r --randomizeAllSpecs -cover -race
 
 coverage: test
-	ginkgo -r --randomizeAllSpecs -cover -race
 	go tool cover -html=service/service.coverprofile
 
 server:

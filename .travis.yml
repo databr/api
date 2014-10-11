@@ -1,5 +1,7 @@
 language: go
-script: make test
+script:
+  - make test
+
 services:
   - mongodb
 addons:
@@ -12,6 +14,8 @@ install:
   - go get github.com/onsi/gomega
   - go get github.com/onsi/ginkgo/ginkgo
   - go install github.com/onsi/ginkgo/ginkgo
+  - go get code.google.com/p/go.tools/cmd/cover
+  - go get -u github.com/mattn/goveralls
   - export PATH=$PATH:$HOME/gopath/bin
   - export API_ROOT="http://api.databr.io"
   - export MONGO_DATABASE_NAME="databr"
