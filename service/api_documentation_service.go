@@ -61,13 +61,13 @@ func generateDocumentation() *swagger.Swagger {
 			},
 		},
 		Responses: swagger.Responses{
-			Ok: swagger.Response{
+			Ok: &swagger.Response{
 				Description: "Sucesso",
-				Schema: swagger.Schema{
+				Schema: &swagger.Schema{
 					Ref: "#/definitions/ParliamentariansResponse",
 				},
 			},
-			ServerError: swagger.Response{
+			ServerError: &swagger.Response{
 				Description: "Erro interno",
 			},
 		},
@@ -85,16 +85,16 @@ func generateDocumentation() *swagger.Swagger {
 			},
 		},
 		Responses: swagger.Responses{
-			Ok: swagger.Response{
+			Ok: &swagger.Response{
 				Description: "Sucesso",
-				Schema: swagger.Schema{
+				Schema: &swagger.Schema{
 					Ref: "#/definitions/ParliamentarianResponse",
 				},
 			},
-			ServerError: swagger.Response{
+			ServerError: &swagger.Response{
 				Description: "Erro interno",
 			},
-			NotFound: swagger.Response{
+			NotFound: &swagger.Response{
 				Description: "Parlamentar não encontrado",
 			},
 		},
@@ -104,13 +104,13 @@ func generateDocumentation() *swagger.Swagger {
 		Tags:        []string{"Partidos"},
 		Description: "Retorna dados de um Partido",
 		Responses: swagger.Responses{
-			Ok: swagger.Response{
+			Ok: &swagger.Response{
 				Description: "Sucesso",
-				Schema: swagger.Schema{
+				Schema: &swagger.Schema{
 					Ref: "#/definitions/PartyResponse",
 				},
 			},
-			ServerError: swagger.Response{
+			ServerError: &swagger.Response{
 				Description: "Erro interno",
 			},
 		},
@@ -129,13 +129,13 @@ func generateDocumentation() *swagger.Swagger {
 			},
 		},
 		Responses: swagger.Responses{
-			Ok: swagger.Response{
+			Ok: &swagger.Response{
 				Description: "Sucesso",
-				Schema: swagger.Schema{
+				Schema: &swagger.Schema{
 					Ref: "#/definitions/PartiesResponse",
 				},
 			},
-			ServerError: swagger.Response{
+			ServerError: &swagger.Response{
 				Description: "Erro interno",
 			},
 		},
@@ -145,13 +145,13 @@ func generateDocumentation() *swagger.Swagger {
 		Summary: "Linhas de Trem e Metro de São Paulo",
 		Tags:    []string{"Trens SP"},
 		Responses: swagger.Responses{
-			Ok: swagger.Response{
+			Ok: &swagger.Response{
 				Description: "Sucesso",
-				Schema: swagger.Schema{
+				Schema: &swagger.Schema{
 					Ref: "#/definitions/LinesResponse",
 				},
 			},
-			ServerError: swagger.Response{
+			ServerError: &swagger.Response{
 				Description: "Erro interno",
 			},
 		},
@@ -169,16 +169,16 @@ func generateDocumentation() *swagger.Swagger {
 			},
 		},
 		Responses: swagger.Responses{
-			Ok: swagger.Response{
+			Ok: &swagger.Response{
 				Description: "Sucesso",
-				Schema: swagger.Schema{
+				Schema: &swagger.Schema{
 					Ref: "#/definitions/LineResponse",
 				},
 			},
-			ServerError: swagger.Response{
+			ServerError: &swagger.Response{
 				Description: "Erro interno",
 			},
-			NotFound: swagger.Response{
+			NotFound: &swagger.Response{
 				Description: "Linha de Trem não encontrada",
 			},
 		},
@@ -197,16 +197,16 @@ func generateDocumentation() *swagger.Swagger {
 			},
 		},
 		Responses: swagger.Responses{
-			Ok: swagger.Response{
+			Ok: &swagger.Response{
 				Description: "Sucesso",
-				Schema: swagger.Schema{
+				Schema: &swagger.Schema{
 					Ref: "#/definitions/StatusesResponse",
 				},
 			},
-			ServerError: swagger.Response{
+			ServerError: &swagger.Response{
 				Description: "Erro interno",
 			},
-			NotFound: swagger.Response{
+			NotFound: &swagger.Response{
 				Description: "Linha de Trem não encontrada",
 			},
 		},
@@ -229,16 +229,16 @@ func generateDocumentation() *swagger.Swagger {
 			},
 		},
 		Responses: swagger.Responses{
-			Ok: swagger.Response{
+			Ok: &swagger.Response{
 				Description: "Sucesso",
-				Schema: swagger.Schema{
+				Schema: &swagger.Schema{
 					Ref: "#/definitions/StatusResponse",
 				},
 			},
-			ServerError: swagger.Response{
+			ServerError: &swagger.Response{
 				Description: "Erro interno",
 			},
-			NotFound: swagger.Response{
+			NotFound: &swagger.Response{
 				Description: "Linha de Trem ou Status não encontrada",
 			},
 		},

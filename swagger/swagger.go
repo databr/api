@@ -48,14 +48,14 @@ type Parameter struct {
 }
 
 type Responses struct {
-	Ok          Response `json:"200,omitempty"`
-	NotFound    Response `json:"404,omitempty"`
-	ServerError Response `json:"500,omitempty"`
+	Ok          *Response `json:"200,omitempty"`
+	NotFound    *Response `json:"404,omitempty"`
+	ServerError *Response `json:"500,omitempty"`
 }
 
 type Response struct {
-	Schema      Schema `json:"schema,omitempty"`
-	Description string `json:"description,omitempty"`
+	Schema      *Schema `json:"schema,omitempty"`
+	Description string  `json:"description,omitempty"`
 }
 
 type Schema struct {
