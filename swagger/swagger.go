@@ -10,7 +10,7 @@ type Swagger struct {
 	Version     float64               `json:"swagger"`
 	Host        string                `json:"host"`
 	Info        Info                  `json:"info"`
-	BasePath    string                `json:"base_path"`
+	BasePath    string                `json:"basePath"`
 	Consumes    []string              `json:"consumes"`
 	Schemes     []string              `json:"schemes"`
 	Paths       map[string]Path       `json:"paths"`
