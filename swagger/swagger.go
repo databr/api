@@ -36,7 +36,7 @@ type Request struct {
 	Tags        []string    `json:"tags"`
 	Summary     string      `json:"summary"`
 	Description string      `json:"description"`
-	Parameters  []Parameter `json:"parameters"`
+	Parameters  []Parameter `json:"parameters,omitempty"`
 	Responses   Responses   `json:"responses"`
 }
 
