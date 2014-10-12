@@ -6,15 +6,15 @@ import (
 )
 
 type Swagger struct {
-	RefPrefix   []string                `json:"-"`
-	Version     float64                 `json:"swagger"`
-	Host        string                  `json:"host"`
-	Info        Info                    `json:"info"`
-	BasePath    string                  `json:"base_path"`
-	Consumes    []string                `json:"consumes"`
-	Schemes     []string                `json:"schemes"`
-	Paths       []map[string]Path       `json:"paths"`
-	Definitions []map[string]Definition `json:"definitions"`
+	RefPrefix   []string              `json:"-"`
+	Version     float64               `json:"swagger"`
+	Host        string                `json:"host"`
+	Info        Info                  `json:"info"`
+	BasePath    string                `json:"base_path"`
+	Consumes    []string              `json:"consumes"`
+	Schemes     []string              `json:"schemes"`
+	Paths       map[string]Path       `json:"paths"`
+	Definitions map[string]Definition `json:"definitions"`
 }
 
 type Info struct {
@@ -69,8 +69,8 @@ type Definition struct {
 func New() *Swagger {
 	return &Swagger{
 		Version:     2.0,
-		Paths:       make([]map[string]Path, 0),
-		Definitions: make([]map[string]Definition, 0),
+		Paths:       make(map[string]Path, 0),
+		Definitions: make(map[string]Definition, 0),
 		RefPrefix:   make([]string, 0),
 	}
 }
@@ -79,10 +79,7 @@ func (s *Swagger) NewDefinition(name string, properties map[string]interface{}) 
 	d := Definition{}
 	d.Properties = properties
 
-	o := map[string]Definition{}
-	o[name] = d
-
-	s.Definitions = append(s.Definitions, o)
+	s.Definitions[name] = d
 }
 
 func (s *Swagger) GenerateDefinition(c interface{}) {
@@ -119,12 +116,9 @@ func (s *Swagger) GenerateDefinition(c interface{}) {
 }
 
 func (s *Swagger) NewGetPath(path string, r Request) {
-	k := map[string]Path{}
-	k[path] = Path{
+	s.Paths[path] = Path{
 		Get: r,
 	}
-
-	s.Paths = append(s.Paths, k)
 }
 
 func getKey(field reflect.StructField) string {
