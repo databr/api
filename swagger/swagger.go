@@ -133,24 +133,52 @@ func getFieldType(f reflect.StructField) reflect.Type {
 	return t
 }
 
-func propertyType(s string) map[string]interface{} {
-	d := map[string]interface{}{}
-
-	if s == "time" {
-		s = "date-time"
+func propertyType(s string) map[string]string {
+	mapType := map[string]map[string]string{
+		"int16": map[string]string{
+			"type":   "integer",
+			"format": "int32",
+		},
+		"int32": map[string]string{
+			"type":   "integer",
+			"format": "int32",
+		},
+		"int64": map[string]string{
+			"type":   "integer",
+			"format": "int64",
+		},
+		"int": map[string]string{
+			"type":   "integer",
+			"format": "int32",
+		},
+		"float32": map[string]string{
+			"type":   "number",
+			"format": "float",
+		},
+		"float64": map[string]string{
+			"type":   "number",
+			"format": "float",
+		},
+		"string": map[string]string{
+			"type": "string",
+		},
+		"bson.ObjectId": map[string]string{
+			"type": "string",
+		},
+		"time": map[string]string{
+			"type":   "string",
+			"format": "date-time",
+		},
 	}
 
-	if s == "bson.ObjectId" {
-		s = "string"
+	if s != "string" && mapType[s] == nil {
+		mapType[s] = map[string]string{
+			"format": s,
+			"type":   "string",
+		}
 	}
 
-	if s != "string" {
-		d["format"] = s
-		s = "string"
-	}
-
-	d["type"] = s
-	return d
+	return mapType[s]
 }
 
 func propertyArrayRef(s string) map[string]interface{} {
