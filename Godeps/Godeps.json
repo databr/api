@@ -3,11 +3,6 @@
 	"GoVersion": "go1.3.1",
 	"Deps": [
 		{
-			"ImportPath": "github.com/bradfitz/gomemcache/memcache",
-			"Comment": "release.r60-17-g799dd6f",
-			"Rev": "799dd6f8c603b393e3fb9d20a841109766c60fa5"
-		},
-		{
 			"ImportPath": "github.com/databr/go-popolo",
 			"Rev": "5e69ba3d8abdf65617c2f5ecd056cae120245552"
 		},
@@ -15,6 +10,10 @@
 			"ImportPath": "github.com/dgrijalva/jwt-go",
 			"Comment": "v2.1.0",
 			"Rev": "d82ad649e4ccf8c73f7e16fdbae22c16047b0962"
+		},
+		{
+			"ImportPath": "github.com/dustin/gomemcached",
+			"Rev": "3bc2b0e8fd5d0304d37f246b38cde753803cee41"
 		},
 		{
 			"ImportPath": "github.com/fiam/gounidecode/unidecode",
