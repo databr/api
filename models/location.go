@@ -4,10 +4,10 @@ type State struct {
 	Id                     string   `json:"id"`
 	Name                   string   `json:"name"`
 	Capital                string   `json:"capital"`
-	Population             string   `json:"population"`
-	Area                   string   `json:"area"`
-	PopulationDensity      string   `json:"population_density"`
-	NumberOfMunicipalities string   `json:"number_of_municipalities"`
+	Population             float64  `json:"population"`
+	Area                   float64  `json:"area"`
+	PopulationDensity      float64  `json:"population_density"`
+	NumberOfMunicipalities int      `json:"number_of_municipalities"`
 	Sources                []Source `json:"sources"`
 }
 
