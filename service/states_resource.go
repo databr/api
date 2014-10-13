@@ -18,7 +18,7 @@ func (r *StatesResource) Index(c *gin.Context) {
 	var s []*models.State
 	search := bson.M{}
 
-	err := r.DB.Find(search, PER_PAGE_LIMIT, 1, &s)
+	err := r.DB.Find(search, GetLimit(c.Request), 1, &s)
 
 	if err != nil {
 		c.JSON(500, gin.H{"error": "500", "message": err.Error()})
@@ -58,6 +58,7 @@ func (r *StatesResource) Get(c *gin.Context) {
 }
 
 func (s *StatesResource) Cities(c *gin.Context) {
+
 	var ci []*models.City
 	stateUri := c.Params.ByName("uri")
 	query := c.Request.URL.Query()
@@ -70,7 +71,7 @@ func (s *StatesResource) Cities(c *gin.Context) {
 	}
 	page, _ := strconv.Atoi(pageS)
 
-	err := s.DB.Find(search, PER_PAGE_LIMIT, page, &ci)
+	err := s.DB.Find(search, GetLimit(c.Request), page, &ci)
 
 	if err != nil {
 		c.JSON(500, gin.H{"error": "500", "message": err.Error()})
@@ -93,7 +94,7 @@ func (s *StatesResource) Cities(c *gin.Context) {
 			"paging": pagination(
 				"v1/states/"+stateUri+"/cities",
 				s.DB,
-				PER_PAGE_LIMIT,
+				GetLimit(c.Request),
 				page,
 				models.City{},
 				search,

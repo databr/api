@@ -34,7 +34,7 @@ func (r *ParliamentarianResource) Index(c *gin.Context) {
 	}
 	page, _ := strconv.Atoi(pageS)
 
-	err := r.DB.Find(search, PER_PAGE_LIMIT, page, &p)
+	err := r.DB.Find(search, GetLimit(c.Request), page, &p)
 
 	if err != nil {
 		c.JSON(500, gin.H{"error": "500", "message": err.Error()})
@@ -58,7 +58,7 @@ func (r *ParliamentarianResource) Index(c *gin.Context) {
 			"paging": pagination(
 				"v1/parliamentarians",
 				r.DB,
-				PER_PAGE_LIMIT,
+				GetLimit(c.Request),
 				page,
 				models.Parliamentarian{},
 				search,

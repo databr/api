@@ -2,6 +2,8 @@ package service
 
 import (
 	"fmt"
+	"net/http"
+	"strconv"
 
 	"github.com/databr/api/config"
 	"github.com/databr/api/database"
@@ -32,4 +34,20 @@ func pagination(resourceURI string,
 	}
 
 	return pagination
+}
+
+func GetLimit(request *http.Request) int {
+	limitS := request.URL.Query().Get("limit")
+	if limitS == "" {
+		return PER_PAGE_LIMIT
+	}
+
+	limit, err := strconv.Atoi(limitS)
+
+	if err != nil {
+		return PER_PAGE_LIMIT
+
+	}
+
+	return limit
 }
