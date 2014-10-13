@@ -51,8 +51,8 @@ type OtherNames struct {
 }
 
 type Link struct {
-	Url  string `json:"url"`  // A URL
-	Note string `json:"note"` // A note, e.g. 'Wikipedia page'
+	Url  string `json:"url"` // A URL
+	Note string `json:"rel"` // A note, e.g. 'Wikipedia page'
 }
 
 type Party struct {
@@ -105,7 +105,10 @@ type Rel struct {
 	Link string `json:"link"`
 }
 
-type Source Link
+type Source struct {
+	Url  string `json:"url"`  // A URL
+	Note string `json:"note"` // A note, e.g. 'Wikipedia page'
+}
 
 type Identifier struct {
 	Identifier string `json:"identifier"` // An issued identifier, e.g. a DUNS number
