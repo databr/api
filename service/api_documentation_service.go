@@ -141,6 +141,22 @@ func generateDocumentation() *swagger.Swagger {
 		},
 	})
 
+	s.NewGetPath("/states", swagger.Request{
+		Tags:    []string{"Divisão Política"},
+		Summary: "Retorna Dados dos Estados do Brasil",
+		Responses: swagger.Responses{
+			Ok: &swagger.Response{
+				Description: "Sucesso",
+				Schema: &swagger.Schema{
+					Ref: "#/definitions/StatesResponse",
+				},
+			},
+			ServerError: &swagger.Response{
+				Description: "Erro interno",
+			},
+		},
+	})
+
 	s.NewGetPath("/states/sp/transports/trains/lines", swagger.Request{
 		Summary: "Linhas de Trem e Metro de São Paulo",
 		Tags:    []string{"Trens SP"},
@@ -272,9 +288,7 @@ func generateDocumentation() *swagger.Swagger {
 		},
 	})
 	s.NewDefinition("PartyResponse", map[string]interface{}{
-		"party": map[string]interface{}{
-			"$ref": "Party",
-		},
+		"party": map[string]interface{}{"$ref": "Party"},
 	})
 	s.NewDefinition("LinesResponse", map[string]interface{}{
 		"paging": map[string]interface{}{
@@ -288,9 +302,7 @@ func generateDocumentation() *swagger.Swagger {
 		},
 	})
 	s.NewDefinition("LineResponse", map[string]interface{}{
-		"line": map[string]interface{}{
-			"$ref": "Line",
-		},
+		"line": map[string]interface{}{"$ref": "Line"},
 	})
 	s.NewDefinition("StatusesResponse", map[string]interface{}{
 		"paging": map[string]interface{}{
@@ -304,18 +316,24 @@ func generateDocumentation() *swagger.Swagger {
 		},
 	})
 	s.NewDefinition("StatusResponse", map[string]interface{}{
-		"status": map[string]interface{}{
-			"$ref": "Status",
-		},
+		"status": map[string]interface{}{"$ref": "Status"},
 	})
 	s.NewDefinition("Pagging", map[string]interface{}{
 		"next": map[string]interface{}{
 			"type":    "string",
-			"example": "http://api.databr.io/v1/parliamentarians/?page=3",
+			"example": "http://api.databr.io/v1/$resource/?page=3",
 		},
 		"prev": map[string]interface{}{
 			"type":    "string",
-			"example": "http://api.databr.io/v1/parliamentarians/?page=1",
+			"example": "http://api.databr.io/v1/$resource/?page=1",
+		},
+	})
+	s.NewDefinition("StatesResponse", map[string]interface{}{
+		"states": map[string]interface{}{
+			"type": "array",
+			"items": map[string]interface{}{
+				"$ref": "State",
+			},
 		},
 	})
 
@@ -330,6 +348,8 @@ func generateDocumentation() *swagger.Swagger {
 	s.GenerateDefinition(models.Line{})
 	s.GenerateDefinition(models.Link{})
 	s.GenerateDefinition(models.Status{})
+	s.GenerateDefinition(models.State{})
+	s.GenerateDefinition(models.City{})
 
 	return s
 }
