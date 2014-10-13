@@ -58,6 +58,12 @@ func generateDocumentation() *swagger.Swagger {
 				In:          "query",
 				Description: "A paginação se dá atraves da query string page, sendo 1 a primeira pagina e a pagina padrão do request. Cada request retorna 100 registros.",
 				Required:    false,
+			}, {
+				Name:        "limit",
+				In:          "query",
+				Description: "Limite de dados retornados por pagina",
+				Default:     "10",
+				Required:    false,
 			},
 		},
 		Responses: swagger.Responses{

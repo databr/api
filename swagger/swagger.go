@@ -45,6 +45,7 @@ type Parameter struct {
 	In          string `json:"in"`
 	Description string `json:"description"`
 	Required    bool   `json:"required"`
+	Default     string `json:"default,omitempty"`
 }
 
 type Responses struct {
