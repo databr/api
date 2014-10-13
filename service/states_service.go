@@ -18,6 +18,8 @@ func (s StatesService) Run(databaseDB database.MongoDB) {
 
 		v1.GET("/states", statesResource.Index)
 		v1.GET("/states/:uri", statesResource.Get)
+		v1.GET("/states/:uri/cities", statesResource.Cities)
+		v1.GET("/states/:uri/cities/:city_uri", statesResource.GetCity)
 
 		v1.GET("/states/:uri/transports/trains/lines", onlySP(), trainsSpResource.Lines)
 		v1.GET("/states/:uri/transports/trains/lines/:line_uri", onlySP(), trainsSpResource.GetLine)
