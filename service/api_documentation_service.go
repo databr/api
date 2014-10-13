@@ -61,7 +61,7 @@ func generateDocumentation() *swagger.Swagger {
 			}, {
 				Name:        "limit",
 				In:          "query",
-				Description: "Limite de dados retornados por pagina",
+				Description: "Limite de dados retornados por pagina, quando não setado a API retorna 100 registros",
 				Default:     "10",
 				Required:    false,
 			},
