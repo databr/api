@@ -3,6 +3,11 @@
 	"GoVersion": "go1.3.1",
 	"Deps": [
 		{
+			"ImportPath": "github.com/bradfitz/gomemcache/memcache",
+			"Comment": "release.r60-17-g799dd6f",
+			"Rev": "799dd6f8c603b393e3fb9d20a841109766c60fa5"
+		},
+		{
 			"ImportPath": "github.com/databr/go-popolo",
 			"Rev": "5e69ba3d8abdf65617c2f5ecd056cae120245552"
 		},
