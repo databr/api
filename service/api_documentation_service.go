@@ -101,8 +101,8 @@ func generateDocumentation() *swagger.Swagger {
 	})
 
 	s.NewGetPath("/parties", swagger.Request{
-		Tags:        []string{"Partidos"},
-		Description: "Retorna dados de um Partido",
+		Tags:    []string{"Partidos"},
+		Summary: "Retorna Partidos Registrados no TSE",
 		Responses: swagger.Responses{
 			Ok: &swagger.Response{
 				Description: "Sucesso",
@@ -158,7 +158,7 @@ func generateDocumentation() *swagger.Swagger {
 	})
 
 	s.NewGetPath("/states/sp/transports/trains/lines", swagger.Request{
-		Summary: "Linhas de Trem e Metro de São Paulo",
+		Summary: "Retorna Linhas da CPTM e Metro de São Paulo",
 		Tags:    []string{"Trens SP"},
 		Responses: swagger.Responses{
 			Ok: &swagger.Response{
@@ -174,7 +174,7 @@ func generateDocumentation() *swagger.Swagger {
 	})
 
 	s.NewGetPath("/states/sp/transports/trains/lines/{uri}", swagger.Request{
-		Summary: "Dados da linha solicitada",
+		Summary: "Retorna dados da linha solicitada",
 		Tags:    []string{"Trens SP"},
 		Parameters: []swagger.Parameter{
 			{
