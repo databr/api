@@ -31,7 +31,9 @@ var (
 	NewRelicLicense string
 	NewRelicAppName string
 
-	MemcacheURL string
+	MemcacheURL      string
+	MemcacheUsername string
+	MemcachePassword string
 )
 
 func init() {
@@ -59,7 +61,9 @@ func init() {
 	NewRelicLicense = env("NEW_RELIC_LICENSE", true)
 	NewRelicAppName = env("NEW_RELIC_APP_NAME", true)
 
-	MemcacheURL = env("MEMCACHED_URL", true)
+	MemcacheURL = env("MEMCACHED_URL", false)
+	MemcacheUsername = env("MEMCACHED_USERNAME", true)
+	MemcachePassword = env("MEMCACHED_PASSWORD", true)
 }
 
 func env(s string, optional bool) string {
