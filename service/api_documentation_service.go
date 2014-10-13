@@ -143,7 +143,7 @@ func generateDocumentation() *swagger.Swagger {
 
 	s.NewGetPath("/states", swagger.Request{
 		Tags:    []string{"Divisão Política"},
-		Summary: "Retorna Dados dos Estados do Brasil",
+		Summary: "Retorna Dados dos estados do Brasil",
 		Responses: swagger.Responses{
 			Ok: &swagger.Response{
 				Description: "Sucesso",
@@ -153,6 +153,98 @@ func generateDocumentation() *swagger.Swagger {
 			},
 			ServerError: &swagger.Response{
 				Description: "Erro interno",
+			},
+		},
+	})
+
+	s.NewGetPath("/states/{state_id}", swagger.Request{
+		Summary: "Retorna dados do estado solicidado",
+		Tags:    []string{"Divisão Política"},
+		Parameters: []swagger.Parameter{
+			{
+				Name:        "state_id",
+				In:          "path",
+				Description: "ID do estado, exemplo: sp",
+				Required:    true,
+			},
+		},
+		Responses: swagger.Responses{
+			Ok: &swagger.Response{
+				Description: "Sucesso",
+				Schema: &swagger.Schema{
+					Ref: "#/definitions/StateResponse",
+				},
+			},
+			ServerError: &swagger.Response{
+				Description: "Erro interno",
+			},
+			NotFound: &swagger.Response{
+				Description: "Estado não encontrado",
+			},
+		},
+	})
+
+	s.NewGetPath("/states/{state_id}/cities", swagger.Request{
+		Summary:     "Retorna todas as cidades do estado solicidado",
+		Description: "Retorna todas as cidades do estado solicidado. Retornara um JSON com atributo paging, esse atributo ira conter next e/ou previous caso tenha resultados anteriores ou posteriores para o request, o valor de next e previous será sempre um link a ser seguido para buscar mais resultados.",
+		Tags:        []string{"Divisão Política"},
+		Parameters: []swagger.Parameter{
+			{
+				Name:        "state_id",
+				In:          "path",
+				Description: "ID do estado, exemplo: sp",
+				Required:    true,
+			}, {
+				Name:        "page",
+				In:          "query",
+				Description: "A paginação se dá atraves da query string page, sendo 1 a primeira pagina e a pagina padrão do request. Cada request retorna 100 registros.",
+				Required:    false,
+			},
+		},
+		Responses: swagger.Responses{
+			Ok: &swagger.Response{
+				Description: "Sucesso",
+				Schema: &swagger.Schema{
+					Ref: "#/definitions/CitiesResponse",
+				},
+			},
+			ServerError: &swagger.Response{
+				Description: "Erro interno",
+			},
+			NotFound: &swagger.Response{
+				Description: "Estado não encontrado",
+			},
+		},
+	})
+
+	s.NewGetPath("/states/{state_id}/cities/{city_id}", swagger.Request{
+		Summary: "Retorna dados do estado solicidado",
+		Tags:    []string{"Divisão Política"},
+		Parameters: []swagger.Parameter{
+			{
+				Name:        "state_id",
+				In:          "path",
+				Description: "ID do estado, exemplo: sp",
+				Required:    true,
+			}, {
+				Name:        "city_id",
+				In:          "path",
+				Description: "ID da cidade, exemplo: saopaulo",
+				Required:    true,
+			},
+		},
+		Responses: swagger.Responses{
+			Ok: &swagger.Response{
+				Description: "Sucesso",
+				Schema: &swagger.Schema{
+					Ref: "#/definitions/CityResponse",
+				},
+			},
+			ServerError: &swagger.Response{
+				Description: "Erro interno",
+			},
+			NotFound: &swagger.Response{
+				Description: "Estado ou Cidade não encontrado",
 			},
 		},
 	})
@@ -271,11 +363,13 @@ func generateDocumentation() *swagger.Swagger {
 			},
 		},
 	})
+
 	s.NewDefinition("ParliamentarianResponse", map[string]interface{}{
 		"parliamentarian": map[string]interface{}{
 			"$ref": "Parliamentarian",
 		},
 	})
+
 	s.NewDefinition("PartiesResponse", map[string]interface{}{
 		"paging": map[string]interface{}{
 			"$ref": "Pagging",
@@ -287,9 +381,11 @@ func generateDocumentation() *swagger.Swagger {
 			},
 		},
 	})
+
 	s.NewDefinition("PartyResponse", map[string]interface{}{
 		"party": map[string]interface{}{"$ref": "Party"},
 	})
+
 	s.NewDefinition("LinesResponse", map[string]interface{}{
 		"paging": map[string]interface{}{
 			"$ref": "Pagging",
@@ -301,6 +397,7 @@ func generateDocumentation() *swagger.Swagger {
 			},
 		},
 	})
+
 	s.NewDefinition("LineResponse", map[string]interface{}{
 		"line": map[string]interface{}{"$ref": "Line"},
 	})
@@ -315,9 +412,11 @@ func generateDocumentation() *swagger.Swagger {
 			},
 		},
 	})
+
 	s.NewDefinition("StatusResponse", map[string]interface{}{
 		"status": map[string]interface{}{"$ref": "Status"},
 	})
+
 	s.NewDefinition("Pagging", map[string]interface{}{
 		"next": map[string]interface{}{
 			"type":    "string",
@@ -328,6 +427,7 @@ func generateDocumentation() *swagger.Swagger {
 			"example": "http://api.databr.io/v1/$resource/?page=1",
 		},
 	})
+
 	s.NewDefinition("StatesResponse", map[string]interface{}{
 		"states": map[string]interface{}{
 			"type": "array",
@@ -335,6 +435,26 @@ func generateDocumentation() *swagger.Swagger {
 				"$ref": "State",
 			},
 		},
+	})
+
+	s.NewDefinition("StateResponse", map[string]interface{}{
+		"state": map[string]interface{}{"$ref": "State"},
+	})
+
+	s.NewDefinition("CitiesResponse", map[string]interface{}{
+		"paging": map[string]interface{}{
+			"$ref": "Pagging",
+		},
+		"cities": map[string]interface{}{
+			"type": "array",
+			"items": map[string]interface{}{
+				"$ref": "City",
+			},
+		},
+	})
+
+	s.NewDefinition("CityResponse", map[string]interface{}{
+		"city": map[string]interface{}{"$ref": "City"},
 	})
 
 	s.GenerateDefinition(models.Parliamentarian{})
