@@ -14,6 +14,12 @@ type Line struct {
 	Links     []Link    `json:"links"`
 	Status    Status    `json:"status"`
 	Sources   []Source  `json:"sources"`
+	Color     Color     `json:"color"`
+}
+
+type Color struct {
+	Hex string `json:"hex"`
+	RGB []int  `json:"rgb"`
 }
 
 type Status struct {
