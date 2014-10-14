@@ -476,6 +476,7 @@ func generateDocumentation() *swagger.Swagger {
 	s.GenerateDefinition(models.Status{})
 	s.GenerateDefinition(models.State{})
 	s.GenerateDefinition(models.City{})
+	s.GenerateDefinition(models.Color{})
 
 	return s
 }
