@@ -1,0 +1,19 @@
+---
+- name: Install databases (mongodb, postgres and influxdb)
+  hosts: db
+  sudo: yes
+  remote_user: root
+  vars:
+    - temp_dir: "/tmp"
+
+  tasks:
+    - include: db.yml
+
+- name: Install api (go)
+  hosts: app
+  sudo: yes
+  vars:
+    - temp_dir: "/tmp"
+
+  tasks:
+    - include: app.yml
