@@ -7,15 +7,17 @@ import (
 )
 
 type Line struct {
-	Id         string    `json:"id"`
-	Name       string    `json:"name"`
-	CreatedAt  time.Time `json:"created_at"`
-	UpdatedAt  time.Time `json:"updated_at"`
-	Links      []Link    `json:"links"`
-	Status     Status    `json:"status"`
-	Sources    []Source  `json:"sources"`
-	Color      Color     `json:"color"`
-	LineNumber int       `json:"number"`
+	Id            string    `json:"id"`
+	Name          string    `json:"name"`
+	CreatedAt     time.Time `json:"created_at"`
+	UpdatedAt     time.Time `json:"updated_at"`
+	Links         []Link    `json:"links"`
+	Status        Status    `json:"status"`
+	Sources       []Source  `json:"sources"`
+	Color         Color     `json:"color"`
+	LineNumber    int       `json:"number"`
+	MetroId       string    `json:"metro_id"`
+	CannonicalUri string    `json:"-" bson:"cannonicaluri"`
 }
 
 type Color struct {
