@@ -56,8 +56,8 @@ func (self TrainsSpResource) GetLine(c *gin.Context) {
 
 		done := make(chan bool)
 		go func() {
-			l.Links = self.getLink(l.Id)
-			l.Status = self.getStatus(l.Id)
+			l.Links = self.getLink(l.Id, l.CannonicalUri)
+			l.Status = self.getStatus(l.CannonicalUri)
 			done <- true
 		}()
 		<-done
@@ -109,18 +109,18 @@ func (self TrainsSpResource) GetLineStatus(c *gin.Context) {
 
 func (self TrainsSpResource) setLinks(l []*models.Line) {
 	for i, _ := range l {
-		l[i].Links = self.getLink(l[i].Id)
+		l[i].Links = self.getLink(l[i].Id, l[i].CannonicalUri)
 	}
 }
 
-func (_ TrainsSpResource) getLink(id string) []models.Link {
+func (_ TrainsSpResource) getLink(id, cannonical string) []models.Link {
 	return []models.Link{
 		{
 			Url:  config.ApiRoot + "/v1/states/sp/transports/trains/lines/" + id,
 			Note: "self",
 		},
 		{
-			Url:  config.ApiRoot + "v1/states/sp/transports/trains/lines/" + id + "/statuses",
+			Url:  config.ApiRoot + "v1/states/sp/transports/trains/lines/" + cannonical + "/statuses",
 			Note: "statuses",
 		},
 	}
@@ -128,7 +128,7 @@ func (_ TrainsSpResource) getLink(id string) []models.Link {
 
 func (self TrainsSpResource) setStatus(l []*models.Line) {
 	for i, _ := range l {
-		l[i].Status = self.getStatus(l[i].Id)
+		l[i].Status = self.getStatus(l[i].CannonicalUri)
 	}
 }
 
