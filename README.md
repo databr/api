@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/databr/api.png?label=ready&title=Ready)](https://waffle.io/databr/api)
 # DataBR API [![Build Status](https://travis-ci.org/databr/api.svg?branch=master)](https://travis-ci.org/databr/api) [![Coverage Status](https://coveralls.io/repos/databr/api/badge.png)](https://coveralls.io/r/databr/api)
 
 
