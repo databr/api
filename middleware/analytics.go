@@ -11,7 +11,11 @@ import (
 var influxdbC *influxdb.Client
 
 func init() {
-	config := influxdb.ClientConfig{
+	if config.InfluxdbEnable != "true" {
+		return
+	}
+
+	configInfluxdb := influxdb.ClientConfig{
 		Host:     config.InfluxdbHost,
 		Username: config.InfluxdbUser,
 		Password: config.InfluxdbPassword,
@@ -20,7 +24,7 @@ func init() {
 	}
 
 	var err error
-	influxdbC, err = influxdb.NewClient(&config)
+	influxdbC, err = influxdb.NewClient(&configInfluxdb)
 	checkErr(err)
 
 	err = influxdbC.Ping()
