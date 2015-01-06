@@ -28,18 +28,15 @@ func main() {
 	databaseDB := database.NewMongoDB()
 
 	parliamentarians := service.ParliamentariansService{r}
-	parliamentarians.Run(databaseDB)
-
 	parties := service.PartiesService{r}
-	parties.Run(databaseDB)
-
 	states := service.StatesService{r}
-	states.Run(databaseDB)
-
 	pingdom := service.PingdomService{r}
-	pingdom.Run()
-
 	doc := service.ApiDocumentationService{r}
+
+	parliamentarians.Run(databaseDB)
+	parties.Run(databaseDB)
+	states.Run(databaseDB)
+	pingdom.Run()
 	doc.Run()
 
 	r.OPTIONS("/*path", func(c *gin.Context) {

@@ -61,11 +61,26 @@ func (d MongoDB) Update(query, data interface{}, _type interface{}) error {
 	return d.collection(_type).Update(query, data)
 }
 
+func (d MongoDB) FindAndGroupBy(by string, query interface{}, result interface{}, collection interface{}) error {
+	return d.collection(collection).Pipe([]bson.M{
+		{
+			"$group": bson.M{
+				"_id": by,
+				d.collectionName(collection) + "s": bson.M{"$push": "$$ROOT"},
+			},
+		},
+	}).All(result)
+}
+
 func (d MongoDB) Upsert(query, data interface{}, _type interface{}) (*mgo.ChangeInfo, error) {
 	return d.collection(_type).Upsert(query, data)
 }
 
 func (d MongoDB) collection(t interface{}) *mgo.Collection {
+	return d.Current.C(d.collectionName(t))
+}
+
+func (d MongoDB) collectionName(t interface{}) string {
 	v := reflect.ValueOf(t)
 
 	elem := v.Type()
@@ -81,6 +96,5 @@ func (d MongoDB) collection(t interface{}) *mgo.Collection {
 		elem = elem.Elem()
 	}
 
-	collection := strings.ToLower(elem.Name())
-	return d.Current.C(collection)
+	return strings.ToLower(elem.Name())
 }
