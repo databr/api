@@ -65,7 +65,7 @@ func (d MongoDB) FindAndGroupBy(by string, query interface{}, result interface{}
 	return d.collection(collection).Pipe([]bson.M{
 		{
 			"$group": bson.M{
-				"_id": by,
+				"_id": "$" + by,
 				d.collectionName(collection) + "s": bson.M{"$push": "$$ROOT"},
 			},
 		},
