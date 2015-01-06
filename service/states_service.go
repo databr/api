@@ -12,6 +12,7 @@ type StatesService struct {
 func (s StatesService) Run(databaseDB database.MongoDB) {
 	statesResource := &StatesResource{DB: databaseDB}
 	trainsSpResource := &TrainsSpResource{DB: databaseDB}
+	reservoirSpResource := &ReservoirSpResource{DB: databaseDB}
 
 	v1 := s.Group("/v1")
 	{
@@ -25,6 +26,8 @@ func (s StatesService) Run(databaseDB database.MongoDB) {
 		v1.GET("/states/:uri/transports/trains/lines/:line_uri", onlySP(), trainsSpResource.GetLine)
 		v1.GET("/states/:uri/transports/trains/lines/:line_uri/statuses", onlySP(), trainsSpResource.GetLineStatuses)
 		v1.GET("/states/:uri/transports/trains/lines/:line_uri/statuses/:status_id", onlySP(), trainsSpResource.GetLineStatus)
+
+		v1.GET("/states/:uri/reservoirs", onlySP(), reservoirSpResource.Index)
 	}
 }
 

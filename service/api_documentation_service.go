@@ -358,6 +358,19 @@ func generateDocumentation() *swagger.Swagger {
 		},
 	})
 
+	s.NewGetPath("/states/sp/reservoirs", swagger.Request{
+		Summary: "Retorna Reservatorios ",
+		Tags:    []string{"Reservatorios (Sabesp)"},
+		Responses: swagger.Responses{
+			Ok: &swagger.Response{
+				Description: "Sucesso",
+			},
+			ServerError: &swagger.Response{
+				Description: "Erro interno",
+			},
+		},
+	})
+
 	s.NewDefinition("ParliamentariansResponse", map[string]interface{}{
 		"paging": map[string]interface{}{
 			"$ref": "Pagging",
