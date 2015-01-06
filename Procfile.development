@@ -1,0 +1,3 @@
+web: fresh
+memcached: memcached -m 64 -p $MEMCACHED_PORT -u memcache -l $MEMCACHED_HOST -vvv
+mongo: mongod --bind_ip=0.0.0.0

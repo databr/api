@@ -29,7 +29,8 @@ export ENV="development"
 export STATUSPAGEIO_ENABLE="false"
 export INFLUXDB_ENABLE="false"
 
-export TOKEN_PRIVATE_FILE="./tmp/token-private-file.rsa"
+export PRIVATE_KEY="qweasdzxc"
+
 ```
 
 ## Rodando
