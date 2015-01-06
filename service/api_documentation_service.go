@@ -148,7 +148,7 @@ func generateDocumentation() *swagger.Swagger {
 	})
 
 	s.NewGetPath("/states", swagger.Request{
-		Tags:    []string{"Divisão Política"},
+		Tags:    []string{"Estados/Cidades"},
 		Summary: "Retorna Dados dos estados do Brasil",
 		Responses: swagger.Responses{
 			Ok: &swagger.Response{
@@ -165,7 +165,7 @@ func generateDocumentation() *swagger.Swagger {
 
 	s.NewGetPath("/states/{state_id}", swagger.Request{
 		Summary: "Retorna dados do estado solicidado",
-		Tags:    []string{"Divisão Política"},
+		Tags:    []string{"Estados/Cidades"},
 		Parameters: []swagger.Parameter{
 			{
 				Name:        "state_id",
@@ -193,7 +193,7 @@ func generateDocumentation() *swagger.Swagger {
 	s.NewGetPath("/states/{state_id}/cities", swagger.Request{
 		Summary:     "Retorna todas as cidades do estado solicidado",
 		Description: "Retorna todas as cidades do estado solicidado. Retornara um JSON com atributo paging, esse atributo ira conter next e/ou previous caso tenha resultados anteriores ou posteriores para o request, o valor de next e previous será sempre um link a ser seguido para buscar mais resultados.",
-		Tags:        []string{"Divisão Política"},
+		Tags:        []string{"Estados/Cidades"},
 		Parameters: []swagger.Parameter{
 			{
 				Name:        "state_id",
@@ -225,7 +225,7 @@ func generateDocumentation() *swagger.Swagger {
 
 	s.NewGetPath("/states/{state_id}/cities/{city_id}", swagger.Request{
 		Summary: "Retorna dados do estado solicidado",
-		Tags:    []string{"Divisão Política"},
+		Tags:    []string{"Estados/Cidades"},
 		Parameters: []swagger.Parameter{
 			{
 				Name:        "state_id",
@@ -257,7 +257,7 @@ func generateDocumentation() *swagger.Swagger {
 
 	s.NewGetPath("/states/sp/transports/trains/lines", swagger.Request{
 		Summary: "Retorna Linhas da CPTM e Metro de São Paulo",
-		Tags:    []string{"Trens SP"},
+		Tags:    []string{"Trens e Metro"},
 		Responses: swagger.Responses{
 			Ok: &swagger.Response{
 				Description: "Sucesso",
@@ -273,7 +273,7 @@ func generateDocumentation() *swagger.Swagger {
 
 	s.NewGetPath("/states/sp/transports/trains/lines/{uri}", swagger.Request{
 		Summary: "Retorna dados da linha solicitada",
-		Tags:    []string{"Trens SP"},
+		Tags:    []string{"Trens e Metro"},
 		Parameters: []swagger.Parameter{
 			{
 				Name:        "uri",
@@ -301,7 +301,7 @@ func generateDocumentation() *swagger.Swagger {
 	s.NewGetPath("/states/sp/transports/trains/lines/{uri}/statuses", swagger.Request{
 		Summary:     "Retorna Ultimos Status da Linha",
 		Description: "Histórico da linha, um novo status é criado quando o status da linha muda, caso contratio apenas é atualizado o campo updated_at",
-		Tags:        []string{"Trens SP"},
+		Tags:        []string{"Trens e Metro"},
 		Parameters: []swagger.Parameter{
 			{
 				Name:        "uri",
@@ -328,7 +328,7 @@ func generateDocumentation() *swagger.Swagger {
 
 	s.NewGetPath("/states/sp/transports/trains/lines/{uri}/statuses/{status_id}", swagger.Request{
 		Summary: "Retorna Status solicitado",
-		Tags:    []string{"Trens SP"},
+		Tags:    []string{"Trens e Metro"},
 		Parameters: []swagger.Parameter{
 			{
 				Name:        "uri",
