@@ -7,4 +7,5 @@ type Reservoir struct {
 		Date    string `json:"date"`
 		Percent string `json:"percent"`
 	} `json:"data"`
+	Source []Source `json:"source"`
 }
