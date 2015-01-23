@@ -15,7 +15,7 @@ type TrainsSpResource struct {
 func (self TrainsSpResource) Lines(c *gin.Context) {
 	var l []*models.Line
 
-	err := self.DB.Find(bson.M{}, GetLimit(c.Request), 1, "-number", &l)
+	err := self.DB.Find(bson.M{}, GetLimit(c.Request), 1, "linenumber", &l)
 
 	if err != nil {
 		c.JSON(500, gin.H{"error": "500", "message": err.Error()})
