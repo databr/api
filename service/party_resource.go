@@ -24,7 +24,7 @@ func (r *PartyResource) Index(c *gin.Context) {
 	}
 	page, _ := strconv.Atoi(pageS)
 
-	err := r.DB.Find(search, GetLimit(c.Request), page, &p)
+	err := r.DB.Find(search, GetLimit(c.Request), page, "-updatedat", &p)
 
 	if err != nil {
 		c.JSON(500, gin.H{"error": "500", "message": err.Error()})

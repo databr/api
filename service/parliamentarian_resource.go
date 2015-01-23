@@ -34,7 +34,7 @@ func (r *ParliamentarianResource) Index(c *gin.Context) {
 	}
 	page, _ := strconv.Atoi(pageS)
 
-	err := r.DB.Find(search, GetLimit(c.Request), page, &p)
+	err := r.DB.Find(search, GetLimit(c.Request), page, "-updatedat", &p)
 
 	if err != nil {
 		c.JSON(500, gin.H{"error": "500", "message": err.Error()})
@@ -118,6 +118,6 @@ func (_ ParliamentarianResource) getLink(id string) []models.Link {
 }
 
 func (r ParliamentarianResource) getMemberships(id string) (memberships []models.Membership) {
-	r.DB.Find(bson.M{"member.id": id}, 200, 1, &memberships)
+	r.DB.Find(bson.M{"member.id": id}, 200, 1, "-updatedat", &memberships)
 	return memberships
 }

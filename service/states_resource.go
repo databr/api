@@ -18,7 +18,7 @@ func (r *StatesResource) Index(c *gin.Context) {
 	var s []*models.State
 	search := bson.M{}
 
-	err := r.DB.Find(search, GetLimit(c.Request), 1, &s)
+	err := r.DB.Find(search, GetLimit(c.Request), 1, "-updatedat", &s)
 
 	if err != nil {
 		c.JSON(500, gin.H{"error": "500", "message": err.Error()})
@@ -74,7 +74,7 @@ func (s *StatesResource) Cities(c *gin.Context) {
 	}
 	page, _ := strconv.Atoi(pageS)
 
-	err := s.DB.Find(search, GetLimit(c.Request), page, &ci)
+	err := s.DB.Find(search, GetLimit(c.Request), page, "-updatedat", &ci)
 
 	if err != nil {
 		c.JSON(500, gin.H{"error": "500", "message": err.Error()})

@@ -15,7 +15,7 @@ type TrainsSpResource struct {
 func (self TrainsSpResource) Lines(c *gin.Context) {
 	var l []*models.Line
 
-	err := self.DB.Find(bson.M{}, GetLimit(c.Request), 1, &l)
+	err := self.DB.Find(bson.M{}, GetLimit(c.Request), 1, "-number", &l)
 
 	if err != nil {
 		c.JSON(500, gin.H{"error": "500", "message": err.Error()})
@@ -72,7 +72,7 @@ func (self TrainsSpResource) GetLineStatuses(c *gin.Context) {
 	uri := c.Params.ByName("line_uri")
 	var s []*models.Status
 
-	err := self.DB.Find(bson.M{"line_id": uri}, GetLimit(c.Request), 1, &s)
+	err := self.DB.Find(bson.M{"line_id": uri}, GetLimit(c.Request), 1, "-updatedat", &s)
 
 	if err != nil {
 		c.JSON(404, gin.H{"error": "404", "message": err.Error()})

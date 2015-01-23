@@ -44,9 +44,9 @@ func (d MongoDB) FindOne(query, result interface{}) error {
 	return d.collection(result).Find(query).Sort("-updatedat").One(result)
 }
 
-func (d MongoDB) Find(query interface{}, limit, page int, result interface{}) error {
+func (d MongoDB) Find(query interface{}, limit, page int, sort string, result interface{}) error {
 	offset := limit * (page - 1)
-	return d.collection(result).Find(query).Sort("-updatedat").Limit(limit).Skip(offset).All(result)
+	return d.collection(result).Find(query).Sort(sort).Limit(limit).Skip(offset).All(result)
 }
 
 func (d MongoDB) Count(resource interface{}, query bson.M) (int, error) {
