@@ -1,6 +1,8 @@
 [![Stories in Ready](https://badge.waffle.io/databr/api.png?label=ready&title=Ready)](https://waffle.io/databr/api)
 # DataBR API [![Build Status](https://travis-ci.org/databr/api.svg?branch=master)](https://travis-ci.org/databr/api) [![Coverage Status](https://coveralls.io/repos/databr/api/badge.png)](https://coveralls.io/r/databr/api)
 
+[![Join the chat at https://gitter.im/databr/api](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/databr/api?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 
 ## [Trello com Tarefas](https://trello.com/b/3WLlqXpX/databr)
 
