@@ -1,6 +1,6 @@
 # DataBR API [![Build Status](https://travis-ci.org/databr/api.svg?branch=master)](https://travis-ci.org/databr/api) [![Coverage Status](https://coveralls.io/repos/databr/api/badge.png)](https://coveralls.io/r/databr/api)
 
-Join us on IRC at #databr to chat with other databr maintainers! [web access](http://webchat.freenode.net/?channels=databr)
+Join us on IRC at #databr to chat with other databr maintainers! ([web access](http://webchat.freenode.net/?channels=databr))
 
 ## Gerando TOKEN Private File
 
