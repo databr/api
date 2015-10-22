@@ -1,0 +1,29 @@
+web:
+  build: .
+
+  ports:
+    - "3000:3000"
+
+  volumes:
+    - .:/go/src/github.com/databr/api
+
+  links:
+    - mongo:mongo
+    - memcached:memcached
+
+  environment:
+    - API_ROOT=http://localhost:3000
+    - ENV=development
+    - GIN_MODE=debug
+    - MEMCACHED_URL=memcached
+    - MONGO_DATABASE_NAME=databr
+    - MONGO_URL=mongodb://mongo
+    - PORT=3000
+    - PRIVATE_KEY=abc
+    - STATUSPAGEIO_ENABLE=false
+
+mongo:
+  image: mongo
+
+memcached:
+  image: memcached
