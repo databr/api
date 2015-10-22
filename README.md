@@ -2,14 +2,16 @@
 
 Join us on IRC at #databr to chat with other databr maintainers! ([web access](http://webchat.freenode.net/?channels=databr))
 
-## Gerando TOKEN Private File
 
-``` bash
-$ openssl genrsa -out ./tmp/token-private-file.rsa 1024
-$ openssl rsa -in ./tmp/token-private-file.rsa -pubout > ~/tmp/token-private-file.rsa.pub
+## Usando Docker
+
+```
+$ docker-compose up // acesse http://localhost:3000
 ```
 
-## Configurando ENV
+## Sem Docker
+
+### Configurando ENV
 
 ``` bash
 export MONGO_DATABASE_NAME="databr"
@@ -25,11 +27,11 @@ export PRIVATE_KEY="qweasdzxc"
 
 ```
 
-## Rodando
+### Rodando
 
 ``` bash
 $ go get github.com/tools/godep
-$ godep restore
 $ go get github.com/pilu/fresh
+$ godep restore
 $ fresh
 ```
