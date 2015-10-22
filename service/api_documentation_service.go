@@ -22,7 +22,8 @@ func (a ApiDocumentationService) Run() {
 	{
 		v1.GET("/doc", func(c *gin.Context) {
 			doc := generateDocumentation()
-			c.Render(200, DataRender{c.Request}, doc)
+			render := &DataRender{c.Request, doc}
+			c.Render(200, render)
 		})
 	}
 }

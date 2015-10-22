@@ -36,7 +36,7 @@ func onlySP() gin.HandlerFunc {
 		if c.Params.ByName("uri") == "sp" {
 			c.Next()
 		} else {
-			c.Abort(404)
+			c.AbortWithStatus(404)
 		}
 	}
 }

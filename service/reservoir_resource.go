@@ -28,7 +28,7 @@ func (r *ReservoirSpResource) Index(c *gin.Context) {
 		for _, item := range rv {
 			data[item.Id] = item.Reservoirs
 		}
-
-		c.Render(200, DataRender{c.Request}, data)
+		render := &DataRender{c.Request, data}
+		c.Render(200, render)
 	}
 }

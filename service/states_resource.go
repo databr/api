@@ -37,7 +37,8 @@ func (r *StatesResource) Index(c *gin.Context) {
 			"states": s,
 		}
 
-		c.Render(200, DataRender{c.Request}, data)
+		render := &DataRender{c.Request, data}
+		c.Render(200, render)
 	}
 }
 
@@ -53,7 +54,9 @@ func (r *StatesResource) Get(c *gin.Context) {
 	} else {
 		s.Capital = r.getCapital(s.CapitalId)
 		s.Links = r.getStateLinks(s)
-		c.Render(200, DataRender{c.Request}, gin.H{"state": s})
+
+		render := &DataRender{c.Request, gin.H{"state": s}}
+		c.Render(200, render)
 	}
 }
 
@@ -101,7 +104,8 @@ func (s *StatesResource) Cities(c *gin.Context) {
 			),
 		}
 
-		c.Render(200, DataRender{c.Request}, data)
+		render := &DataRender{c.Request, data}
+		c.Render(200, render)
 	}
 }
 
@@ -123,7 +127,8 @@ func (s *StatesResource) GetCity(c *gin.Context) {
 		}()
 		<-done
 
-		c.Render(200, DataRender{c.Request}, gin.H{"city": city})
+		render := &DataRender{c.Request, gin.H{"city": city}}
+		c.Render(200, render)
 	}
 }
 

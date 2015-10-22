@@ -11,15 +11,15 @@ import (
 )
 
 type DataRender struct {
-	r *http.Request
+	r    *http.Request
+	data interface{}
 }
 
-func (render DataRender) Render(w http.ResponseWriter, code int, data ...interface{}) error {
-	w.WriteHeader(code)
+func (render *DataRender) Render(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 
 	if render.r.URL.Query().Get("pretty") == "true" {
-		out, err := json.MarshalIndent(data[0], "", "    ")
+		out, err := json.MarshalIndent(render.data, "", "    ")
 		if err != nil {
 			return err
 		}
@@ -28,7 +28,7 @@ func (render DataRender) Render(w http.ResponseWriter, code int, data ...interfa
 	}
 
 	writer := render.gzip(w)
-	return json.NewEncoder(writer).Encode(data[0])
+	return json.NewEncoder(writer).Encode(render.data)
 }
 
 func (render DataRender) gzip(w http.ResponseWriter) io.Writer {

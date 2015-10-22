@@ -40,7 +40,7 @@ func main() {
 
 	r.OPTIONS("/*path", func(c *gin.Context) {
 		c.Writer.Header().Set("Allow", "GET, OPTIONS")
-		c.Abort(200)
+		c.AbortWithStatus(200)
 	})
 
 	r.GET("/", func(c *gin.Context) {

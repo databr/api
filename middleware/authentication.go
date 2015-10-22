@@ -21,7 +21,7 @@ func Authentication() gin.HandlerFunc {
 			c.Set("app_id", token.Claims["app_id"])
 			c.Next()
 		} else {
-			c.Error(err, nil)
+			c.Error(err)
 			c.JSON(401, map[string]interface{}{
 				"error":        "token invalid",
 				"message":      "Token is invalid, check your request and try again",

@@ -65,7 +65,8 @@ func (r *ParliamentarianResource) Index(c *gin.Context) {
 			),
 		}
 
-		c.Render(200, DataRender{c.Request}, data)
+		render := &DataRender{c.Request, data}
+		c.Render(200, render)
 	}
 }
 
@@ -89,7 +90,9 @@ func (r *ParliamentarianResource) Get(c *gin.Context) {
 	if err != nil {
 		c.JSON(404, gin.H{"error": "404", "message": err.Error()})
 	} else {
-		c.Render(200, DataRender{c.Request}, gin.H{"parliamentarian": p})
+
+		render := &DataRender{c.Request, gin.H{"parliamentarian": p}}
+		c.Render(200, render)
 	}
 }
 

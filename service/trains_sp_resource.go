@@ -40,7 +40,8 @@ func (self TrainsSpResource) Lines(c *gin.Context) {
 			),
 		}
 
-		c.Render(200, DataRender{c.Request}, data)
+		render := &DataRender{c.Request, data}
+		c.Render(200, render)
 	}
 }
 
@@ -62,7 +63,8 @@ func (self TrainsSpResource) GetLine(c *gin.Context) {
 		}()
 		<-done
 
-		c.Render(200, DataRender{c.Request}, gin.H{"line": l})
+		render := &DataRender{c.Request, gin.H{"line": l}}
+		c.Render(200, render)
 	}
 }
 
@@ -82,7 +84,8 @@ func (self TrainsSpResource) GetLineStatuses(c *gin.Context) {
 		}()
 		<-done
 
-		c.Render(200, DataRender{c.Request}, gin.H{"statuses": s})
+		render := &DataRender{c.Request, gin.H{"statuses": s}}
+		c.Render(200, render)
 	}
 }
 
@@ -103,7 +106,8 @@ func (self TrainsSpResource) GetLineStatus(c *gin.Context) {
 		}()
 		<-done
 
-		c.Render(200, DataRender{c.Request}, gin.H{"status": status})
+		render := &DataRender{c.Request, gin.H{"status": status}}
+		c.Render(200, render)
 	}
 }
 
