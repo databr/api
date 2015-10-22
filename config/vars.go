@@ -17,12 +17,6 @@ var (
 	StatusPageIOPageID   string
 	StatusPageIOEnable   string
 
-	InfluxdbHost     string
-	InfluxdbUser     string
-	InfluxdbPassword string
-	InfluxdbDatabase string
-	InfluxdbEnable   string
-
 	MongoURL          string
 	MongoDatabaseName string
 
@@ -46,12 +40,6 @@ func init() {
 	StatusPageIOApiKey = env("STATUSPAGEIO_API_KEY", StatusPageIOEnable != "true")
 	StatusPageIOMetricID = env("STATUSPAGEIO_METRIC_ID", StatusPageIOEnable != "true")
 	StatusPageIOPageID = env("STATUSPAGEIO_PAGE_ID", StatusPageIOEnable != "true")
-
-	InfluxdbEnable = env("INFLUXDB_ENABLE", false)
-	InfluxdbHost = env("INFLUXDB_HOST", InfluxdbEnable != "true")
-	InfluxdbUser = env("INFLUXDB_USERNAME", InfluxdbEnable != "true")
-	InfluxdbPassword = env("INFLUXDB_PASSWORD", InfluxdbEnable != "true")
-	InfluxdbDatabase = env("INFLUXDB_DATABASE", InfluxdbEnable != "true")
 
 	MongoURL = env("MONGO_URL", false)
 	MongoDatabaseName = env("MONGO_DATABASE_NAME", false)

@@ -15,17 +15,11 @@ $ openssl rsa -in ./tmp/token-private-file.rsa -pubout > ~/tmp/token-private-fil
 export MONGO_DATABASE_NAME="databr"
 export MONGO_URL="mongodb://dev"
 
-export INFLUXDB_HOST="dev:8086"
-export INFLUXDB_USERNAME="user1"
-export INFLUXDB_PASSWORD="user1"
-export INFLUXDB_DATABASE="databr"
-
 export API_ROOT="http://localhost:3002"
 export PORT=3002
 export ENV="development"
 
 export STATUSPAGEIO_ENABLE="false"
-export INFLUXDB_ENABLE="false"
 
 export PRIVATE_KEY="qweasdzxc"
 

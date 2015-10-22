@@ -17,7 +17,6 @@ func main() {
 	r.Use(gin.Recovery())
 	r.Use(middleware.CORS())
 	// r.Use(middleware.Authentication())
-	r.Use(middleware.Analytics())
 	r.Use(middleware.StatusPageIO())
 
 	if config.Env == "production" {
