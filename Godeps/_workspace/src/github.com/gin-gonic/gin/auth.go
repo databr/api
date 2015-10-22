@@ -7,86 +7,90 @@ package gin
 import (
 	"crypto/subtle"
 	"encoding/base64"
-	"errors"
-	"sort"
+	"strconv"
 )
 
-const (
-	AuthUserKey = "user"
-)
+const AuthUserKey = "user"
 
 type (
-	BasicAuthPair struct {
-		Code string
-		User string
-	}
 	Accounts map[string]string
-	Pairs    []BasicAuthPair
+	authPair struct {
+		Value string
+		User  string
+	}
+	authPairs []authPair
 )
 
-func (a Pairs) Len() int           { return len(a) }
-func (a Pairs) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
-func (a Pairs) Less(i, j int) bool { return a[i].Code < a[j].Code }
-
-func processCredentials(accounts Accounts) (Pairs, error) {
-	if len(accounts) == 0 {
-		return nil, errors.New("Empty list of authorized credentials.")
+func (a authPairs) searchCredential(authValue string) (string, bool) {
+	if len(authValue) == 0 {
+		return "", false
 	}
-	pairs := make(Pairs, 0, len(accounts))
-	for user, password := range accounts {
-		if len(user) == 0 || len(password) == 0 {
-			return nil, errors.New("User or password is empty")
+	for _, pair := range a {
+		if pair.Value == authValue {
+			return pair.User, true
 		}
-		base := user + ":" + password
-		code := "Basic " + base64.StdEncoding.EncodeToString([]byte(base))
-		pairs = append(pairs, BasicAuthPair{code, user})
 	}
-	// We have to sort the credentials in order to use bsearch later.
-	sort.Sort(pairs)
-	return pairs, nil
+	return "", false
+}
+
+// BasicAuthForRealm returns a Basic HTTP Authorization middleware. It takes as arguments a map[string]string where
+// the key is the user name and the value is the password, as well as the name of the Realm.
+// If the realm is empty, "Authorization Required" will be used by default.
+// (see http://tools.ietf.org/html/rfc2617#section-1.2)
+func BasicAuthForRealm(accounts Accounts, realm string) HandlerFunc {
+	if realm == "" {
+		realm = "Authorization Required"
+	}
+	realm = "Basic realm=" + strconv.Quote(realm)
+	pairs := processAccounts(accounts)
+	return func(c *Context) {
+		// Search user in the slice of allowed credentials
+		user, found := pairs.searchCredential(c.Request.Header.Get("Authorization"))
+		if !found {
+			// Credentials doesn't match, we return 401 and abort handlers chain.
+			c.Header("WWW-Authenticate", realm)
+			c.AbortWithStatus(401)
+		} else {
+			// The user credentials was found, set user's id to key AuthUserKey in this context, the userId can be read later using
+			// c.MustGet(gin.AuthUserKey)
+			c.Set(AuthUserKey, user)
+		}
+	}
+}
+
+// BasicAuth returns a Basic HTTP Authorization middleware. It takes as argument a map[string]string where
+// the key is the user name and the value is the password.
+func BasicAuth(accounts Accounts) HandlerFunc {
+	return BasicAuthForRealm(accounts, "")
+}
+
+func processAccounts(accounts Accounts) authPairs {
+	if len(accounts) == 0 {
+		panic("Empty list of authorized credentials")
+	}
+	pairs := make(authPairs, 0, len(accounts))
+	for user, password := range accounts {
+		if len(user) == 0 {
+			panic("User can not be empty")
+		}
+		value := authorizationHeader(user, password)
+		pairs = append(pairs, authPair{
+			Value: value,
+			User:  user,
+		})
+	}
+	return pairs
+}
+
+func authorizationHeader(user, password string) string {
+	base := user + ":" + password
+	return "Basic " + base64.StdEncoding.EncodeToString([]byte(base))
 }
 
 func secureCompare(given, actual string) bool {
 	if subtle.ConstantTimeEq(int32(len(given)), int32(len(actual))) == 1 {
 		return subtle.ConstantTimeCompare([]byte(given), []byte(actual)) == 1
-	} else {
-		/* Securely compare actual to itself to keep constant time, but always return false */
-		return subtle.ConstantTimeCompare([]byte(actual), []byte(actual)) == 1 && false
 	}
-}
-
-func searchCredential(pairs Pairs, auth string) string {
-	if len(auth) == 0 {
-		return ""
-	}
-	// Search user in the slice of allowed credentials
-	r := sort.Search(len(pairs), func(i int) bool { return pairs[i].Code >= auth })
-	if r < len(pairs) && secureCompare(pairs[r].Code, auth) {
-		return pairs[r].User
-	} else {
-		return ""
-	}
-}
-
-// Implements a basic Basic HTTP Authorization. It takes as argument a map[string]string where
-// the key is the user name and the value is the password.
-func BasicAuth(accounts Accounts) HandlerFunc {
-
-	pairs, err := processCredentials(accounts)
-	if err != nil {
-		panic(err)
-	}
-	return func(c *Context) {
-		// Search user in the slice of allowed credentials
-		user := searchCredential(pairs, c.Request.Header.Get("Authorization"))
-		if len(user) == 0 {
-			// Credentials doesn't match, we return 401 Unauthorized and abort request.
-			c.Writer.Header().Set("WWW-Authenticate", "Basic realm=\"Authorization Required\"")
-			c.Fail(401, errors.New("Unauthorized"))
-		} else {
-			// user is allowed, set UserId to key "user" in this context, the userId can be read later using
-			// c.Get(gin.AuthUserKey)
-			c.Set(AuthUserKey, user)
-		}
-	}
+	/* Securely compare actual to itself to keep constant time, but always return false */
+	return subtle.ConstantTimeCompare([]byte(actual), []byte(actual)) == 1 && false
 }

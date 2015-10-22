@@ -2,100 +2,69 @@ package gorm
 
 import (
 	"fmt"
-	"strings"
-
 	"reflect"
+	"time"
 )
 
-type mysql struct{}
-
-func (s *mysql) BinVar(i int) string {
-	return "$$" // ?
+type mysql struct {
+	commonDialect
 }
 
-func (s *mysql) SupportLastInsertId() bool {
-	return true
-}
-
-func (d *mysql) SqlTag(value reflect.Value, size int) string {
+func (mysql) SqlTag(value reflect.Value, size int, autoIncrease bool) string {
 	switch value.Kind() {
 	case reflect.Bool:
 		return "boolean"
-	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uintptr:
+	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32:
+		if autoIncrease {
+			return "int AUTO_INCREMENT"
+		}
 		return "int"
-	case reflect.Int64, reflect.Uint64:
+	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uintptr:
+		if autoIncrease {
+			return "int unsigned AUTO_INCREMENT"
+		}
+		return "int unsigned"
+	case reflect.Int64:
+		if autoIncrease {
+			return "bigint AUTO_INCREMENT"
+		}
 		return "bigint"
+	case reflect.Uint64:
+		if autoIncrease {
+			return "bigint unsigned AUTO_INCREMENT"
+		}
+		return "bigint unsigned"
 	case reflect.Float32, reflect.Float64:
 		return "double"
 	case reflect.String:
 		if size > 0 && size < 65532 {
 			return fmt.Sprintf("varchar(%d)", size)
-		} else {
-			return "longtext"
 		}
+		return "longtext"
 	case reflect.Struct:
-		if value.Type() == timeType {
-			return "datetime"
+		if _, ok := value.Interface().(time.Time); ok {
+			return "timestamp NULL"
 		}
 	default:
 		if _, ok := value.Interface().([]byte); ok {
 			if size > 0 && size < 65532 {
 				return fmt.Sprintf("varbinary(%d)", size)
-			} else {
-				return "longblob"
 			}
+			return "longblob"
 		}
 	}
 	panic(fmt.Sprintf("invalid sql type %s (%s) for mysql", value.Type().Name(), value.Kind().String()))
 }
 
-func (s *mysql) PrimaryKeyTag(value reflect.Value, size int) string {
-	suffix_str := " NOT NULL AUTO_INCREMENT PRIMARY KEY"
-	switch value.Kind() {
-	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uintptr:
-		return "int" + suffix_str
-	case reflect.Int64, reflect.Uint64:
-		return "bigint" + suffix_str
-	default:
-		panic("Invalid primary key type")
-	}
-}
-
-func (s *mysql) ReturningStr(key string) string {
-	return ""
-}
-
-func (s *mysql) Quote(key string) string {
+func (mysql) Quote(key string) string {
 	return fmt.Sprintf("`%s`", key)
 }
 
-func (s *mysql) databaseName(scope *Scope) string {
-	from := strings.Index(scope.db.parent.source, "/") + 1
-	to := strings.Index(scope.db.parent.source, "?")
-	if to == -1 {
-		to = len(scope.db.parent.source)
-	}
-	return scope.db.parent.source[from:to]
+func (mysql) SelectFromDummyTable() string {
+	return "FROM DUAL"
 }
 
-func (s *mysql) HasTable(scope *Scope, tableName string) bool {
-	var count int
-	newScope := scope.New(nil)
-	newScope.Raw(fmt.Sprintf("SELECT count(*) FROM INFORMATION_SCHEMA.tables where table_name = %v AND table_schema = %v",
-		newScope.AddToVars(tableName),
-		newScope.AddToVars(s.databaseName(scope))))
-	newScope.DB().QueryRow(newScope.Sql, newScope.SqlVars...).Scan(&count)
-	return count > 0
-}
-
-func (s *mysql) HasColumn(scope *Scope, tableName string, columnName string) bool {
-	var count int
-	newScope := scope.New(nil)
-	newScope.Raw(fmt.Sprintf("SELECT count(*) FROM information_schema.columns WHERE table_schema = %v AND table_name = %v AND column_name = %v",
-		newScope.AddToVars(s.databaseName(scope)),
-		newScope.AddToVars(tableName),
-		newScope.AddToVars(columnName),
-	))
-	newScope.DB().QueryRow(newScope.Sql, newScope.SqlVars...).Scan(&count)
-	return count > 0
+func (s mysql) CurrentDatabase(scope *Scope) (name string) {
+	s.RawScanString(scope, &name, "SELECT DATABASE()")
+	return
 }

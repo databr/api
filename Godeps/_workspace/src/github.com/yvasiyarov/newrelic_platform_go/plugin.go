@@ -24,6 +24,10 @@ type NewrelicPlugin struct {
 	Agent      *Agent          `json:"agent"`
 	Components []ComponentData `json:"components"`
 
+	// All HTTP requests will be done using this client. Change it if you need
+	// to use a proxy.
+	Client http.Client `json:"-"`
+
 	ComponentModels      []IComponent `json:"-"`
 	LastPollTime         time.Time    `json:"-"`
 	Verbose              bool         `json:"-"`
@@ -60,7 +64,7 @@ func (plugin *NewrelicPlugin) Harvest() error {
 	}
 
 	if httpCode, err := plugin.SendMetricas(); err != nil {
-		log.Printf("Can not send metricas to newrelic: %#v\n", err)
+		log.Printf("Can not send metricas to newrelic: %v\n", err)
 		return err
 	} else {
 
@@ -68,7 +72,7 @@ func (plugin *NewrelicPlugin) Harvest() error {
 			log.Printf("Got HTTP response code:%d", httpCode)
 		}
 
-		if err, isFatal := plugin.CheckResponse(httpCode); isFatal {		
+		if err, isFatal := plugin.CheckResponse(httpCode); isFatal {
 			log.Printf("Got fatal error:%v\n", err)
 			return err
 		} else {
@@ -94,7 +98,6 @@ func (plugin *NewrelicPlugin) GetMetricaKey(metrica IMetrica) string {
 }
 
 func (plugin *NewrelicPlugin) SendMetricas() (int, error) {
-	client := &http.Client{}
 	var metricasJson []byte
 	var encodingError error
 
@@ -120,7 +123,7 @@ func (plugin *NewrelicPlugin) SendMetricas() (int, error) {
 		httpRequest.Header.Set("Content-Type", "application/json")
 		httpRequest.Header.Set("Accept", "application/json")
 
-		if httpResponse, err := client.Do(httpRequest); err != nil {
+		if httpResponse, err := plugin.Client.Do(httpRequest); err != nil {
 			return 0, err
 		} else {
 			defer httpResponse.Body.Close()
@@ -171,7 +174,7 @@ func (plugin *NewrelicPlugin) CheckResponse(httpResponseCode int) (error, bool) 
 		}
 	case http.StatusInternalServerError, http.StatusBadGateway, http.StatusServiceUnavailable, http.StatusGatewayTimeout:
 		{
-			err = fmt.Errorf("Got %v response code.Metricas will be aggregated")
+			err = fmt.Errorf("Got %v response code.Metricas will be aggregated", httpResponseCode)
 		}
 	}
 	return err, isFatal

@@ -2,61 +2,83 @@ package gorm
 
 import (
 	"database/sql"
+	"errors"
 	"reflect"
-	"strconv"
-	"strings"
-	"time"
 )
 
 type Field struct {
-	Name              string
-	DBName            string
-	Value             interface{}
-	IsBlank           bool
-	IsIgnored         bool
-	Tag               reflect.StructTag
-	SqlTag            string
-	ForeignKey        string
-	BeforeAssociation bool
-	AfterAssociation  bool
-	isPrimaryKey      bool
+	*StructField
+	IsBlank bool
+	Field   reflect.Value
 }
 
-func (f *Field) IsScanner() bool {
-	_, is_scanner := reflect.New(reflect.ValueOf(f.Value).Type()).Interface().(sql.Scanner)
-	return is_scanner
+func (field *Field) Set(value interface{}) error {
+	if !field.Field.IsValid() {
+		return errors.New("field value not valid")
+	}
+
+	if !field.Field.CanAddr() {
+		return errors.New("unaddressable value")
+	}
+
+	if rvalue, ok := value.(reflect.Value); ok {
+		value = rvalue.Interface()
+	}
+
+	if scanner, ok := field.Field.Addr().Interface().(sql.Scanner); ok {
+		if v, ok := value.(reflect.Value); ok {
+			if err := scanner.Scan(v.Interface()); err != nil {
+				return err
+			}
+		} else {
+			if err := scanner.Scan(value); err != nil {
+				return err
+			}
+		}
+	} else {
+		reflectValue, ok := value.(reflect.Value)
+		if !ok {
+			reflectValue = reflect.ValueOf(value)
+		}
+
+		if reflectValue.Type().ConvertibleTo(field.Field.Type()) {
+			field.Field.Set(reflectValue.Convert(field.Field.Type()))
+		} else {
+			return errors.New("could not convert argument")
+		}
+	}
+
+	field.IsBlank = isBlank(field.Field)
+	return nil
 }
 
-func (f *Field) IsTime() bool {
-	_, is_time := f.Value.(time.Time)
-	return is_time
-}
+// Fields get value's fields
+func (scope *Scope) Fields() map[string]*Field {
+	if scope.fields == nil {
+		fields := map[string]*Field{}
+		structFields := scope.GetStructFields()
 
-func parseSqlTag(str string) (typ string, addational_typ string, size int) {
-	if str == "-" {
-		typ = str
-	} else if str != "" {
-		tags := strings.Split(str, ";")
-		m := make(map[string]string)
-		for _, value := range tags {
-			v := strings.Split(value, ":")
-			k := strings.TrimSpace(strings.ToUpper(v[0]))
-			if len(v) == 2 {
-				m[k] = v[1]
+		indirectValue := scope.IndirectValue()
+		isStruct := indirectValue.Kind() == reflect.Struct
+		for _, structField := range structFields {
+			if isStruct {
+				fields[structField.DBName] = getField(indirectValue, structField)
 			} else {
-				m[k] = k
+				fields[structField.DBName] = &Field{StructField: structField, IsBlank: true}
 			}
 		}
 
-		if len(m["SIZE"]) > 0 {
-			size, _ = strconv.Atoi(m["SIZE"])
-		}
-
-		if len(m["TYPE"]) > 0 {
-			typ = m["TYPE"]
-		}
-
-		addational_typ = m["NOT NULL"] + " " + m["UNIQUE"]
+		scope.fields = fields
 	}
-	return
+	return scope.fields
+}
+
+func getField(indirectValue reflect.Value, structField *StructField) *Field {
+	field := &Field{StructField: structField}
+	for _, name := range structField.Names {
+		indirectValue = reflect.Indirect(indirectValue).FieldByName(name)
+	}
+	field.Field = indirectValue
+	field.IsBlank = isBlank(indirectValue)
+	return field
 }

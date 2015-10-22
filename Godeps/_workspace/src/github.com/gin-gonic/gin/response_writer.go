@@ -6,10 +6,14 @@ package gin
 
 import (
 	"bufio"
-	"errors"
-	"log"
+	"io"
 	"net"
 	"net/http"
+)
+
+const (
+	noWritten     = -1
+	defaultStatus = 200
 )
 
 type (
@@ -19,60 +23,86 @@ type (
 		http.Flusher
 		http.CloseNotifier
 
+		// Returns the HTTP response status code of the current request.
 		Status() int
+
+		// Returns the number of bytes already written into the response http body.
+		// See Written()
+		Size() int
+
+		// Writes the string into the response body.
+		WriteString(string) (int, error)
+
+		// Returns true if the response body was already written.
 		Written() bool
+
+		// Forces to write the http header (status code + headers).
 		WriteHeaderNow()
 	}
 
 	responseWriter struct {
 		http.ResponseWriter
-		status  int
-		written bool
+		size   int
+		status int
 	}
 )
 
+var _ ResponseWriter = &responseWriter{}
+
 func (w *responseWriter) reset(writer http.ResponseWriter) {
 	w.ResponseWriter = writer
-	w.status = 200
-	w.written = false
+	w.size = noWritten
+	w.status = defaultStatus
 }
 
 func (w *responseWriter) WriteHeader(code int) {
-	if code > 0 {
-		w.status = code
-		if w.written {
-			log.Println("[GIN] WARNING. Headers were already written!")
+	if code > 0 && w.status != code {
+		if w.Written() {
+			debugPrint("[WARNING] Headers were already written. Wanted to override status code %d with %d", w.status, code)
 		}
+		w.status = code
 	}
 }
 
 func (w *responseWriter) WriteHeaderNow() {
-	if !w.written {
-		w.written = true
+	if !w.Written() {
+		w.size = 0
 		w.ResponseWriter.WriteHeader(w.status)
 	}
 }
 
 func (w *responseWriter) Write(data []byte) (n int, err error) {
 	w.WriteHeaderNow()
-	return w.ResponseWriter.Write(data)
+	n, err = w.ResponseWriter.Write(data)
+	w.size += n
+	return
+}
+
+func (w *responseWriter) WriteString(s string) (n int, err error) {
+	w.WriteHeaderNow()
+	n, err = io.WriteString(w.ResponseWriter, s)
+	w.size += n
+	return
 }
 
 func (w *responseWriter) Status() int {
 	return w.status
 }
 
+func (w *responseWriter) Size() int {
+	return w.size
+}
+
 func (w *responseWriter) Written() bool {
-	return w.written
+	return w.size != noWritten
 }
 
 // Implements the http.Hijacker interface
 func (w *responseWriter) Hijack() (net.Conn, *bufio.ReadWriter, error) {
-	hijacker, ok := w.ResponseWriter.(http.Hijacker)
-	if !ok {
-		return nil, nil, errors.New("the ResponseWriter doesn't support the Hijacker interface")
+	if w.size < 0 {
+		w.size = 0
 	}
-	return hijacker.Hijack()
+	return w.ResponseWriter.(http.Hijacker).Hijack()
 }
 
 // Implements the http.CloseNotify interface
@@ -82,8 +112,5 @@ func (w *responseWriter) CloseNotify() <-chan bool {
 
 // Implements the http.Flush interface
 func (w *responseWriter) Flush() {
-	flusher, ok := w.ResponseWriter.(http.Flusher)
-	if ok {
-		flusher.Flush()
-	}
+	w.ResponseWriter.(http.Flusher).Flush()
 }

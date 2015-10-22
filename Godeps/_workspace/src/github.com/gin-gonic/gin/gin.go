@@ -5,89 +5,125 @@
 package gin
 
 import (
-	"fmt"
-	"github.com/gin-gonic/gin/render"
-	"github.com/julienschmidt/httprouter"
 	"html/template"
-	"math"
+	"net"
 	"net/http"
-	"path"
+	"os"
 	"sync"
+
+	"github.com/gin-gonic/gin/render"
 )
 
-const (
-	AbortIndex   = math.MaxInt8 / 2
-	MIMEJSON     = "application/json"
-	MIMEHTML     = "text/html"
-	MIMEXML      = "application/xml"
-	MIMEXML2     = "text/xml"
-	MIMEPlain    = "text/plain"
-	MIMEPOSTForm = "application/x-www-form-urlencoded"
-)
+// Framework's version
+const Version = "v1.0rc2"
 
-type (
-	HandlerFunc func(*Context)
+var default404Body = []byte("404 page not found")
+var default405Body = []byte("405 method not allowed")
 
-	// Used internally to configure router, a RouterGroup is associated with a prefix
-	// and an array of handlers (middlewares)
-	RouterGroup struct {
-		Handlers []HandlerFunc
-		prefix   string
-		parent   *RouterGroup
-		engine   *Engine
+type HandlerFunc func(*Context)
+type HandlersChain []HandlerFunc
+
+// Last returns the last handler in the chain. ie. the last handler is the main own.
+func (c HandlersChain) Last() HandlerFunc {
+	length := len(c)
+	if length > 0 {
+		return c[length-1]
 	}
-
-	// Represents the web framework, it wraps the blazing fast httprouter multiplexer and a list of global middlewares.
-	Engine struct {
-		*RouterGroup
-		HTMLRender   render.Render
-		cache        sync.Pool
-		finalNoRoute []HandlerFunc
-		noRoute      []HandlerFunc
-		router       *httprouter.Router
-	}
-)
-
-func (engine *Engine) handle404(w http.ResponseWriter, req *http.Request) {
-	c := engine.createContext(w, req, nil, engine.finalNoRoute)
-	// set 404 by default, useful for logging
-	c.Writer.WriteHeader(404)
-	c.Next()
-	if !c.Writer.Written() {
-		if c.Writer.Status() == 404 {
-			c.Data(-1, MIMEPlain, []byte("404 page not found"))
-		} else {
-			c.Writer.WriteHeaderNow()
-		}
-	}
-	engine.cache.Put(c)
+	return nil
 }
 
-// Returns a new blank Engine instance without any middleware attached.
-// The most basic configuration
+type (
+	RoutesInfo []RouteInfo
+	RouteInfo  struct {
+		Method  string
+		Path    string
+		Handler string
+	}
+
+	// Engine is the framework's instance, it contains the muxer, middlewares and configuration settings.
+	// Create an instance of Engine, by using New() or Default()
+	Engine struct {
+		RouterGroup
+		HTMLRender  render.HTMLRender
+		allNoRoute  HandlersChain
+		allNoMethod HandlersChain
+		noRoute     HandlersChain
+		noMethod    HandlersChain
+		pool        sync.Pool
+		trees       methodTrees
+
+		// Enables automatic redirection if the current route can't be matched but a
+		// handler for the path with (without) the trailing slash exists.
+		// For example if /foo/ is requested but a route only exists for /foo, the
+		// client is redirected to /foo with http status code 301 for GET requests
+		// and 307 for all other request methods.
+		RedirectTrailingSlash bool
+
+		// If enabled, the router tries to fix the current request path, if no
+		// handle is registered for it.
+		// First superfluous path elements like ../ or // are removed.
+		// Afterwards the router does a case-insensitive lookup of the cleaned path.
+		// If a handle can be found for this route, the router makes a redirection
+		// to the corrected path with status code 301 for GET requests and 307 for
+		// all other request methods.
+		// For example /FOO and /..//Foo could be redirected to /foo.
+		// RedirectTrailingSlash is independent of this option.
+		RedirectFixedPath bool
+
+		// If enabled, the router checks if another method is allowed for the
+		// current route, if the current request can not be routed.
+		// If this is the case, the request is answered with 'Method Not Allowed'
+		// and HTTP status code 405.
+		// If no other Method is allowed, the request is delegated to the NotFound
+		// handler.
+		HandleMethodNotAllowed bool
+		ForwardedByClientIP    bool
+	}
+)
+
+var _ IRouter = &Engine{}
+
+// New returns a new blank Engine instance without any middleware attached.
+// By default the configuration is:
+// - RedirectTrailingSlash:  true
+// - RedirectFixedPath:      false
+// - HandleMethodNotAllowed: false
+// - ForwardedByClientIP:    true
 func New() *Engine {
-	engine := &Engine{}
-	engine.RouterGroup = &RouterGroup{nil, "/", nil, engine}
-	engine.router = httprouter.New()
-	engine.router.NotFound = engine.handle404
-	engine.cache.New = func() interface{} {
-		c := &Context{Engine: engine}
-		c.Writer = &c.writermem
-		return c
+	debugPrintWARNINGNew()
+	engine := &Engine{
+		RouterGroup: RouterGroup{
+			Handlers: nil,
+			basePath: "/",
+			root:     true,
+		},
+		RedirectTrailingSlash:  true,
+		RedirectFixedPath:      false,
+		HandleMethodNotAllowed: false,
+		ForwardedByClientIP:    true,
+		trees:                  make(methodTrees, 0, 9),
+	}
+	engine.RouterGroup.engine = engine
+	engine.pool.New = func() interface{} {
+		return engine.allocateContext()
 	}
 	return engine
 }
 
-// Returns a Engine instance with the Logger and Recovery already attached.
+// Default returns an Engine instance with the Logger and Recovery middleware already attached.
 func Default() *Engine {
 	engine := New()
 	engine.Use(Recovery(), Logger())
 	return engine
 }
 
+func (engine *Engine) allocateContext() *Context {
+	return &Context{engine: engine}
+}
+
 func (engine *Engine) LoadHTMLGlob(pattern string) {
-	if gin_mode == debugCode {
-		engine.HTMLRender = render.HTMLDebug
+	if IsDebugging() {
+		engine.HTMLRender = render.HTMLDebug{Glob: pattern}
 	} else {
 		templ := template.Must(template.ParseGlob(pattern))
 		engine.SetHTMLTemplate(templ)
@@ -95,8 +131,8 @@ func (engine *Engine) LoadHTMLGlob(pattern string) {
 }
 
 func (engine *Engine) LoadHTMLFiles(files ...string) {
-	if gin_mode == debugCode {
-		engine.HTMLRender = render.HTMLDebug
+	if IsDebugging() {
+		engine.HTMLRender = render.HTMLDebug{Files: files}
 	} else {
 		templ := template.Must(template.ParseFiles(files...))
 		engine.SetHTMLTemplate(templ)
@@ -104,159 +140,239 @@ func (engine *Engine) LoadHTMLFiles(files ...string) {
 }
 
 func (engine *Engine) SetHTMLTemplate(templ *template.Template) {
-	engine.HTMLRender = render.HTMLRender{
-		Template: templ,
+	if len(engine.trees) > 0 {
+		debugPrintWARNINGSetHTMLTemplate()
 	}
+	engine.HTMLRender = render.HTMLProduction{Template: templ}
 }
 
 // Adds handlers for NoRoute. It return a 404 code by default.
 func (engine *Engine) NoRoute(handlers ...HandlerFunc) {
 	engine.noRoute = handlers
-	engine.finalNoRoute = engine.combineHandlers(engine.noRoute)
+	engine.rebuild404Handlers()
 }
 
-func (engine *Engine) Use(middlewares ...HandlerFunc) {
+// Sets the handlers called when... TODO
+func (engine *Engine) NoMethod(handlers ...HandlerFunc) {
+	engine.noMethod = handlers
+	engine.rebuild405Handlers()
+}
+
+// Attachs a global middleware to the router. ie. the middlewares attached though Use() will be
+// included in the handlers chain for every single request. Even 404, 405, static files...
+// For example, this is the right place for a logger or error management middleware.
+func (engine *Engine) Use(middlewares ...HandlerFunc) IRoutes {
 	engine.RouterGroup.Use(middlewares...)
-	engine.finalNoRoute = engine.combineHandlers(engine.noRoute)
+	engine.rebuild404Handlers()
+	engine.rebuild405Handlers()
+	return engine
 }
 
-// ServeHTTP makes the router implement the http.Handler interface.
+func (engine *Engine) rebuild404Handlers() {
+	engine.allNoRoute = engine.combineHandlers(engine.noRoute)
+}
+
+func (engine *Engine) rebuild405Handlers() {
+	engine.allNoMethod = engine.combineHandlers(engine.noMethod)
+}
+
+func (engine *Engine) addRoute(method, path string, handlers HandlersChain) {
+	debugPrintRoute(method, path, handlers)
+
+	if path[0] != '/' {
+		panic("path must begin with '/'")
+	}
+	if method == "" {
+		panic("HTTP method can not be empty")
+	}
+	if len(handlers) == 0 {
+		panic("there must be at least one handler")
+	}
+
+	root := engine.trees.get(method)
+	if root == nil {
+		root = new(node)
+		engine.trees = append(engine.trees, methodTree{
+			method: method,
+			root:   root,
+		})
+	}
+	root.addRoute(path, handlers)
+}
+
+// Routes returns a slice of registered routes, including some useful information, such as:
+// the http method, path and the handler name.
+func (engine *Engine) Routes() (routes RoutesInfo) {
+	for _, tree := range engine.trees {
+		routes = iterate("", tree.method, routes, tree.root)
+	}
+	return routes
+}
+
+func iterate(path, method string, routes RoutesInfo, root *node) RoutesInfo {
+	path += root.path
+	if len(root.handlers) > 0 {
+		routes = append(routes, RouteInfo{
+			Method:  method,
+			Path:    path,
+			Handler: nameOfFunction(root.handlers.Last()),
+		})
+	}
+	for _, child := range root.children {
+		routes = iterate(path, method, routes, child)
+	}
+	return routes
+}
+
+// Run attaches the router to a http.Server and starts listening and serving HTTP requests.
+// It is a shortcut for http.ListenAndServe(addr, router)
+// Note: this method will block the calling goroutine undefinitelly unless an error happens.
+func (engine *Engine) Run(addr string) (err error) {
+	debugPrint("Listening and serving HTTP on %s\n", addr)
+	defer func() { debugPrintError(err) }()
+
+	err = http.ListenAndServe(addr, engine)
+	return
+}
+
+// RunTLS attaches the router to a http.Server and starts listening and serving HTTPS (secure) requests.
+// It is a shortcut for http.ListenAndServeTLS(addr, certFile, keyFile, router)
+// Note: this method will block the calling goroutine undefinitelly unless an error happens.
+func (engine *Engine) RunTLS(addr string, certFile string, keyFile string) (err error) {
+	debugPrint("Listening and serving HTTPS on %s\n", addr)
+	defer func() { debugPrintError(err) }()
+
+	err = http.ListenAndServeTLS(addr, certFile, keyFile, engine)
+	return
+}
+
+// RunUnix attaches the router to a http.Server and starts listening and serving HTTP requests
+// through the specified unix socket (ie. a file).
+// Note: this method will block the calling goroutine undefinitelly unless an error happens.
+func (engine *Engine) RunUnix(file string) (err error) {
+	debugPrint("Listening and serving HTTP on unix:/%s", file)
+	defer func() { debugPrintError(err) }()
+
+	os.Remove(file)
+	listener, err := net.Listen("unix", file)
+	if err != nil {
+		return
+	}
+	defer listener.Close()
+	err = http.Serve(listener, engine)
+	return
+}
+
+// Conforms to the http.Handler interface.
 func (engine *Engine) ServeHTTP(w http.ResponseWriter, req *http.Request) {
-	engine.router.ServeHTTP(w, req)
+	c := engine.pool.Get().(*Context)
+	c.writermem.reset(w)
+	c.Request = req
+	c.reset()
+
+	engine.handleHTTPRequest(c)
+
+	engine.pool.Put(c)
 }
 
-func (engine *Engine) Run(addr string) {
-	if gin_mode == debugCode {
-		fmt.Println("[GIN-debug] Listening and serving HTTP on " + addr)
+func (engine *Engine) handleHTTPRequest(context *Context) {
+	httpMethod := context.Request.Method
+	path := context.Request.URL.Path
+
+	// Find root of the tree for the given HTTP method
+	t := engine.trees
+	for i, tl := 0, len(t); i < tl; i++ {
+		if t[i].method == httpMethod {
+			root := t[i].root
+			// Find route in tree
+			handlers, params, tsr := root.getValue(path, context.Params)
+			if handlers != nil {
+				context.handlers = handlers
+				context.Params = params
+				context.Next()
+				context.writermem.WriteHeaderNow()
+				return
+
+			} else if httpMethod != "CONNECT" && path != "/" {
+				if tsr && engine.RedirectTrailingSlash {
+					redirectTrailingSlash(context)
+					return
+				}
+				if engine.RedirectFixedPath && redirectFixedPath(context, root, engine.RedirectFixedPath) {
+					return
+				}
+			}
+			break
+		}
 	}
-	if err := http.ListenAndServe(addr, engine); err != nil {
-		panic(err)
+
+	// TODO: unit test
+	if engine.HandleMethodNotAllowed {
+		for _, tree := range engine.trees {
+			if tree.method != httpMethod {
+				if handlers, _, _ := tree.root.getValue(path, nil); handlers != nil {
+					context.handlers = engine.allNoMethod
+					serveError(context, 405, default405Body)
+					return
+				}
+			}
+		}
+	}
+	context.handlers = engine.allNoRoute
+	serveError(context, 404, default404Body)
+}
+
+var mimePlain = []string{MIMEPlain}
+
+func serveError(c *Context, code int, defaultMessage []byte) {
+	c.writermem.status = code
+	c.Next()
+	if !c.writermem.Written() {
+		if c.writermem.Status() == code {
+			c.writermem.Header()["Content-Type"] = mimePlain
+			c.Writer.Write(defaultMessage)
+		} else {
+			c.writermem.WriteHeaderNow()
+		}
 	}
 }
 
-func (engine *Engine) RunTLS(addr string, cert string, key string) {
-	if gin_mode == debugCode {
-		fmt.Println("[GIN-debug] Listening and serving HTTPS on " + addr)
+func redirectTrailingSlash(c *Context) {
+	req := c.Request
+	path := req.URL.Path
+	code := 301 // Permanent redirect, request with GET method
+	if req.Method != "GET" {
+		code = 307
 	}
-	if err := http.ListenAndServeTLS(addr, cert, key, engine); err != nil {
-		panic(err)
+
+	if len(path) > 1 && path[len(path)-1] == '/' {
+		req.URL.Path = path[:len(path)-1]
+	} else {
+		req.URL.Path = path + "/"
 	}
+	debugPrint("redirecting request %d: %s --> %s", code, path, req.URL.String())
+	http.Redirect(c.Writer, req, req.URL.String(), code)
+	c.writermem.WriteHeaderNow()
 }
 
-/************************************/
-/********** ROUTES GROUPING *********/
-/************************************/
+func redirectFixedPath(c *Context, root *node, trailingSlash bool) bool {
+	req := c.Request
+	path := req.URL.Path
 
-// Adds middlewares to the group, see example code in github.
-func (group *RouterGroup) Use(middlewares ...HandlerFunc) {
-	group.Handlers = append(group.Handlers, middlewares...)
-}
-
-// Creates a new router group. You should add all the routes that have common middlwares or the same path prefix.
-// For example, all the routes that use a common middlware for authorization could be grouped.
-func (group *RouterGroup) Group(component string, handlers ...HandlerFunc) *RouterGroup {
-	prefix := group.pathFor(component)
-
-	return &RouterGroup{
-		Handlers: group.combineHandlers(handlers),
-		parent:   group,
-		prefix:   prefix,
-		engine:   group.engine,
+	fixedPath, found := root.findCaseInsensitivePath(
+		cleanPath(path),
+		trailingSlash,
+	)
+	if found {
+		code := 301 // Permanent redirect, request with GET method
+		if req.Method != "GET" {
+			code = 307
+		}
+		req.URL.Path = string(fixedPath)
+		debugPrint("redirecting request %d: %s --> %s", code, path, req.URL.String())
+		http.Redirect(c.Writer, req, req.URL.String(), code)
+		c.writermem.WriteHeaderNow()
+		return true
 	}
-}
-
-func (group *RouterGroup) pathFor(p string) string {
-	joined := path.Join(group.prefix, p)
-	// Append a '/' if the last component had one, but only if it's not there already
-	if len(p) > 0 && p[len(p)-1] == '/' && joined[len(joined)-1] != '/' {
-		return joined + "/"
-	}
-	return joined
-}
-
-// Handle registers a new request handle and middlewares with the given path and method.
-// The last handler should be the real handler, the other ones should be middlewares that can and should be shared among different routes.
-// See the example code in github.
-//
-// For GET, POST, PUT, PATCH and DELETE requests the respective shortcut
-// functions can be used.
-//
-// This function is intended for bulk loading and to allow the usage of less
-// frequently used, non-standardized or custom methods (e.g. for internal
-// communication with a proxy).
-func (group *RouterGroup) Handle(method, p string, handlers []HandlerFunc) {
-	p = group.pathFor(p)
-	handlers = group.combineHandlers(handlers)
-	if gin_mode == debugCode {
-		nuHandlers := len(handlers)
-		name := funcName(handlers[nuHandlers-1])
-		fmt.Printf("[GIN-debug] %-5s %-25s --> %s (%d handlers)\n", method, p, name, nuHandlers)
-	}
-	group.engine.router.Handle(method, p, func(w http.ResponseWriter, req *http.Request, params httprouter.Params) {
-		c := group.engine.createContext(w, req, params, handlers)
-		c.Next()
-		c.Writer.WriteHeaderNow()
-		group.engine.cache.Put(c)
-	})
-}
-
-// POST is a shortcut for router.Handle("POST", path, handle)
-func (group *RouterGroup) POST(path string, handlers ...HandlerFunc) {
-	group.Handle("POST", path, handlers)
-}
-
-// GET is a shortcut for router.Handle("GET", path, handle)
-func (group *RouterGroup) GET(path string, handlers ...HandlerFunc) {
-	group.Handle("GET", path, handlers)
-}
-
-// DELETE is a shortcut for router.Handle("DELETE", path, handle)
-func (group *RouterGroup) DELETE(path string, handlers ...HandlerFunc) {
-	group.Handle("DELETE", path, handlers)
-}
-
-// PATCH is a shortcut for router.Handle("PATCH", path, handle)
-func (group *RouterGroup) PATCH(path string, handlers ...HandlerFunc) {
-	group.Handle("PATCH", path, handlers)
-}
-
-// PUT is a shortcut for router.Handle("PUT", path, handle)
-func (group *RouterGroup) PUT(path string, handlers ...HandlerFunc) {
-	group.Handle("PUT", path, handlers)
-}
-
-// OPTIONS is a shortcut for router.Handle("OPTIONS", path, handle)
-func (group *RouterGroup) OPTIONS(path string, handlers ...HandlerFunc) {
-	group.Handle("OPTIONS", path, handlers)
-}
-
-// HEAD is a shortcut for router.Handle("HEAD", path, handle)
-func (group *RouterGroup) HEAD(path string, handlers ...HandlerFunc) {
-	group.Handle("HEAD", path, handlers)
-}
-
-// Static serves files from the given file system root.
-// Internally a http.FileServer is used, therefore http.NotFound is used instead
-// of the Router's NotFound handler.
-// To use the operating system's file system implementation,
-// use :
-//     router.Static("/static", "/var/www")
-func (group *RouterGroup) Static(p, root string) {
-	prefix := group.pathFor(p)
-	p = path.Join(p, "/*filepath")
-	fileServer := http.StripPrefix(prefix, http.FileServer(http.Dir(root)))
-	group.GET(p, func(c *Context) {
-		fileServer.ServeHTTP(c.Writer, c.Request)
-	})
-	group.HEAD(p, func(c *Context) {
-		fileServer.ServeHTTP(c.Writer, c.Request)
-	})
-}
-
-func (group *RouterGroup) combineHandlers(handlers []HandlerFunc) []HandlerFunc {
-	s := len(group.Handlers) + len(handlers)
-	h := make([]HandlerFunc, 0, s)
-	h = append(h, group.Handlers...)
-	h = append(h, handlers...)
-	return h
+	return false
 }

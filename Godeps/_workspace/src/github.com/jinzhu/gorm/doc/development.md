@@ -2,7 +2,7 @@
 
 ## Architecture
 
-The most notable component of Gorm is `gorm.DB`, which hold database connection. It could be initialized like this:
+The most notable component of Gorm is`gorm.DB`, which hold database connection. It could be initialized like this:
 
     db, err := gorm.Open("postgres", "user=gorm dbname=gorm sslmode=disable")
 
@@ -27,7 +27,7 @@ There are four kinds of callbacks corresponds to sql's CURD: create callbacks, u
 
     func updateCreated(scope *Scope) {
         if scope.HasColumn("Created") {
-            scope.SetColumn("Created", time.Now())
+            scope.SetColumn("Created", NowFunc())
         }
     }
 
@@ -61,7 +61,7 @@ Gorm is powered by callbacks, so you could refer below links to learn how to wri
 
 [Update callbacks](https://github.com/jinzhu/gorm/blob/master/callback_update.go)
 
-[Query callbacks](https://github.com/jinzhu/gorm/blob/master/callback_create.go)
+[Query callbacks](https://github.com/jinzhu/gorm/blob/master/callback_query.go)
 
 [Delete callbacks](https://github.com/jinzhu/gorm/blob/master/callback_delete.go)
 

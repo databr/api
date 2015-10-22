@@ -1,141 +1,149 @@
 package gorm
 
-import "strconv"
+import "fmt"
 
 type search struct {
-	db              *DB
-	WhereConditions []map[string]interface{}
-	OrConditions    []map[string]interface{}
-	NotConditions   []map[string]interface{}
-	InitAttrs       []interface{}
-	AssignAttrs     []interface{}
-	HavingCondition map[string]interface{}
-	Orders          []string
-	Joins           string
-	Select          string
-	Offset          string
-	Limit           string
-	Group           string
-	TableName       string
-	Unscope         bool
-	Raw             bool
+	db               *DB
+	whereConditions  []map[string]interface{}
+	orConditions     []map[string]interface{}
+	notConditions    []map[string]interface{}
+	havingConditions []map[string]interface{}
+	initAttrs        []interface{}
+	assignAttrs      []interface{}
+	selects          map[string]interface{}
+	omits            []string
+	orders           []string
+	joins            string
+	preload          []searchPreload
+	offset           string
+	limit            string
+	group            string
+	tableName        string
+	raw              bool
+	Unscoped         bool
+	countingQuery    bool
+}
+
+type searchPreload struct {
+	schema     string
+	conditions []interface{}
 }
 
 func (s *search) clone() *search {
-	return &search{
-		WhereConditions: s.WhereConditions,
-		OrConditions:    s.OrConditions,
-		NotConditions:   s.NotConditions,
-		InitAttrs:       s.InitAttrs,
-		AssignAttrs:     s.AssignAttrs,
-		HavingCondition: s.HavingCondition,
-		Orders:          s.Orders,
-		Select:          s.Select,
-		Offset:          s.Offset,
-		Limit:           s.Limit,
-		Unscope:         s.Unscope,
-		Group:           s.Group,
-		Joins:           s.Joins,
-		TableName:       s.TableName,
-		Raw:             s.Raw,
-	}
+	clone := *s
+	return &clone
 }
 
-func (s *search) where(query interface{}, values ...interface{}) *search {
-	s.WhereConditions = append(s.WhereConditions, map[string]interface{}{"query": query, "args": values})
+func (s *search) Where(query interface{}, values ...interface{}) *search {
+	s.whereConditions = append(s.whereConditions, map[string]interface{}{"query": query, "args": values})
 	return s
 }
 
-func (s *search) not(query interface{}, values ...interface{}) *search {
-	s.NotConditions = append(s.NotConditions, map[string]interface{}{"query": query, "args": values})
+func (s *search) Not(query interface{}, values ...interface{}) *search {
+	s.notConditions = append(s.notConditions, map[string]interface{}{"query": query, "args": values})
 	return s
 }
 
-func (s *search) or(query interface{}, values ...interface{}) *search {
-	s.OrConditions = append(s.OrConditions, map[string]interface{}{"query": query, "args": values})
+func (s *search) Or(query interface{}, values ...interface{}) *search {
+	s.orConditions = append(s.orConditions, map[string]interface{}{"query": query, "args": values})
 	return s
 }
 
-func (s *search) attrs(attrs ...interface{}) *search {
-	s.InitAttrs = append(s.InitAttrs, toSearchableMap(attrs...))
+func (s *search) Attrs(attrs ...interface{}) *search {
+	s.initAttrs = append(s.initAttrs, toSearchableMap(attrs...))
 	return s
 }
 
-func (s *search) assign(attrs ...interface{}) *search {
-	s.AssignAttrs = append(s.AssignAttrs, toSearchableMap(attrs...))
+func (s *search) Assign(attrs ...interface{}) *search {
+	s.assignAttrs = append(s.assignAttrs, toSearchableMap(attrs...))
 	return s
 }
 
-func (s *search) order(value string, reorder ...bool) *search {
+func (s *search) Order(value string, reorder ...bool) *search {
 	if len(reorder) > 0 && reorder[0] {
-		s.Orders = []string{value}
-	} else {
-		s.Orders = append(s.Orders, value)
+		if value != "" {
+			s.orders = []string{value}
+		} else {
+			s.orders = []string{}
+		}
+	} else if value != "" {
+		s.orders = append(s.orders, value)
 	}
 	return s
 }
 
-func (s *search) selects(value interface{}) *search {
-	s.Select = s.getInterfaceAsSql(value)
+func (s *search) Select(query interface{}, args ...interface{}) *search {
+	s.selects = map[string]interface{}{"query": query, "args": args}
 	return s
 }
 
-func (s *search) limit(value interface{}) *search {
-	s.Limit = s.getInterfaceAsSql(value)
+func (s *search) Omit(columns ...string) *search {
+	s.omits = columns
 	return s
 }
 
-func (s *search) offset(value interface{}) *search {
-	s.Offset = s.getInterfaceAsSql(value)
+func (s *search) Limit(value interface{}) *search {
+	s.limit = s.getInterfaceAsSql(value)
 	return s
 }
 
-func (s *search) group(query string) *search {
-	s.Group = s.getInterfaceAsSql(query)
+func (s *search) Offset(value interface{}) *search {
+	s.offset = s.getInterfaceAsSql(value)
 	return s
 }
 
-func (s *search) having(query string, values ...interface{}) *search {
-	s.HavingCondition = map[string]interface{}{"query": query, "args": values}
+func (s *search) Group(query string) *search {
+	s.group = s.getInterfaceAsSql(query)
 	return s
 }
 
-func (s *search) includes(value interface{}) *search {
+func (s *search) Having(query string, values ...interface{}) *search {
+	s.havingConditions = append(s.havingConditions, map[string]interface{}{"query": query, "args": values})
 	return s
 }
 
-func (s *search) joins(query string) *search {
-	s.Joins = query
+func (s *search) Joins(query string) *search {
+	s.joins = query
 	return s
 }
 
-func (s *search) raw(b bool) *search {
-	s.Raw = b
+func (s *search) Preload(schema string, values ...interface{}) *search {
+	var preloads []searchPreload
+	for _, preload := range s.preload {
+		if preload.schema != schema {
+			preloads = append(preloads, preload)
+		}
+	}
+	preloads = append(preloads, searchPreload{schema, values})
+	s.preload = preloads
+	return s
+}
+
+func (s *search) Raw(b bool) *search {
+	s.raw = b
 	return s
 }
 
 func (s *search) unscoped() *search {
-	s.Unscope = true
+	s.Unscoped = true
 	return s
 }
 
-func (s *search) table(name string) *search {
-	s.TableName = name
+func (s *search) Table(name string) *search {
+	s.tableName = name
 	return s
 }
 
 func (s *search) getInterfaceAsSql(value interface{}) (str string) {
-	switch value := value.(type) {
-	case string:
-		str = value
-	case int:
-		if value < 0 {
-			str = ""
-		} else {
-			str = strconv.Itoa(value)
-		}
+	switch value.(type) {
+	case string, int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64:
+		str = fmt.Sprintf("%v", value)
 	default:
-		s.db.err(InvalidSql)
+		s.db.AddError(InvalidSql)
+	}
+
+	if str == "-1" {
+		return ""
 	}
 	return
 }

@@ -11,63 +11,79 @@ func CommitOrRollbackTransaction(scope *Scope) {
 }
 
 func SaveBeforeAssociations(scope *Scope) {
+	if !scope.shouldSaveAssociations() {
+		return
+	}
 	for _, field := range scope.Fields() {
-		if field.BeforeAssociation && !field.IsBlank && !field.IsIgnored {
-			value := reflect.ValueOf(field.Value)
-			newDB := scope.NewDB()
-
-			if value.CanAddr() {
-				newDB.Save(value.Addr().Interface())
-			} else {
-				// If can't take address, then clone the value and set it back
-				value = reflect.New(reflect.ValueOf(field.Value).Type()).Elem()
-				for _, f := range newDB.NewScope(field.Value).Fields() {
-					value.FieldByName(f.Name).Set(reflect.ValueOf(f.Value))
+		if scope.changeableField(field) && !field.IsBlank && !field.IsIgnored {
+			if relationship := field.Relationship; relationship != nil && relationship.Kind == "belongs_to" {
+				value := field.Field
+				scope.Err(scope.NewDB().Save(value.Addr().Interface()).Error)
+				if len(relationship.ForeignFieldNames) != 0 {
+					for idx, fieldName := range relationship.ForeignFieldNames {
+						associationForeignName := relationship.AssociationForeignDBNames[idx]
+						if f, ok := scope.New(value.Addr().Interface()).FieldByName(associationForeignName); ok {
+							scope.Err(scope.SetColumn(fieldName, f.Field.Interface()))
+						}
+					}
 				}
-				newDB.Save(value.Addr().Interface())
-				scope.SetColumn(field.Name, value.Interface())
-			}
-
-			if len(field.ForeignKey) > 0 {
-				scope.SetColumn(field.ForeignKey, newDB.NewScope(value.Interface()).PrimaryKeyValue())
 			}
 		}
 	}
 }
 
 func SaveAfterAssociations(scope *Scope) {
+	if !scope.shouldSaveAssociations() {
+		return
+	}
 	for _, field := range scope.Fields() {
-		if field.AfterAssociation && !field.IsBlank && !field.IsIgnored {
-			value := reflect.ValueOf(field.Value)
+		if scope.changeableField(field) && !field.IsBlank && !field.IsIgnored {
+			if relationship := field.Relationship; relationship != nil &&
+				(relationship.Kind == "has_one" || relationship.Kind == "has_many" || relationship.Kind == "many_to_many") {
+				value := field.Field
 
-			switch value.Kind() {
-			case reflect.Slice:
-				for i := 0; i < value.Len(); i++ {
-					newDB := scope.NewDB()
-					elem := value.Index(i).Addr().Interface()
+				switch value.Kind() {
+				case reflect.Slice:
+					for i := 0; i < value.Len(); i++ {
+						newDB := scope.NewDB()
+						elem := value.Index(i).Addr().Interface()
+						newScope := newDB.NewScope(elem)
 
-					if len(field.ForeignKey) > 0 {
-						newDB.NewScope(elem).SetColumn(field.ForeignKey, scope.PrimaryKeyValue())
+						if relationship.JoinTableHandler == nil && len(relationship.ForeignFieldNames) != 0 {
+							for idx, fieldName := range relationship.ForeignFieldNames {
+								associationForeignName := relationship.AssociationForeignDBNames[idx]
+								if f, ok := scope.FieldByName(associationForeignName); ok {
+									scope.Err(newScope.SetColumn(fieldName, f.Field.Interface()))
+								}
+							}
+						}
+
+						if relationship.PolymorphicType != "" {
+							scope.Err(newScope.SetColumn(relationship.PolymorphicType, scope.TableName()))
+						}
+
+						scope.Err(newDB.Save(elem).Error)
+
+						if joinTableHandler := relationship.JoinTableHandler; joinTableHandler != nil {
+							scope.Err(joinTableHandler.Add(joinTableHandler, scope.NewDB(), scope.Value, newScope.Value))
+						}
+					}
+				default:
+					elem := value.Addr().Interface()
+					newScope := scope.New(elem)
+					if len(relationship.ForeignFieldNames) != 0 {
+						for idx, fieldName := range relationship.ForeignFieldNames {
+							associationForeignName := relationship.AssociationForeignDBNames[idx]
+							if f, ok := scope.FieldByName(associationForeignName); ok {
+								scope.Err(newScope.SetColumn(fieldName, f.Field.Interface()))
+							}
+						}
 					}
 
-					newDB.Save(elem)
-				}
-			default:
-				newDB := scope.NewDB()
-				if value.CanAddr() {
-					newDB.NewScope(field.Value).SetColumn(field.ForeignKey, scope.PrimaryKeyValue())
-					newDB.Save(field.Value)
-				} else {
-					destValue := reflect.New(reflect.TypeOf(field.Value)).Elem()
-
-					for _, f := range newDB.NewScope(field.Value).Fields() {
-						destValue.FieldByName(f.Name).Set(reflect.ValueOf(f.Value))
+					if relationship.PolymorphicType != "" {
+						scope.Err(newScope.SetColumn(relationship.PolymorphicType, scope.TableName()))
 					}
-
-					elem := destValue.Addr().Interface()
-					newDB.NewScope(elem).SetColumn(field.ForeignKey, scope.PrimaryKeyValue())
-					newDB.Save(elem)
-					scope.SetColumn(field.Name, destValue.Interface())
+					scope.Err(scope.NewDB().Save(elem).Error)
 				}
 			}
 		}

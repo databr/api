@@ -5,10 +5,14 @@
 package gin
 
 import (
+	"io"
 	"os"
+
+	"github.com/gin-gonic/gin/binding"
+	"github.com/mattn/go-colorable"
 )
 
-const GIN_MODE = "GIN_MODE"
+const ENV_GIN_MODE = "GIN_MODE"
 
 const (
 	DebugMode   string = "debug"
@@ -21,26 +25,37 @@ const (
 	testCode    = iota
 )
 
-var gin_mode int = debugCode
+var DefaultWriter io.Writer = colorable.NewColorableStdout()
+var ginMode int = debugCode
+var modeName string = DebugMode
+
+func init() {
+	mode := os.Getenv(ENV_GIN_MODE)
+	if len(mode) == 0 {
+		SetMode(DebugMode)
+	} else {
+		SetMode(mode)
+	}
+}
 
 func SetMode(value string) {
 	switch value {
 	case DebugMode:
-		gin_mode = debugCode
+		ginMode = debugCode
 	case ReleaseMode:
-		gin_mode = releaseCode
+		ginMode = releaseCode
 	case TestMode:
-		gin_mode = testCode
+		ginMode = testCode
 	default:
-		panic("gin mode unknown, the allowed modes are: " + DebugMode + " and " + ReleaseMode)
+		panic("gin mode unknown: " + value)
 	}
+	modeName = value
 }
 
-func init() {
-	value := os.Getenv(GIN_MODE)
-	if len(value) == 0 {
-		SetMode(DebugMode)
-	} else {
-		SetMode(value)
-	}
+func DisableBindValidation() {
+	binding.Validator = nil
+}
+
+func Mode() string {
+	return modeName
 }

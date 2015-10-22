@@ -1,62 +1,76 @@
 {
 	"ImportPath": "github.com/databr/api",
-	"GoVersion": "go1.4",
+	"GoVersion": "go1.4.2",
 	"Deps": [
 		{
 			"ImportPath": "github.com/databr/go-popolo",
-			"Rev": "5e69ba3d8abdf65617c2f5ecd056cae120245552"
+			"Rev": "f8d6112a1aaeb7348207b62f2755724e38c14c06"
 		},
 		{
 			"ImportPath": "github.com/dgrijalva/jwt-go",
-			"Comment": "v2.1.0",
-			"Rev": "d82ad649e4ccf8c73f7e16fdbae22c16047b0962"
+			"Comment": "v2.3.0-7-gacc5a5f",
+			"Rev": "acc5a5f31e3493f1992315fd85aa49226372b810"
 		},
 		{
 			"ImportPath": "github.com/dustin/gomemcached",
-			"Rev": "3bc2b0e8fd5d0304d37f246b38cde753803cee41"
+			"Rev": "2ea451e47a26123cf5378f407088303f86e57c97"
 		},
 		{
 			"ImportPath": "github.com/fiam/gounidecode/unidecode",
-			"Rev": "311ebb7422d3ff70cc1d064c5a297520ff5f304a"
+			"Rev": "8deddbd03fec2c28969266e52f27b6fb22be1823"
 		},
 		{
 			"ImportPath": "github.com/gin-gonic/gin",
-			"Comment": "v0.4-8-g3b079bb",
-			"Rev": "3b079bb6f79ae501e73a5401c41b589f6616b61e"
-		},
-		{
-			"ImportPath": "github.com/influxdb/influxdb/client",
-			"Comment": "v0.8.1-71-g4b92d96",
-			"Rev": "4b92d96cb46118c3bc2d574fbd55488a8c4e678e"
+			"Comment": "v1.0rc1-136-gfd5d429",
+			"Rev": "fd5d4294a5d5223d55fc76d7840f4b0ad91647bb"
 		},
 		{
 			"ImportPath": "github.com/jinzhu/gorm",
-			"Rev": "11bfaba497a2aa5752c30705ea528d18fe68c73d"
-		},
-		{
-			"ImportPath": "github.com/julienschmidt/httprouter",
-			"Rev": "46807412fe50aaceb73bb57061c2230fd26a1640"
+			"Rev": "1d5f5f43f37a19d452a920447108de6e9e7b5e96"
 		},
 		{
 			"ImportPath": "github.com/lib/pq",
-			"Rev": "c6325123e6d45115749734a8bc35060ebac74d0e"
+			"Comment": "go1.0-cutoff-59-gb269bd0",
+			"Rev": "b269bd035a727d6c1081f76e7a239a1b00674c40"
+		},
+		{
+			"ImportPath": "github.com/manucorporat/sse",
+			"Rev": "fe6ea2c8e398672518ef204bf0fbd9af858d0e15"
+		},
+		{
+			"ImportPath": "github.com/mattn/go-colorable",
+			"Rev": "40e4aedc8fabf8c23e040057540867186712faa5"
+		},
+		{
+			"ImportPath": "github.com/qor/inflection",
+			"Rev": "45321e63b98c756df17369c027c1df89298e1288"
 		},
 		{
 			"ImportPath": "github.com/yvasiyarov/go-metrics",
-			"Rev": "b23f8b043b6492e7aef34eb11aab268a5c89c14b"
+			"Rev": "c25f46c4b94079672242ec48a545e7ca9ebe3aec"
 		},
 		{
 			"ImportPath": "github.com/yvasiyarov/gorelic",
-			"Comment": "v0.0.6-6-ged461c0",
-			"Rev": "ed461c0552ffe5e4bee53eb23c0edacc13c82555"
+			"Comment": "v0.0.6-36-gb960e98",
+			"Rev": "b960e980d682781c1baddf156bf00c81a022d769"
 		},
 		{
 			"ImportPath": "github.com/yvasiyarov/newrelic_platform_go",
-			"Rev": "2d5b3d6e6db42e361ca5a5b6376a1368f7067236"
+			"Rev": "db03d6dfd965ebc22dbfd910567c641b326ff055"
+		},
+		{
+			"ImportPath": "golang.org/x/net/context",
+			"Rev": "51854aba4682903632d14998d47781fe34e62a02"
+		},
+		{
+			"ImportPath": "gopkg.in/bluesuncorp/validator.v5",
+			"Comment": "v5.10.3",
+			"Rev": "77108103e5fd435ff31967e1a011fda801391c85"
 		},
 		{
 			"ImportPath": "gopkg.in/mgo.v2",
-			"Rev": "dc255bb679efa273b6544a03261c4053505498a4"
+			"Comment": "r2015.06.03-4-gf4923a5",
+			"Rev": "f4923a569136442e900b8cf5c1a706c0a8b0883c"
 		}
 	]
 }
