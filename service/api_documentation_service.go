@@ -44,109 +44,109 @@ func generateDocumentation() *swagger.Swagger {
 		},
 	}
 
-	s.NewGetPath("/parliamentarians", swagger.Request{
-		Tags:        []string{"Parlamentares"},
-		Summary:     "Retorna parlamentares das casas legislativas",
-		Description: "Retorna parlamentares das casas legislativas, podendo ser filtrado por ID. Retornara um JSON com atributo paging, esse atributo ira conter next e/ou previous caso tenha resultados anteriores ou posteriores para o request, o valor de next e previous será sempre um link a ser seguido para buscar mais resultados.",
-		Parameters: []swagger.Parameter{
-			{
-				Name:        "identifier",
-				In:          "query",
-				Description: "Pode ser: ID usado Senado; os 3 IDs que a Câ¢mara Federal usa(numero de matricula, ID parlamentar, ID de cadastro); o ID usado pelo Transparencia Brasil; o CPF do parlamentar",
-				Required:    false,
-			}, {
-				Name:        "page",
-				In:          "query",
-				Description: "A paginação se dá atraves da query string page, sendo 1 a primeira pagina e a pagina padrão do request. Cada request retorna 100 registros.",
-				Required:    false,
-			}, {
-				Name:        "limit",
-				In:          "query",
-				Description: "Limite de dados retornados por pagina, quando não setado a API retorna 100 registros",
-				Default:     "10",
-				Required:    false,
-			},
-		},
-		Responses: swagger.Responses{
-			Ok: &swagger.Response{
-				Description: "Sucesso",
-				Schema: &swagger.Schema{
-					Ref: "#/definitions/ParliamentariansResponse",
-				},
-			},
-			ServerError: &swagger.Response{
-				Description: "Erro interno",
-			},
-		},
-	})
+	// s.NewGetPath("/parliamentarians", swagger.Request{
+	// 	Tags:        []string{"Parlamentares"},
+	// 	Summary:     "Retorna parlamentares das casas legislativas",
+	// 	Description: "Retorna parlamentares das casas legislativas, podendo ser filtrado por ID. Retornara um JSON com atributo paging, esse atributo ira conter next e/ou previous caso tenha resultados anteriores ou posteriores para o request, o valor de next e previous será sempre um link a ser seguido para buscar mais resultados.",
+	// 	Parameters: []swagger.Parameter{
+	// 		{
+	// 			Name:        "identifier",
+	// 			In:          "query",
+	// 			Description: "Pode ser: ID usado Senado; os 3 IDs que a Câ¢mara Federal usa(numero de matricula, ID parlamentar, ID de cadastro); o ID usado pelo Transparencia Brasil; o CPF do parlamentar",
+	// 			Required:    false,
+	// 		}, {
+	// 			Name:        "page",
+	// 			In:          "query",
+	// 			Description: "A paginação se dá atraves da query string page, sendo 1 a primeira pagina e a pagina padrão do request. Cada request retorna 100 registros.",
+	// 			Required:    false,
+	// 		}, {
+	// 			Name:        "limit",
+	// 			In:          "query",
+	// 			Description: "Limite de dados retornados por pagina, quando não setado a API retorna 100 registros",
+	// 			Default:     "10",
+	// 			Required:    false,
+	// 		},
+	// 	},
+	// 	Responses: swagger.Responses{
+	// 		Ok: &swagger.Response{
+	// 			Description: "Sucesso",
+	// 			Schema: &swagger.Schema{
+	// 				Ref: "#/definitions/ParliamentariansResponse",
+	// 			},
+	// 		},
+	// 		ServerError: &swagger.Response{
+	// 			Description: "Erro interno",
+	// 		},
+	// 	},
+	// })
 
-	s.NewGetPath("/parliamentarians/{id}", swagger.Request{
-		Tags:    []string{"Parlamentares"},
-		Summary: "Retorna dados de um parlamentar",
-		Parameters: []swagger.Parameter{
-			{
-				Name:        "id",
-				In:          "path",
-				Description: "id to deputado no databr.io, exemplo: tiririca",
-				Required:    true,
-			},
-		},
-		Responses: swagger.Responses{
-			Ok: &swagger.Response{
-				Description: "Sucesso",
-				Schema: &swagger.Schema{
-					Ref: "#/definitions/ParliamentarianResponse",
-				},
-			},
-			ServerError: &swagger.Response{
-				Description: "Erro interno",
-			},
-			NotFound: &swagger.Response{
-				Description: "Parlamentar não encontrado",
-			},
-		},
-	})
+	// s.NewGetPath("/parliamentarians/{id}", swagger.Request{
+	// 	Tags:    []string{"Parlamentares"},
+	// 	Summary: "Retorna dados de um parlamentar",
+	// 	Parameters: []swagger.Parameter{
+	// 		{
+	// 			Name:        "id",
+	// 			In:          "path",
+	// 			Description: "id to deputado no databr.io, exemplo: tiririca",
+	// 			Required:    true,
+	// 		},
+	// 	},
+	// 	Responses: swagger.Responses{
+	// 		Ok: &swagger.Response{
+	// 			Description: "Sucesso",
+	// 			Schema: &swagger.Schema{
+	// 				Ref: "#/definitions/ParliamentarianResponse",
+	// 			},
+	// 		},
+	// 		ServerError: &swagger.Response{
+	// 			Description: "Erro interno",
+	// 		},
+	// 		NotFound: &swagger.Response{
+	// 			Description: "Parlamentar não encontrado",
+	// 		},
+	// 	},
+	// })
 
-	s.NewGetPath("/parties", swagger.Request{
-		Tags:    []string{"Partidos"},
-		Summary: "Retorna Partidos Registrados no TSE",
-		Responses: swagger.Responses{
-			Ok: &swagger.Response{
-				Description: "Sucesso",
-				Schema: &swagger.Schema{
-					Ref: "#/definitions/PartyResponse",
-				},
-			},
-			ServerError: &swagger.Response{
-				Description: "Erro interno",
-			},
-		},
-	})
+	// s.NewGetPath("/parties", swagger.Request{
+	// 	Tags:    []string{"Partidos"},
+	// 	Summary: "Retorna Partidos Registrados no TSE",
+	// 	Responses: swagger.Responses{
+	// 		Ok: &swagger.Response{
+	// 			Description: "Sucesso",
+	// 			Schema: &swagger.Schema{
+	// 				Ref: "#/definitions/PartyResponse",
+	// 			},
+	// 		},
+	// 		ServerError: &swagger.Response{
+	// 			Description: "Erro interno",
+	// 		},
+	// 	},
+	// })
 
-	s.NewGetPath("/parties/{id}", swagger.Request{
-		Tags:        []string{"Partidos"},
-		Summary:     "Dados do Partido",
-		Description: "Retorna dados do Partido",
-		Parameters: []swagger.Parameter{
-			{
-				Name:        "id",
-				In:          "path",
-				Description: "ID do partido, exemplo: psdb",
-				Required:    true,
-			},
-		},
-		Responses: swagger.Responses{
-			Ok: &swagger.Response{
-				Description: "Sucesso",
-				Schema: &swagger.Schema{
-					Ref: "#/definitions/PartiesResponse",
-				},
-			},
-			ServerError: &swagger.Response{
-				Description: "Erro interno",
-			},
-		},
-	})
+	// s.NewGetPath("/parties/{id}", swagger.Request{
+	// 	Tags:        []string{"Partidos"},
+	// 	Summary:     "Dados do Partido",
+	// 	Description: "Retorna dados do Partido",
+	// 	Parameters: []swagger.Parameter{
+	// 		{
+	// 			Name:        "id",
+	// 			In:          "path",
+	// 			Description: "ID do partido, exemplo: psdb",
+	// 			Required:    true,
+	// 		},
+	// 	},
+	// 	Responses: swagger.Responses{
+	// 		Ok: &swagger.Response{
+	// 			Description: "Sucesso",
+	// 			Schema: &swagger.Schema{
+	// 				Ref: "#/definitions/PartiesResponse",
+	// 			},
+	// 		},
+	// 		ServerError: &swagger.Response{
+	// 			Description: "Erro interno",
+	// 		},
+	// 	},
+	// })
 
 	s.NewGetPath("/states", swagger.Request{
 		Tags:    []string{"Estados/Cidades"},

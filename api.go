@@ -25,14 +25,14 @@ func main() {
 
 	databaseDB := database.NewMongoDB()
 
-	parliamentarians := service.ParliamentariansService{r}
-	parties := service.PartiesService{r}
+	// parliamentarians := service.ParliamentariansService{r}
+	// parties := service.PartiesService{r}
 	states := service.StatesService{r}
 	pingdom := service.PingdomService{r}
 	doc := service.ApiDocumentationService{r}
 
-	parliamentarians.Run(databaseDB)
-	parties.Run(databaseDB)
+	// parliamentarians.Run(databaseDB)
+	// parties.Run(databaseDB)
 	states.Run(databaseDB)
 	pingdom.Run()
 	doc.Run()
