@@ -40,7 +40,7 @@ func generateDocumentation() *swagger.Swagger {
 		Version:     "1.0.0",
 		Description: "DataBR é um conjunto de API para ajudar desenvolvedores, jornalistas, analistas e quem mais tiver interesse em trabalhar dados do governo brasileiro. Acreditamos que com nosso esforço na coleta e analise de dados, possibilitando a criação de aplicativos, jogos e visualizações, estamos ajudando para um Brasil melhor.",
 		Contact: swagger.Contact{
-			Name: "contato@databr.io",
+			Name: "duke@databr.io",
 		},
 	}
 
