@@ -31,8 +31,13 @@ func TestFirstAndLast(t *testing.T) {
 		t.Errorf("Find first record as slice")
 	}
 
-	if DB.Joins("left join emails on emails.user_id = users.id").First(&User{}).Error != nil {
+	var user User
+	if DB.Joins("left join emails on emails.user_id = users.id").First(&user).Error != nil {
 		t.Errorf("Should not raise any error when order with Join table")
+	}
+
+	if user.Email != "" {
+		t.Errorf("User's Email should be blank as no one set it")
 	}
 }
 
@@ -61,6 +66,22 @@ func TestUIntPrimaryKey(t *testing.T) {
 	DB.Model(Animal{}).Where(Animal{Counter: uint64(2)}).Scan(&animal)
 	if animal.Counter != 2 {
 		t.Errorf("Fetch a record from with a non-int primary key should work, but failed")
+	}
+}
+
+func TestStringPrimaryKeyForNumericValueStartingWithZero(t *testing.T) {
+	type AddressByZipCode struct {
+		ZipCode string `gorm:"primary_key"`
+		Address string
+	}
+
+	DB.AutoMigrate(&AddressByZipCode{})
+	DB.Create(&AddressByZipCode{ZipCode: "00501", Address: "Holtsville"})
+
+	var address AddressByZipCode
+	DB.First(&address, "00501")
+	if address.ZipCode != "00501" {
+		t.Errorf("Fetch a record from with a string primary key for a numeric value starting with zero should work, but failed")
 	}
 }
 
@@ -139,6 +160,14 @@ func TestSearchWithPlainSQL(t *testing.T) {
 		t.Errorf("Should found 1 users, but got %v", len(users))
 	}
 
+	if err := DB.Where("id IN (?)", []string{}).Find(&users).Error; err != nil {
+		t.Error("no error should happen when query with empty slice, but got: ", err)
+	}
+
+	if err := DB.Not("id IN (?)", []string{}).Find(&users).Error; err != nil {
+		t.Error("no error should happen when query with empty slice, but got: ", err)
+	}
+
 	if DB.Where("name = ?", "none existing").Find(&[]User{}).RecordNotFound() {
 		t.Errorf("Should not get RecordNotFound error when looking for none existing records")
 	}
@@ -191,10 +220,12 @@ func TestSearchWithStruct(t *testing.T) {
 }
 
 func TestSearchWithMap(t *testing.T) {
+	companyID := 1
 	user1 := User{Name: "MapSearchUser1", Age: 1, Birthday: now.MustParse("2000-1-1")}
 	user2 := User{Name: "MapSearchUser2", Age: 10, Birthday: now.MustParse("2010-1-1")}
 	user3 := User{Name: "MapSearchUser3", Age: 20, Birthday: now.MustParse("2020-1-1")}
-	DB.Save(&user1).Save(&user2).Save(&user3)
+	user4 := User{Name: "MapSearchUser4", Age: 30, Birthday: now.MustParse("2020-1-1"), CompanyID: &companyID}
+	DB.Save(&user1).Save(&user2).Save(&user3).Save(&user4)
 
 	var user User
 	DB.First(&user, map[string]interface{}{"name": user1.Name})
@@ -217,6 +248,21 @@ func TestSearchWithMap(t *testing.T) {
 	DB.Find(&users, map[string]interface{}{"name": user3.Name})
 	if len(users) != 1 {
 		t.Errorf("Search all records with inline map")
+	}
+
+	DB.Find(&users, map[string]interface{}{"name": user4.Name, "company_id": nil})
+	if len(users) != 0 {
+		t.Errorf("Search all records with inline map containing null value finding 0 records")
+	}
+
+	DB.Find(&users, map[string]interface{}{"name": user1.Name, "company_id": nil})
+	if len(users) != 1 {
+		t.Errorf("Search all records with inline map containing null value finding 1 record")
+	}
+
+	DB.Find(&users, map[string]interface{}{"name": user4.Name, "company_id": companyID})
+	if len(users) != 1 {
+		t.Errorf("Search all records with inline multiple value map")
 	}
 }
 
@@ -361,10 +407,14 @@ func TestNot(t *testing.T) {
 	DB.Create(getPreparedUser("user1", "not"))
 	DB.Create(getPreparedUser("user2", "not"))
 	DB.Create(getPreparedUser("user3", "not"))
-	DB.Create(getPreparedUser("user4", "not"))
+
+	user4 := getPreparedUser("user4", "not")
+	user4.Company = Company{}
+	DB.Create(user4)
+
 	DB := DB.Where("role = ?", "not")
 
-	var users1, users2, users3, users4, users5, users6, users7, users8 []User
+	var users1, users2, users3, users4, users5, users6, users7, users8, users9 []User
 	if DB.Find(&users1).RowsAffected != 4 {
 		t.Errorf("should find 4 not users")
 	}
@@ -407,15 +457,20 @@ func TestNot(t *testing.T) {
 		t.Errorf("Should find all users's name not equal 3")
 	}
 
-	DB.Not("name", []string{"user3"}).Find(&users7)
-	if len(users1)-len(users7) != int(name3Count) {
+	DB.Not(map[string]interface{}{"name": "user3", "company_id": nil}).Find(&users7)
+	if len(users1)-len(users7) != 2 { // not user3 or user4
+		t.Errorf("Should find all user's name not equal to 3 who do not have company id")
+	}
+
+	DB.Not("name", []string{"user3"}).Find(&users8)
+	if len(users1)-len(users8) != int(name3Count) {
 		t.Errorf("Should find all users's name not equal 3")
 	}
 
 	var name2Count int64
 	DB.Table("users").Where("name = ?", "user2").Count(&name2Count)
-	DB.Not("name", []string{"user3", "user2"}).Find(&users8)
-	if len(users1)-len(users8) != (int(name3Count) + int(name2Count)) {
+	DB.Not("name", []string{"user3", "user2"}).Find(&users9)
+	if len(users1)-len(users9) != (int(name3Count) + int(name2Count)) {
 		t.Errorf("Should find all users's name not equal 3")
 	}
 }
@@ -578,15 +633,4 @@ func TestSelectWithArrayInput(t *testing.T) {
 	if user.Name != "jinzhu" || user.Age != 42 {
 		t.Errorf("Should have selected both age and name")
 	}
-}
-
-func TestCurrentDatabase(t *testing.T) {
-	databaseName := DB.CurrentDatabase()
-	if err := DB.Error; err != nil {
-		t.Errorf("Problem getting current db name: %s", err)
-	}
-	if databaseName == "" {
-		t.Errorf("Current db name returned empty; this should never happen!")
-	}
-	t.Logf("Got current db name: %v", databaseName)
 }

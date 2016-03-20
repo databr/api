@@ -9,9 +9,9 @@ import (
 	"github.com/lib/pq"
 )
 
-var Postgres gorm.DB
+var Postgres *gorm.DB
 
-func NewPostgres() gorm.DB {
+func NewPostgres() *gorm.DB {
 	var err error
 
 	databaseUrl, _ := pq.ParseURL(os.Getenv("DATABASE_URL"))

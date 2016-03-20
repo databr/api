@@ -18,7 +18,7 @@ type PersonAddress struct {
 	gorm.JoinTableHandler
 	PersonID  int
 	AddressID int
-	DeletedAt time.Time
+	DeletedAt *time.Time
 	CreatedAt time.Time
 }
 
@@ -39,7 +39,7 @@ func (*PersonAddress) Delete(handler gorm.JoinTableHandlerInterface, db *gorm.DB
 
 func (pa *PersonAddress) JoinWith(handler gorm.JoinTableHandlerInterface, db *gorm.DB, source interface{}) *gorm.DB {
 	table := pa.Table(db)
-	return db.Table(table).Joins("INNER JOIN person_addresses ON person_addresses.address_id = addresses.id").Where(fmt.Sprintf("%v.deleted_at IS NULL OR %v.deleted_at <= '0001-01-02'", table, table))
+	return db.Joins("INNER JOIN person_addresses ON person_addresses.address_id = addresses.id").Where(fmt.Sprintf("%v.deleted_at IS NULL OR %v.deleted_at <= '0001-01-02'", table, table))
 }
 
 func TestJoinTable(t *testing.T) {

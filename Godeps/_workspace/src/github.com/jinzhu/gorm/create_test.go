@@ -1,6 +1,7 @@
 package gorm_test
 
 import (
+	"os"
 	"reflect"
 	"testing"
 	"time"
@@ -51,12 +52,16 @@ func TestCreate(t *testing.T) {
 
 	DB.Model(user).Update("name", "create_user_new_name")
 	DB.First(&user, user.Id)
-	if user.CreatedAt != newUser.CreatedAt {
+	if user.CreatedAt.Format(time.RFC3339Nano) != newUser.CreatedAt.Format(time.RFC3339Nano) {
 		t.Errorf("CreatedAt should not be changed after update")
 	}
 }
 
 func TestCreateWithNoGORMPrimayKey(t *testing.T) {
+	if dialect := os.Getenv("GORM_DIALECT"); dialect == "mssql" {
+		t.Skip("Skipping this because MSSQL will return identity only if the table has an Id column")
+	}
+
 	jt := JoinTable{From: 1, To: 2}
 	err := DB.Create(&jt).Error
 	if err != nil {
@@ -87,7 +92,7 @@ func TestCreateWithNoStdPrimaryKeyAndDefaultValues(t *testing.T) {
 
 	// We must fetch the value again, to have the default fields updated
 	// (We can't do this in the update statements, since sql default can be expressions
-	// And be different from the fields' type (eg. a time.Time fiels has a default value of "now()"
+	// And be different from the fields' type (eg. a time.Time fields has a default value of "now()"
 	DB.Model(Animal{}).Where(&Animal{Counter: an.Counter}).First(&an)
 
 	if an.Name != "galeone" {
