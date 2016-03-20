@@ -173,6 +173,7 @@ func generateDocumentation() *swagger.Swagger {
 				In:          "path",
 				Description: "ID do estado, exemplo: sp",
 				Required:    true,
+				Type:        "string",
 			},
 		},
 		Responses: swagger.Responses{
@@ -201,6 +202,7 @@ func generateDocumentation() *swagger.Swagger {
 				In:          "path",
 				Description: "ID do estado, exemplo: sp",
 				Required:    true,
+				Type:        "string",
 			}, {
 				Name:        "page",
 				In:          "query",
@@ -233,11 +235,13 @@ func generateDocumentation() *swagger.Swagger {
 				In:          "path",
 				Description: "ID do estado, exemplo: sp",
 				Required:    true,
+				Type:        "string",
 			}, {
 				Name:        "city_id",
 				In:          "path",
 				Description: "ID da cidade, exemplo: saopaulo",
 				Required:    true,
+				Type:        "string",
 			},
 		},
 		Responses: swagger.Responses{
@@ -309,6 +313,7 @@ func generateDocumentation() *swagger.Swagger {
 				In:          "path",
 				Description: "ID da Linha, exemplo: linha1azul",
 				Required:    true,
+				Type:        "string",
 			},
 		},
 		Responses: swagger.Responses{
@@ -336,11 +341,13 @@ func generateDocumentation() *swagger.Swagger {
 				In:          "path",
 				Description: "ID da Linha, exemplo: linha1azul",
 				Required:    true,
+				Type:        "string",
 			}, {
 				Name:        "status_id",
 				In:          "path",
 				Description: "ID do Status",
 				Required:    true,
+				Type:        "string",
 			},
 		},
 		Responses: swagger.Responses{
