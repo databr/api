@@ -208,6 +208,7 @@ func generateDocumentation() *swagger.Swagger {
 				In:          "query",
 				Description: "A paginação se dá atraves da query string page, sendo 1 a primeira pagina e a pagina padrão do request. Cada request retorna 100 registros.",
 				Required:    false,
+				Type: 			 "string",
 			},
 		},
 		Responses: swagger.Responses{
@@ -285,6 +286,7 @@ func generateDocumentation() *swagger.Swagger {
 				In:          "path",
 				Description: "ID da Linha, exemplo: linha1azul",
 				Required:    true,
+				Type: 			 "string",
 			},
 		},
 		Responses: swagger.Responses{

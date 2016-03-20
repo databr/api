@@ -7,7 +7,7 @@ import (
 
 type Swagger struct {
 	RefPrefix   []string              `json:"-"`
-	Version     float64               `json:"swagger"`
+	Version     string                `json:"swagger"`
 	Host        string                `json:"host"`
 	Info        Info                  `json:"info"`
 	BasePath    string                `json:"basePath"`
@@ -70,7 +70,7 @@ type Definition struct {
 
 func New() *Swagger {
 	return &Swagger{
-		Version:     2.0,
+		Version:     "2.0",
 		Paths:       make(map[string]Path, 0),
 		Definitions: make(map[string]Definition, 0),
 		RefPrefix:   make([]string, 0),
