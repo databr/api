@@ -124,7 +124,7 @@ func (_ TrainsSpResource) getLink(id, cannonical string) []models.Link {
 			Note: "self",
 		},
 		{
-			Url:  config.ApiRoot + "v1/states/sp/transports/trains/lines/" + cannonical + "/statuses",
+			Url:  config.ApiRoot + "/v1/states/sp/transports/trains/lines/" + cannonical + "/statuses",
 			Note: "statuses",
 		},
 	}
@@ -158,11 +158,11 @@ func (self TrainsSpResource) getStatusLink(lineId string, statusId bson.ObjectId
 			Note: "self",
 		},
 		{
-			Url:  config.ApiRoot + "v1/states/sp/transports/trains/lines/" + lineId + "/statuses",
+			Url:  config.ApiRoot + "/v1/states/sp/transports/trains/lines/" + lineId + "/statuses",
 			Note: "statuses",
 		},
 		{
-			Url:  config.ApiRoot + "v1/states/sp/transports/trains/lines/" + lineId,
+			Url:  config.ApiRoot + "/v1/states/sp/transports/trains/lines/" + lineId,
 			Note: "line",
 		},
 	}
